@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using MBA.Modulo2.Data.Domain;
+@inject SignInManager<ApplicationUser> signInManager;
+
+
+@if (signInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown user-menu">
+        <div style="white-space: nowrap">
+            <a href="#" class="nav-link text-dark" data-bs-toggle="dropdown">
+                <img src="~/dist/assets/img/user2-160x160.jpg"
+                     class="user-image rounded-circle shadow"
+                     alt="User Image" />
+                <span class="d-none d-md-inline">@User.Identity.Name</span>
+            </a>
+        </div>
+    </li>
+    <li class="nav-item dropdown user-menu">
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+    </li>
+}
+else
+{
+    <li class="nav-item dropdown user-menu">
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+    </li>
+    <li class="nav-item dropdown user-menu">
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+    </li>
+} 
