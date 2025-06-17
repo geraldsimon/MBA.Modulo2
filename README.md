@@ -10,7 +10,12 @@ A Aplicação MVC e API RESTful compartilha da camada de business, camada de dados
 
 
 ### **Autor(es)**
+- **Alberto Luis Tarastchuck Borges**
+- **Douglas dos Santos Costa**
 - **Geraldo Alves Simao Junior**
+- **José Ricardo de Castro** 
+- **Leonardo da Silva Rocha**
+- **Silvio Cesar Kinaake**
 
 ## **2. Proposta do Projeto**
 
