@@ -26,7 +26,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\MBA.Modulo2.Business\MBA.Modulo2.Business.csproj" />
-	  <ProjectReference Include="..\MBA.Modulo2.Data\MBA.Modulo2.Data.csproj" />
 	</ItemGroup>
 
 </Project>
