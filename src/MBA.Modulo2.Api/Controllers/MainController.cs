@@ -51,6 +51,6 @@ public abstract class MainController(INotifier notifier) : ControllerBase
 
     protected void ReportError(string mensagem)
     {
-        _notifier.Handle(new Notification(mensagem));
+        _notifier.Handle(new Notificacao(mensagem));
     }
 }

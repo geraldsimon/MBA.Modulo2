@@ -47,7 +47,7 @@ public class AccountController(ISellerService sellerService,
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterViewModel model)
+    public async Task<IActionResult> Register(CadastroViewModel model)
     {
         if (ModelState.IsValid)
         {
@@ -67,7 +67,7 @@ public class AccountController(ISellerService sellerService,
                 await _signInManager.SignInAsync(user, false);
                 var logedUser = await _userManager.GetUserAsync(User);
                 var userId = logedUser?.Id;
-                Seller saller = new()
+                Vendedor saller = new()
                 {
                     Id = (Guid)userId,
                     Name = model.Name,

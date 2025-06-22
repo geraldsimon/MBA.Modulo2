@@ -12,9 +12,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     {
     }
 
-    public DbSet<Seller> Sellers { get; set; }
-    public DbSet<Category> Categories { get; set; } = null!;
-    public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Vendedor> Sellers { get; set; }
+    public DbSet<Categoria> Categories { get; set; } = null!;
+    public DbSet<Produto> Products { get; set; } = null!;
     public DbSet<Post> Posts { get; set; } = null!;
-    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<Comentario> Comments { get; set; } = null!;
 }

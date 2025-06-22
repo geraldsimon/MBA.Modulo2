@@ -9,11 +9,11 @@ namespace MBA.Modulo2.Api.Configuration
     {
         public AutomapperConfig()
         {
-            CreateMap<Category, CategoryViewModel>().ReverseMap();
-            CreateMap<Product, ProductViewModel>().ReverseMap();
-            CreateMap<Product, ProductLoggedOutViewModel>().ReverseMap();
+            CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
+            CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+            CreateMap<Produto, ProductLoggedOutViewModel>().ReverseMap();
             CreateMap<Post, PostViewModel>().ReverseMap();
-            CreateMap<Comment, CommentViewModel>().ReverseMap();
+            CreateMap<Comentario, ComentarioViewModel>().ReverseMap();
         }
     }
 }

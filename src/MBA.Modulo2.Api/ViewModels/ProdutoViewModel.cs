@@ -1,17 +1,15 @@
-﻿using MBA.Modulo2.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
-namespace MBA.Modulo2.App.ViewModels;
+namespace MBA.Modulo2.Shared.ViewModels;
 
-public class ProductViewModel
+public class ProdutoViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    
+
     [Required(ErrorMessage = "The name field is mandatory.")]
     public string Name { get; set; } = null!;
-
+    
     [Required(ErrorMessage = "The Description field is mandatory.")]
     public string Description { get; set; }
 
@@ -24,16 +22,13 @@ public class ProductViewModel
     [Required(ErrorMessage = "The Stock field is mandatory.")]
     public int Stock { get; set; }
 
+    [Required(ErrorMessage = "The Imagem field is mandatory.")]
     public string Image { get; set; }
 
-
-    [JsonIgnore]
-    public IFormFile ImageFile { get; set; }
+    public string ImageUpload { get; set; }
 
     public Guid CategoryId { get; set; }
-    public Categoria Category { get; set; } = null!;
 
     // FK for Seller
     public Guid SellerId { get; set; }
-    public Vendedor Seller { get; set; } = null!;
 }

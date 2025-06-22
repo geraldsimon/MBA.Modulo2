@@ -4,12 +4,12 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<Category>> GetAllAsync();
-        Task<Category> GetByIdAsync(Guid id);
-        Task<Category> GetByIdWithProductAsync(Guid id);
-        Task<Category> GetByNameAsync(string name);
-        Task AddAsync(Category category);
-        Task UpdateAsync(Category category);
+        Task<IEnumerable<Categoria>> GetAllAsync();
+        Task<Categoria> GetByIdAsync(Guid id);
+        Task<Categoria> GetByIdWithProductAsync(Guid id);
+        Task<Categoria> GetByNameAsync(string name);
+        Task AddAsync(Categoria category);
+        Task UpdateAsync(Categoria category);
         Task DeleteAsync(Guid id);
     }
 }
