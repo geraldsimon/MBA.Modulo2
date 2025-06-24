@@ -15,7 +15,12 @@
 
                     <div class="card-body">
                         <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text"> @product.Description.Length > 10 ? @product.Description.Substring(0, 10) + "..." : @product.Description.Length </p>
+                        <p class="card-text">
+    @( (product.Description?.Length ?? 0) > 10 
+        ? product.Description.Substring(0, 10) + "..." 
+        : product.Description ?? "" )
+</p>
+
                         <p class="card-text"><b>Category:</b> @product.Category.Name</p>
                         <h6 class="text-primary">$@product.Price.ToString("F2")</h6>
                         @* <a href="#" class="btn btn-success">Buy Now</a> *@
