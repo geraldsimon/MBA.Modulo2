@@ -16,21 +16,21 @@ public static class DependencyInjectionConfig
         services.AddScoped<AppDbContext>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped<ISellerRepository, SellerRepository>();
+        services.AddScoped<IProdutoRepository, ProdutoRepository>();
+        services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+        services.AddScoped<IVendedorRepository, VendedorRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
-        services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<IComentarioRepository, ComentarioRepository>();
 
         // Business
-        services.AddScoped<IProductService, ProductService>();
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<ISellerService, SellerService>();
+        services.AddScoped<IProductService, ProdutoService>();
+        services.AddScoped<ICategoryService, CategoriaService>();
+        services.AddScoped<ISellerService, VendedorService>();
         services.AddScoped<IPostService, PostService>();
-        services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<ICommentService, ComentarioService>();
 
         services.AddScoped<IImageService, ImageService>();
-        services.AddScoped<INotifier, Notifier>();
+        services.AddScoped<INotifier, Notificador>();
         services.AddScoped<IUser, AspNetUser>();
 
         return services;

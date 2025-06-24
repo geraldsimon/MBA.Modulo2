@@ -9,5 +9,5 @@ public class PostViewModel
     public string Content { get; set; }
     [JsonIgnore] 
     public Guid SellerId { get; set; }
-    public List<CommentViewModel> Comments { get; set; }
+    public List<ComentarioViewModel> Comments { get; set; }
 }

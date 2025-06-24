@@ -50,7 +50,7 @@ public static class DbMigrationHelpers
 
         var idUser = await CreateUserAsync(serviceProvider.CreateScope().ServiceProvider, _email, _password);
 
-        await context.Sellers.AddAsync(new Seller()
+        await context.Sellers.AddAsync(new Vendedor()
         {
             Id = idUser,
             Name = "Joao Melo",
@@ -59,7 +59,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Categories.AddAsync(new Category()
+        await context.Categories.AddAsync(new Categoria()
         {
             Id = Guid.NewGuid(),
             Name = "LapTop",
@@ -78,7 +78,7 @@ public static class DbMigrationHelpers
 
     private static async Task CreateProducts(AppDbContext context, Guid idUser, Guid guidCategory)
     {
-        await context.Products.AddAsync(new Product()
+        await context.Products.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "Amazon Fire Max 11 tablet",
@@ -92,7 +92,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Products.AddAsync(new Product()
+        await context.Products.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "Lenovo IdeaPad 15.6”",
@@ -106,7 +106,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Products.AddAsync(new Product()
+        await context.Products.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "HP 14\" Ultral Light Laptop",
@@ -127,16 +127,16 @@ public static class DbMigrationHelpers
             Content = "This is a sample post content.",
             SellerId = idUser,
             CreatedAt = DateTime.UtcNow,
-            Comments = new List<Comment>()
+            Comments = new List<Comentario>()
             {
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment.",
                     CreatedAt = DateTime.UtcNow,
                     SellerId = idUser
                 },
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment 2.",
@@ -153,16 +153,16 @@ public static class DbMigrationHelpers
             Content = "This another sample post content kkkk.",
             SellerId = idUser,
             CreatedAt = DateTime.UtcNow,
-            Comments = new List<Comment>()
+            Comments = new List<Comentario>()
             {
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment kkk.",
                     CreatedAt = DateTime.UtcNow,
                     SellerId = idUser
                 },
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment 2. kk",

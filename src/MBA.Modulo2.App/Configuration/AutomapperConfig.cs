@@ -9,7 +9,7 @@ public class AutomapperConfig : Profile
     public AutomapperConfig()
     {
 
-        CreateMap<Category, CategoryViewModel>().ReverseMap();
-        CreateMap<Product, ProductViewModel>().ReverseMap();
+        CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
+        CreateMap<Produto, ProductViewModel>().ReverseMap();
     }
 }
