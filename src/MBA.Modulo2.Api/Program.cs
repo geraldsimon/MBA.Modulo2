@@ -2,6 +2,16 @@ using MBA.Modulo2.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7196") // URL do seu Blazor WebAssembly
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.AddDatabaseSelector();
 
 builder.Services.AddControllers();
@@ -20,6 +30,8 @@ builder.Services.AddApiConfig();
 builder.Services.AddSwaggerConfig();
 
 var app = builder.Build();
+
+app.UseCors("AllowBlazorClient");
 
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
