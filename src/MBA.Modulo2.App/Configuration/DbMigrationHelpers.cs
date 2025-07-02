@@ -99,12 +99,12 @@ public static class DbMigrationHelpers
     private static async Task EnsureSeedAdminUserAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var _user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         var adminEmail = "Admin@gmail.com";
         var adminPassword = "Teste@123";
 
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        var adminUser = await _user.FindByEmailAsync(adminEmail);
         if (adminUser == null)
         {
             adminUser = new ApplicationUser
@@ -114,7 +114,7 @@ public static class DbMigrationHelpers
                 EmailConfirmed = true,
             };
 
-            await userManager.CreateAsync(adminUser, adminPassword);
+            await _user.CreateAsync(adminUser, adminPassword);
         }
 
         var claimsToAdd = new[]
@@ -122,12 +122,16 @@ public static class DbMigrationHelpers
             new Claim("Categorias", "VI,AD,ED,EX")
         };
 
-        var existingClaims = await userManager.GetClaimsAsync(adminUser);
+        var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var manager = await _userManager.FindByEmailAsync("Admin@gmail.com");
+        var existingClaims = await _userManager.GetClaimsAsync(adminUser);
+
+
         foreach (var claim in claimsToAdd)
         {
             if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
             {
-                await userManager.AddClaimAsync(adminUser, claim);
+                await _user.AddClaimAsync(manager, claim);
             }
         }
     }
