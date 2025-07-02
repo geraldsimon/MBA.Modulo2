@@ -47,7 +47,7 @@ public static class DbMigrationHelpers
             return;
 
         using var scope = serviceProvider.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var _user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         var _email = "joaomelo@gmail.com";
         var _password = "Teste@123";
@@ -56,17 +56,21 @@ public static class DbMigrationHelpers
 
         var claimsToAdd = new[]
         {
-            new Claim("Produtos", "VI,AD,ED,EX")
+            new Claim("Produtos", "VI"),
+            new Claim("Produtos", "AD"),
+            new Claim("Produtos", "ED"),
+            new Claim("Produtos", "EX")
         };
 
-        var user = await userManager.FindByEmailAsync(_email);
+        var user = await _user.FindByEmailAsync(_email);
+         await _user.DeleteAsync(user);
 
-        var existingClaims = await userManager.GetClaimsAsync(user);
+        var existingClaims = await _user.GetClaimsAsync(user);
         foreach (var claim in claimsToAdd)
         {
             if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
             {
-                await userManager.AddClaimAsync(user, claim);
+                await _user.AddClaimAsync(user, claim);
             }
         }
 
@@ -119,20 +123,26 @@ public static class DbMigrationHelpers
 
         var claimsToAdd = new[]
         {
-            new Claim("Categorias", "VI,AD,ED,EX")
+            new Claim("Categorias", "VI"),
+            new Claim("Categorias", "AD"),
+            new Claim("Categorias", "ED"),
+            new Claim("Categorias", "EX"),
+
+            new Claim("Produtos", "VI"),
+            new Claim("Produtos", "AD"),
+            new Claim("Produtos", "ED"),
+            new Claim("Produtos", "EX")
         };
 
         var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var manager = await _userManager.FindByEmailAsync("Admin@gmail.com");
         var existingClaims = await _userManager.GetClaimsAsync(adminUser);
 
+        var newClaims = claimsToAdd.Where(claim => !existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value));
 
-        foreach (var claim in claimsToAdd)
+        foreach (var claim in newClaims)
         {
-            if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
-            {
-                await _user.AddClaimAsync(manager, claim);
-            }
+            await _user.AddClaimAsync(manager, claim);
         }
     }
 

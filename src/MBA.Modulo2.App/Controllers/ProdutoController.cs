@@ -32,7 +32,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
     {
         var user = _userManager.GetUserId(User);
        
-        var products = _mapper.Map<IEnumerable<ProductViewModel>>(await _productService.GetAllWithCategoryBySellerAsync(Guid.Parse(user)));
+        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.GetAllWithCategoryBySellerAsync(Guid.Parse(user)));
 
         foreach (var prodct in products)
         {
@@ -42,7 +42,8 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View(products);
     }
 
-    [ClaimsAuthorize("Produtos", "VI")]
+    //[ClaimsAuthorize("Produtos", "VI")]
+    [Authorize]
     public async Task<IActionResult> Details([Required] Guid id)
     {
         if (!ModelState.IsValid)
@@ -50,7 +51,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             return BadRequest(ModelState);
         }
 
-        var product = _mapper.Map<ProductViewModel>(await _productService.GetByIdAsync(id));
+        var product = _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id));
 
         if (product == null)
         {
@@ -80,7 +81,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
     [ClaimsAuthorize("Produtos", "AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProductViewModel product, IFormFile ImageFile)
+    public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProdutoViewModel product, IFormFile ImageFile)
     {
         var _product = _mapper.Map<Produto>(product);
 
@@ -114,7 +115,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             return BadRequest(ModelState);
         }
 
-        var product = _mapper.Map<ProductViewModel>(await _productService.GetByIdAsync(id));
+        var product = _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id));
 
         if (product == null)
         {
@@ -129,7 +130,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
     [ClaimsAuthorize("Produtos", "ED")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit([Required] Guid id, [Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProductViewModel product, IFormFile ImageFile, string CurrentImage)
+    public async Task<IActionResult> Edit([Required] Guid id, [Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProdutoViewModel product, IFormFile ImageFile, string CurrentImage)
     {
         if (id != product.Id)
         {
@@ -184,7 +185,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             return BadRequest(ModelState);
         }
 
-        var product = _mapper.Map<ProductViewModel>(await _productService.GetByIdAsync(id));
+        var product = _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id));
 
         if (product == null)
         {
