@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using MBA.Modulo2.Data.Domain;
+@using MBA.Modulo2.App.Extensions
 @inject SignInManager<ApplicationUser> signInManager;
 <!doctype html>
 <html lang="en">
@@ -63,14 +64,17 @@
                                         <i class="nav-arrow bi bi-chevron-right"></i>
                                     </p>
                                 </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-area="" asp-controller="Categoria" asp-action="Index">
-                                            <i class="nav-icon bi bi-circle"></i>
-                                            Categoria
-                                        </a>
-                                    </li>
-                                </ul>
+                                @if (User.CategoriasPermissao("VI"))
+                                {
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Categoria" asp-action="Index">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                Categoria
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a class="nav-link" asp-area="" asp-controller="Produto" asp-action="Index">

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AppSemTemplate.Extensions;
+using AutoMapper;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
@@ -13,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MBA.Modulo2.App.Controllers;
 
+[Authorize]
 public class ProdutoController(UserManager<ApplicationUser> userManager,
                                IProductService productService,
                                ICategoryService categoryService,
@@ -25,6 +27,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
     private readonly IImageService _imageService = imageService;
     private readonly IMapper _mapper = mapper;
 
+    [ClaimsAuthorize("Produtos", "VI")]
     public async Task<IActionResult> Index()
     {
         var user = _userManager.GetUserId(User);
@@ -39,7 +42,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View(products);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "VI")]
     public async Task<IActionResult> Details([Required] Guid id)
     {
         if (!ModelState.IsValid)
@@ -57,7 +60,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View(product);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "AD")]
     public async Task<IActionResult> Create()
     {
         var category = await _categoryService.GetAllAsync();
@@ -74,7 +77,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View();
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProductViewModel product, IFormFile ImageFile)
@@ -103,7 +106,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View(_product);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "ED")]
     public async Task<IActionResult> Edit([Required] Guid id)
     {
         if (!ModelState.IsValid)
@@ -123,7 +126,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View(product);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "ED")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit([Required] Guid id, [Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProductViewModel product, IFormFile ImageFile, string CurrentImage)
@@ -173,7 +176,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View(_product);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "EX")]
     public async Task<IActionResult> Delete([Required] Guid id)
     {
         if (!ModelState.IsValid)
@@ -191,7 +194,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         return View("Delete", product);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Produtos", "EX")]
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)

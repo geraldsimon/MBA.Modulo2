@@ -3,6 +3,7 @@ using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 namespace MBA.Modulo2.App.Configuration;
@@ -34,6 +35,7 @@ public static class DbMigrationHelpers
         {
             await context.Database.MigrateAsync();
 
+            await EnsureSeedAdminUserAsync(serviceProvider);
 
             await EnsureSeedProducts(context, serviceProvider);
         }
@@ -44,11 +46,29 @@ public static class DbMigrationHelpers
         if (await context.Sellers.AnyAsync())
             return;
 
+        using var scope = serviceProvider.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
         var _email = "joaomelo@gmail.com";
         var _password = "Teste@123";
 
-
         var idUser = await CreateUserAsync(serviceProvider.CreateScope().ServiceProvider, _email, _password);
+
+        var claimsToAdd = new[]
+        {
+            new Claim("Produtos", "VI,AD,ED,EX")
+        };
+
+        var user = await userManager.FindByEmailAsync(_email);
+
+        var existingClaims = await userManager.GetClaimsAsync(user);
+        foreach (var claim in claimsToAdd)
+        {
+            if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
+            {
+                await userManager.AddClaimAsync(user, claim);
+            }
+        }
 
         await context.Sellers.AddAsync(new Vendedor()
         {
@@ -74,6 +94,42 @@ public static class DbMigrationHelpers
         await CreateProducts(context, idUser, guidCategory);
         await CreateProducts(context, idUser, guidCategory);
         await CreateProducts(context, idUser, guidCategory);
+    }
+
+    private static async Task EnsureSeedAdminUserAsync(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var adminEmail = "Admin@gmail.com";
+        var adminPassword = "Teste@123";
+
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+            };
+
+            await userManager.CreateAsync(adminUser, adminPassword);
+        }
+
+        var claimsToAdd = new[]
+        {
+            new Claim("Categorias", "VI,AD,ED,EX")
+        };
+
+        var existingClaims = await userManager.GetClaimsAsync(adminUser);
+        foreach (var claim in claimsToAdd)
+        {
+            if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
+            {
+                await userManager.AddClaimAsync(adminUser, claim);
+            }
+        }
     }
 
     private static async Task CreateProducts(AppDbContext context, Guid idUser, Guid guidCategory)

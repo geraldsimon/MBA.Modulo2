@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AppSemTemplate.Extensions;
+using AutoMapper;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Models;
@@ -9,12 +10,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MBA.Modulo2.App.Controllers;
 
+[Authorize]
 public class CategoriaController(ICategoryService categoryService, IMapper mapper) : Controller
 {
     private readonly ICategoryService _categoryService = categoryService;
     private readonly IMapper _mapper = mapper;
 
-    [Authorize]
+    [ClaimsAuthorize("Categorias", "VI")]
     public async Task<IActionResult> Index()
     {
         return View(_mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoryService.GetAllAsync()));
@@ -38,13 +40,13 @@ public class CategoriaController(ICategoryService categoryService, IMapper mappe
         return View(category);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Categorias", "AD")]
     public IActionResult Create()
     {
         return View();
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Categorias","AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Name,Description")] CategoriaViewModel category)
@@ -68,7 +70,7 @@ public class CategoriaController(ICategoryService categoryService, IMapper mappe
         return View(category);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Categorias", "ED")]
     public async Task<IActionResult> Edit([Required] Guid id)
     {
         if (!ModelState.IsValid)
@@ -91,7 +93,7 @@ public class CategoriaController(ICategoryService categoryService, IMapper mappe
         return View(_category);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Categorias", "ED")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] CategoriaViewModel category)
@@ -123,7 +125,7 @@ public class CategoriaController(ICategoryService categoryService, IMapper mappe
         return View(category);
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Categorias", "EX")]
     public async Task<IActionResult> Delete([Required] Guid id)
     {
         if (!ModelState.IsValid)
@@ -147,7 +149,8 @@ public class CategoriaController(ICategoryService categoryService, IMapper mappe
         return View(category);
     }
 
-    [Authorize]
+
+    [ClaimsAuthorize("Categorias", "EX")]
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed([Required] Guid id)
