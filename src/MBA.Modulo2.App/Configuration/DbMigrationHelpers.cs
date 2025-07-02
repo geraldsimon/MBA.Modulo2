@@ -3,6 +3,7 @@ using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 namespace MBA.Modulo2.App.Configuration;
@@ -34,6 +35,7 @@ public static class DbMigrationHelpers
         {
             await context.Database.MigrateAsync();
 
+            await EnsureSeedAdminUserAsync(serviceProvider);
 
             await EnsureSeedProducts(context, serviceProvider);
         }
@@ -44,13 +46,35 @@ public static class DbMigrationHelpers
         if (await context.Sellers.AnyAsync())
             return;
 
+        using var scope = serviceProvider.CreateScope();
+        var _user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
         var _email = "joaomelo@gmail.com";
         var _password = "Teste@123";
 
-
         var idUser = await CreateUserAsync(serviceProvider.CreateScope().ServiceProvider, _email, _password);
 
-        await context.Sellers.AddAsync(new Seller()
+        var claimsToAdd = new[]
+        {
+            new Claim("Produtos", "VI"),
+            new Claim("Produtos", "AD"),
+            new Claim("Produtos", "ED"),
+            new Claim("Produtos", "EX")
+        };
+
+        var user = await _user.FindByEmailAsync(_email);
+         await _user.DeleteAsync(user);
+
+        var existingClaims = await _user.GetClaimsAsync(user);
+        foreach (var claim in claimsToAdd)
+        {
+            if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
+            {
+                await _user.AddClaimAsync(user, claim);
+            }
+        }
+
+        await context.Sellers.AddAsync(new Vendedor()
         {
             Id = idUser,
             Name = "Joao Melo",
@@ -59,7 +83,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Categories.AddAsync(new Category()
+        await context.Categories.AddAsync(new Categoria()
         {
             Id = Guid.NewGuid(),
             Name = "LapTop",
@@ -76,9 +100,55 @@ public static class DbMigrationHelpers
         await CreateProducts(context, idUser, guidCategory);
     }
 
+    private static async Task EnsureSeedAdminUserAsync(IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var _user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var adminEmail = "Admin@gmail.com";
+        var adminPassword = "Teste@123";
+
+        var adminUser = await _user.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+            };
+
+            await _user.CreateAsync(adminUser, adminPassword);
+        }
+
+        var claimsToAdd = new[]
+        {
+            new Claim("Categorias", "VI"),
+            new Claim("Categorias", "AD"),
+            new Claim("Categorias", "ED"),
+            new Claim("Categorias", "EX"),
+
+            new Claim("Produtos", "VI"),
+            new Claim("Produtos", "AD"),
+            new Claim("Produtos", "ED"),
+            new Claim("Produtos", "EX")
+        };
+
+        var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var manager = await _userManager.FindByEmailAsync("Admin@gmail.com");
+        var existingClaims = await _userManager.GetClaimsAsync(adminUser);
+
+        var newClaims = claimsToAdd.Where(claim => !existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value));
+
+        foreach (var claim in newClaims)
+        {
+            await _user.AddClaimAsync(manager, claim);
+        }
+    }
+
     private static async Task CreateProducts(AppDbContext context, Guid idUser, Guid guidCategory)
     {
-        await context.Products.AddAsync(new Product()
+        await context.Products.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "Amazon Fire Max 11 tablet",
@@ -92,7 +162,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Products.AddAsync(new Product()
+        await context.Products.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "Lenovo IdeaPad 15.6”",
@@ -106,7 +176,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Products.AddAsync(new Product()
+        await context.Products.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "HP 14\" Ultral Light Laptop",
@@ -127,16 +197,16 @@ public static class DbMigrationHelpers
             Content = "This is a sample post content.",
             SellerId = idUser,
             CreatedAt = DateTime.UtcNow,
-            Comments = new List<Comment>()
+            Comments = new List<Comentario>()
             {
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment.",
                     CreatedAt = DateTime.UtcNow,
                     SellerId = idUser
                 },
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment 2.",
@@ -153,16 +223,16 @@ public static class DbMigrationHelpers
             Content = "This another sample post content kkkk.",
             SellerId = idUser,
             CreatedAt = DateTime.UtcNow,
-            Comments = new List<Comment>()
+            Comments = new List<Comentario>()
             {
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment kkk.",
                     CreatedAt = DateTime.UtcNow,
                     SellerId = idUser
                 },
-                new Comment()
+                new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment 2. kk",

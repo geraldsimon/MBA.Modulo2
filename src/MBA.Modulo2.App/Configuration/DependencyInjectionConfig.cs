@@ -11,14 +11,14 @@ public static class DependencyInjectionConfig
     {
         // Data
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped<ISellerRepository, SellerRepository>();
+        services.AddScoped<IProdutoRepository, ProdutoRepository>();
+        services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+        services.AddScoped<IVendedorRepository, VendedorRepository>();
 
         // Business
-        services.AddScoped<ISellerService, SellerService>();
-        services.AddScoped<IProductService, ProductService>();
-        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ISellerService, VendedorService>();
+        services.AddScoped<IProductService, ProdutoService>();
+        services.AddScoped<ICategoryService, CategoriaService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IUser, AspNetUser>();
 

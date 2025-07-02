@@ -4,6 +4,6 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface ISellerService
     {
-        Task AddAsync(Seller seller);
+        Task AddAsync(Vendedor seller);
     }
 }

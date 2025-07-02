@@ -4,15 +4,15 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetAllAsync();
-        Task<IEnumerable<Product>> GetAllByCategory(Guid id);
-        Task<IEnumerable<Product>> GetAllWithCategoryAsync();
-        Task<IEnumerable<Product>> GetAllWithCategoryBySellerAsync(Guid id);
-        Task<Product> GetByIdAsync(Guid id, Guid sellerId);
-        Task<Product> GetByIdAsync(Guid? id);
+        Task<IEnumerable<Produto>> GetAllAsync();
+        Task<IEnumerable<Produto>> GetAllByCategory(Guid id);
+        Task<IEnumerable<Produto>> GetAllWithCategoryAsync();
+        Task<IEnumerable<Produto>> GetAllWithCategoryBySellerAsync(Guid id);
+        Task<Produto> GetByIdAsync(Guid id, Guid sellerId);
+        Task<Produto> GetByIdAsync(Guid? id);
         Task<bool> GetAnyAsync(Guid id);
-        Task<bool> AddAsync(Product product);
+        Task<bool> AddAsync(Produto product);
         Task<bool> DeleteAsync(Guid id);
-        Task UpdateAsync(Product product);
+        Task UpdateAsync(Produto product);
     }
 }

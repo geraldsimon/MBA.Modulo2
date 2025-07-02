@@ -1,0 +1,52 @@
+﻿@page "/produto"
+@using MBA.Modulo2.Spa.ExternalApi
+@using MBA.Modulo2.Spa.ViewModels
+@inject ProdutoHttpClient ProdutoApi
+<PageTitle>Lista de Produtos</PageTitle>
+
+<h3>Lista de Produtos</h3>
+
+@if (products == null)
+{
+    <p>Carregando produtos...</p>
+}
+else if (products.Count == 0)
+{
+    <p>Nenhum produto disponível.</p>
+}
+else
+{
+
+    var imagePath = $"https://localhost:7009/images/";
+    <div class="row">
+        @foreach (var product in products)
+        {
+            <div class="card m-2" style="width: 18rem;">
+                <img src="@imagePath+@product.Image" class="card-img-top" alt="@product.Name" />
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Description</p>
+                    <p><strong>Preço:</strong> @product.Price.ToString("C")</p>
+                    <p><strong>Estoque:</strong> @product.Stock</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<ProductLoggedOutViewModel> products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            products = await ProdutoApi.GetProductsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
+            products = new List<ProductLoggedOutViewModel>();
+        }
+    }
+}

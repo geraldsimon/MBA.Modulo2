@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBA.Modulo2.Business", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBA.Modulo2.Data", "src\MBA.Modulo2.Data\MBA.Modulo2.Data.csproj", "{999D0C10-59BA-9DDB-9696-5EDCB419C5A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBA.Modulo2.Spa", "src\MBA.Modulo2.SPA\MBA.Modulo2.Spa.csproj", "{1FCA0904-F4AC-44D8-8BBC-DDB0AA3B7CF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{999D0C10-59BA-9DDB-9696-5EDCB419C5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{999D0C10-59BA-9DDB-9696-5EDCB419C5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{999D0C10-59BA-9DDB-9696-5EDCB419C5A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FCA0904-F4AC-44D8-8BBC-DDB0AA3B7CF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FCA0904-F4AC-44D8-8BBC-DDB0AA3B7CF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FCA0904-F4AC-44D8-8BBC-DDB0AA3B7CF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FCA0904-F4AC-44D8-8BBC-DDB0AA3B7CF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

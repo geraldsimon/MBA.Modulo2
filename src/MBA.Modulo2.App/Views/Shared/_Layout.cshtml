@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using MBA.Modulo2.Data.Domain;
+@using MBA.Modulo2.App.Extensions
 @inject SignInManager<ApplicationUser> signInManager;
 <!doctype html>
 <html lang="en">
@@ -30,6 +31,10 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                      @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Vitrine">Vitrine de Produtos</a></li>
+                    }
                     <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -63,19 +68,22 @@
                                         <i class="nav-arrow bi bi-chevron-right"></i>
                                     </p>
                                 </a>
+                                @if (User.CategoriasPermissao("VI"))
+                                {
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Categoria" asp-action="Index">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                Categoria
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a class="nav-link" asp-area="" asp-controller="Category" asp-action="Index">
+                                        <a class="nav-link" asp-area="" asp-controller="Produto" asp-action="Index">
                                             <i class="nav-icon bi bi-circle"></i>
-                                            Category
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Index">
-                                            <i class="nav-icon bi bi-circle"></i>
-                                            Product
+                                            Produto
                                         </a>
                                     </li>
                                 </ul>
