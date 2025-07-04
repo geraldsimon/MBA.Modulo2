@@ -56,7 +56,8 @@ namespace MBA.Modulo2.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(1000)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,7 +86,8 @@ namespace MBA.Modulo2.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,7 +232,8 @@ namespace MBA.Modulo2.Data.Migrations
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

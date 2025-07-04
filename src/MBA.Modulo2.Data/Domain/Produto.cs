@@ -18,6 +18,7 @@ public class Produto
     public int Stock { get; set; }
 
     public string Image { get; set; }
+    public bool Active { get; set; }
 
     public Guid CategoryId { get; set; }
     public Categoria Category { get; set; } = null!;

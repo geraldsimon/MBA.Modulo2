@@ -11,12 +11,12 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
-public class ProductController(IProductService productService,
+public class ProductController(IProdutoService productService,
                                 IImageService imageService,
                                 IMapper mapper,
                                 INotifier notifier) : MainController(notifier)
 {
-    private readonly IProductService _productService = productService;
+    private readonly IProdutoService _productService = productService;
     private readonly IImageService _imageService = imageService;
     private readonly IMapper _mapper = mapper;
 

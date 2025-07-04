@@ -63,15 +63,15 @@ public static class DbMigrationHelpers
         };
 
         var user = await _user.FindByEmailAsync(_email);
-         await _user.DeleteAsync(user);
 
         var existingClaims = await _user.GetClaimsAsync(user);
-        foreach (var claim in claimsToAdd)
+
+
+        var newClaims = claimsToAdd.Where(claim => !existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value));
+
+        foreach (var claim in newClaims)
         {
-            if (!existingClaims.Any(c => c.Type == claim.Type && c.Value == claim.Value))
-            {
-                await _user.AddClaimAsync(user, claim);
-            }
+            await _user.AddClaimAsync(user, claim);
         }
 
         await context.Sellers.AddAsync(new Vendedor()
@@ -128,10 +128,13 @@ public static class DbMigrationHelpers
             new Claim("Categorias", "ED"),
             new Claim("Categorias", "EX"),
 
-            new Claim("Produtos", "VI"),
-            new Claim("Produtos", "AD"),
-            new Claim("Produtos", "ED"),
-            new Claim("Produtos", "EX")
+            new Claim("Vendedores", "VI"),
+            new Claim("Vendedores", "AD"),
+            new Claim("Vendedores", "ED"),
+            new Claim("Vendedores", "EX"),
+
+            new Claim("Produtos", "MVI"),
+            new Claim("Produtos", "MED"),
         };
 
         var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -157,7 +160,8 @@ public static class DbMigrationHelpers
             SellerId = idUser,
             Stock = 10,
             Image = "71troH2aUJL._AC_SX679_.jpg",
-            CategoryId = guidCategory
+            CategoryId = guidCategory,
+            Active = true
         });
 
         await context.SaveChangesAsync();
@@ -171,7 +175,8 @@ public static class DbMigrationHelpers
             SellerId = idUser,
             Stock = 10,
             Image = "71S+P-5tdpL._AC_SL1500_.jpg",
-            CategoryId = guidCategory
+            CategoryId = guidCategory,
+            Active = true
         });
 
         await context.SaveChangesAsync();
@@ -185,7 +190,8 @@ public static class DbMigrationHelpers
             SellerId = idUser,
             Stock = 10,
             Image = "81divYKpeTL._AC_SL1500_.jpg",
-            CategoryId = guidCategory
+            CategoryId = guidCategory,
+            Active = true
         });
 
         await context.SaveChangesAsync();

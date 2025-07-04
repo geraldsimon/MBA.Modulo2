@@ -7,9 +7,9 @@ using System.Diagnostics;
 
 namespace MBA.Modulo2.App.Controllers;
 
-public class HomeController(IProductService productService, IMapper mapper) : Controller
+public class HomeController(IProdutoService productService, IMapper mapper) : Controller
 {
-    private readonly IProductService _productService = productService;
+    private readonly IProdutoService _productService = productService;
     private readonly IMapper _mapper = mapper;
 
      public IActionResult Index()

@@ -1,8 +1,10 @@
-﻿@using MBA.Modulo2.App.ViewModels
+﻿@using MBA.Modulo2.App.Extensions
+@using MBA.Modulo2.App.ViewModels
 @model IEnumerable<ProdutoViewModel>
 
 @{
     ViewData["Title"] = "Index";
+    char pipe = (char)124;
 }
 <br />
 <br />
@@ -14,7 +16,10 @@
             <div class="card-header">
                 <div class="form-group" style="display: flex; justify-content: space-between;">
                     <div><h3>Products</h3></div>
-                    <div><a class="btn btn-primary" asp-action="Create">Create New</a></div>
+                    @if (User.ProdutosPermissao("VI"))
+                    {
+                        <div><a class="btn btn-primary" asp-action="Create">Create New</a></div>
+                    }
                 </div>
             </div>
             <div class="card-body">
@@ -33,6 +38,7 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
+
                             <tr class="align-middle">
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
@@ -41,9 +47,20 @@
                                 <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
                                 <td><img src="~/images/@Html.DisplayFor(model => item.Image)" alt="Product Image" style="width: 150px; height: auto;" /></td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    @if (User.ProdutosPermissao("VI"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        @pipe
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                        @pipe
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    }
+                                    <form asp-action="ToggleStatus" method="post">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm @(item.Active ? "btn-danger" : "btn-success")">
+                                            @(item.Active ? "Desativar" : "Ativar")
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }
@@ -65,4 +82,11 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+@functions {
+    public bool HasClaim(string type, string value)
+    {
+        var claim = User.Claims.FirstOrDefault(c => c.Type == type);
+        return claim != null && claim.Value.Split(',').Contains(value);
+    }
+}

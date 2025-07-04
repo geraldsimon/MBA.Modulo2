@@ -4,7 +4,7 @@ using MBA.Modulo2.Data.Models;
 
 namespace MBA.Modulo2.Business.Services.Implamentation;
 
-public class ProdutoService(IProdutoRepository productRepository) : IProductService
+public class ProdutoService(IProdutoRepository productRepository) : IProdutoService
 {
     private readonly IProdutoRepository _productRepository = productRepository;
 

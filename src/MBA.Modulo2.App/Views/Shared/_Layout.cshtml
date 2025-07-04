@@ -31,7 +31,7 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                      @if (signInManager.IsSignedIn(User))
+                    @if (signInManager.IsSignedIn(User))
                     {
                         <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Vitrine">Vitrine de Produtos</a></li>
                     }
@@ -68,6 +68,17 @@
                                         <i class="nav-arrow bi bi-chevron-right"></i>
                                     </p>
                                 </a>
+                                @if (User.VendedoresPermissao("VI"))
+                                {
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Vendedor" asp-action="Index">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                Vendedor
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
                                 @if (User.CategoriasPermissao("VI"))
                                 {
                                     <ul class="nav nav-treeview">
@@ -79,14 +90,17 @@
                                         </li>
                                     </ul>
                                 }
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-area="" asp-controller="Produto" asp-action="Index">
-                                            <i class="nav-icon bi bi-circle"></i>
-                                            Produto
-                                        </a>
-                                    </li>
-                                </ul>
+                                @if (User.ProdutosPermissao("VI"))
+                                {
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Produto" asp-action="Index">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                Produto
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
                             </li>
                         }
                     </ul>
