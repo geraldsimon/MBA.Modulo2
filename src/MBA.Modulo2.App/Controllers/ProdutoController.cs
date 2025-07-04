@@ -16,23 +16,33 @@ namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
 public class ProdutoController(UserManager<ApplicationUser> userManager,
-                               IProductService productService,
+                               IProdutoService productService,
                                ICategoryService categoryService,
                                IImageService imageService,
                                IMapper mapper) : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private readonly IProductService _productService = productService;
+    private readonly IProdutoService _productService = productService;
     private readonly ICategoryService _categoryService = categoryService;
     private readonly IImageService _imageService = imageService;
     private readonly IMapper _mapper = mapper;
 
-    [ClaimsAuthorize("Produtos", "VI")]
-    public async Task<IActionResult> Index()
+    //[ClaimsAuthorize("Produtos", "VI,MVI")]
+    public async Task<IActionResult> Index(string Id)
     {
-        var user = _userManager.GetUserId(User);
-       
-        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.GetAllWithCategoryBySellerAsync(Guid.Parse(user)));
+        if (String.IsNullOrEmpty(Id))
+        {
+            Id = TempData["UserID"] as string ?? TempData["UserID"]?.ToString();
+
+            if (String.IsNullOrEmpty(Id))
+                Id = _userManager.GetUserId(User);
+            else
+                TempData["UserID"] = Id;
+        }
+        else
+            TempData["UserID"] = Id;
+
+        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.GetAllWithCategoryBySellerAsync(Guid.Parse(Id)));
 
         foreach (var prodct in products)
         {
@@ -40,6 +50,24 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         }
 
         return View(products);
+    }
+
+
+    public async Task<IActionResult> ToggleStatus(Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var product = await _productService.GetByIdAsync(id);
+
+        if (product == null) return NotFound();
+
+        product.Active = !product.Active;
+        await _productService.UpdateAsync(product);
+
+        return RedirectToAction("Index"); // ou o nome da sua lista
     }
 
     //[ClaimsAuthorize("Produtos", "VI")]
@@ -93,8 +121,8 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
                 var fileName = $"{imgPrefixo}{ImageFile.FileName}".Trim();
                 await _imageService.SaveImageAsync(ImageFile, fileName);
                 _product.Image = fileName;
+                _product.Active = true;
             }
-
             product.Id = Guid.NewGuid();
             await _productService.AddAsync(_product);
             return RedirectToAction(nameof(Index));

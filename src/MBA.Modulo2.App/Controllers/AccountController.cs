@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MBA.Modulo2.App.Controllers;
 
-public class AccountController(ISellerService sellerService,
+public class AccountController(IVendedorService sellerService,
                          SignInManager<ApplicationUser> signInManager,
                          UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly ISellerService _sellerService = sellerService;
+    private readonly IVendedorService _sellerService = sellerService;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 

@@ -25,7 +25,7 @@ public class ProdutoViewModel
     public int Stock { get; set; }
 
     public string Image { get; set; }
-
+    public bool Active { get; set; }
 
     [JsonIgnore]
     public IFormFile ImageFile { get; set; }

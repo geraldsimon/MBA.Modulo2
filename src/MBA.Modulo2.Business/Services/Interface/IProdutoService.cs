@@ -2,7 +2,7 @@
 
 namespace MBA.Modulo2.Business.Services.Interface
 {
-    public interface IProductService
+    public interface IProdutoService
     {
         Task<IEnumerable<Produto>> GetAllAsync();
         Task<IEnumerable<Produto>> GetAllByCategory(Guid id);

@@ -10,5 +10,20 @@ namespace MBA.Modulo2.App.Extensions
             var permissoes = claim?.Split(',') ?? Array.Empty<string>();
             return permissoes.Contains(requiredPermission);
         }
+        public static bool VendedoresPermissao(this ClaimsPrincipal user, string requiredPermission)
+        {
+            var claim = user.Claims.FirstOrDefault(c => c.Type == "Vendedores")?.Value;
+            var permissoes = claim?.Split(',') ?? Array.Empty<string>();
+            return permissoes.Contains(requiredPermission);
+        }
+
+
+        public static bool ProdutosPermissao(this ClaimsPrincipal user, string requiredPermission)
+        {
+            var claim = user.Claims.FirstOrDefault(c => c.Type == "Produtos")?.Value;
+            var permissoes = claim?.Split(',') ?? Array.Empty<string>();
+            return permissoes.Contains(requiredPermission);
+        }
+
     }
 }
