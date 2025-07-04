@@ -10,6 +10,6 @@ public class AutomapperConfig : Profile
     {
 
         CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
-        CreateMap<Produto, ProductViewModel>().ReverseMap();
+        CreateMap<Produto, ProdutoViewModel>().ReverseMap();
     }
 }

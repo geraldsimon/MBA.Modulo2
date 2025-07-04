@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace MBA.Modulo2.App.ViewModels;
 
-public class ProductViewModel
+public class ProdutoViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     

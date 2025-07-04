@@ -12,5 +12,5 @@ public class CategoriaViewModel
     [Required(ErrorMessage = "The Description field is mandatory.")]
     public string Description { get; set; }
 
-    public ICollection<ProductViewModel> Products { get; set; } = [];
+    public ICollection<ProdutoViewModel> Products { get; set; } = [];
 }
