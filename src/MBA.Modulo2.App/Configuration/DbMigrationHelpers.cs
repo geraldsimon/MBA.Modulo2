@@ -132,9 +132,10 @@ public static class DbMigrationHelpers
             new Claim("Vendedores", "AD"),
             new Claim("Vendedores", "ED"),
             new Claim("Vendedores", "EX"),
-
+            
             new Claim("Produtos", "MVI"),
             new Claim("Produtos", "MED"),
+            new Claim("Produtos", "TS"),
         };
 
         var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
