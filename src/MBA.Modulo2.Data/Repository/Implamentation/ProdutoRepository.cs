@@ -55,4 +55,26 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
         return await _context.Products.AnyAsync(e => e.Id == id);
     }
+
+    public async Task<Produto> DetalheProduto(Guid? id)
+    {
+        var produto = await _context.Products
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .Include(p => p.Seller)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (produto != null)
+        {
+            // Carrega os produtos do vendedor separadamente
+            produto.Seller.Products = await _context.Products
+                .AsNoTracking()
+                .Where(p => p.SellerId == produto.SellerId && p.Id != produto.Id)
+                .ToListAsync();
+        }
+
+        return produto;
+    }
+
+
 }

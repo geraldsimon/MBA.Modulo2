@@ -60,4 +60,11 @@ public class ProdutoService(IProdutoRepository productRepository) : IProdutoServ
     {
         await _productRepository.UpdateAsync(product);
     }
+
+
+    public async Task<Produto> DetalheProduto(Guid? id)
+    {
+        return await _productRepository.DetalheProduto(id);
+    }
+
 }
