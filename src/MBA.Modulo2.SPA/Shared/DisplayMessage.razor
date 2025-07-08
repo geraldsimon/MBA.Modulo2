@@ -1,0 +1,13 @@
+﻿<div class="error-message btn alert-danger">
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+    
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+}
