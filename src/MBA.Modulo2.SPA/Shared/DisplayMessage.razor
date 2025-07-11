@@ -1,11 +1,14 @@
-﻿<div class="error-message btn alert-danger">
+﻿@page "/notauthorized"
+
+<div class="error-message btn-btn alert-danger">
+    <h1>tESTE</h1>
 
     @if (!string.IsNullOrEmpty(ErrorMessage))
     {
-    
+        <h3>@ErrorMessage</h3>
     }
-</div>
 
+</div>
 
 @code {
     [Parameter]
