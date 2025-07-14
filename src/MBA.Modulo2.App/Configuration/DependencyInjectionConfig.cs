@@ -24,7 +24,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<ICategoryService, CategoriaService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IUser, AspNetUser>();
-        services.AddScoped<ICustomerService, ClienteService>();
+        services.AddScoped<IClienteService, ClienteService>();
 
 
         return services;

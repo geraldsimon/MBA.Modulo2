@@ -31,7 +31,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IVendedorService, VendedorService>();
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<ICommentService, ComentarioService>();
-        services.AddScoped<ICustomerService, ClienteService>();
+        services.AddScoped<IClienteService, ClienteService>();
 
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<INotifier, Notificador>();

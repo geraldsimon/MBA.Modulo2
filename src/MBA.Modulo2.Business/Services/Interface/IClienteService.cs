@@ -2,7 +2,7 @@
 
 namespace MBA.Modulo2.Business.Services.Interface
 {
-    public interface ICustomerService
+    public interface IClienteService
     {
         Task AddAsync(Cliente customer);
     }
