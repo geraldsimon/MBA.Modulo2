@@ -27,7 +27,12 @@
                 @bind-Value="loginModel.Password" />
                 <ValidationMessage For="@(() => loginModel.Password)" />
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Enviar</button>
+            <button type="submit" class="btn btn-primary mt-2">Entrar</button>
+
+            <p class="mt-3 text-center">
+                Não tem uma conta? <NavLink href="/cadastro">Cadastre-se aqui</NavLink>
+            </p>
+
         </EditForm>
     </div>
 </div>

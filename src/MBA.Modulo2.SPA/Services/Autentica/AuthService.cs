@@ -66,6 +66,52 @@ namespace MBA.Modulo2.Spa.Services.Autentica
                 throw;
             } 
         }
+        public async Task<LoginResult> novocadastro(CadastroUserModel cadastroUserModel)
+        {
+            try
+            {
+                var httpClient = _httpClientFactory.CreateClient("ApiSpa");
+                var loginJson = JsonSerializer.Serialize(cadastroUserModel);
+                var requestContent = new StringContent(loginJson, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync("api/Auth/newAccount", requestContent);
+
+                var json = await response.Content.ReadAsStringAsync();
+
+                var loginResult = JsonSerializer.Deserialize<LoginResult>(
+                    json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                );
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return loginResult;
+                }
+
+                if (loginResult is not null && loginResult.Success)
+                {
+                    var token = loginResult.Data.AccessToken;
+                    var expiration = DateTime.UtcNow.AddSeconds(loginResult.Data.ExpiresIn);
+
+                    await _localStorage.SetItemAsync("authToken", token);
+                    await _localStorage.SetItemAsync("tokenExpiration", expiration);
+                }
+
+                ((ApiAuthenticationStateProvider)_authenticationStateProvider)
+                                    .MarkUserAsAuthenticated(cadastroUserModel.Email);
+
+                httpClient.DefaultRequestHeaders.Authorization =
+                            new AuthenticationHeaderValue("bearer",
+                                                             loginResult.Data.AccessToken);
+
+                return loginResult;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task Logout()
         {
