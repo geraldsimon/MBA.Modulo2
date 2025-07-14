@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -50,16 +51,11 @@ namespace MBA.Modulo2.Spa.Services.Autentica
         private bool TokenExpirou(string dataToken)
         {
             DateTime dataAtualUtc = DateTime.UtcNow;
-            DateTime dataExpiracao =
-                DateTime.ParseExact(dataToken, "yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'", null,
-                System.Globalization.DateTimeStyles.RoundtripKind);
+            DateTime dataExpiracao = DateTime.Parse(dataToken, null, System.Globalization.DateTimeStyles.RoundtripKind);
 
-            if (dataExpiracao < dataAtualUtc)
-            {
-                return true;
-            }
-            return false;
+            return dataExpiracao < dataAtualUtc;
         }
+
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var claims = new List<Claim>();

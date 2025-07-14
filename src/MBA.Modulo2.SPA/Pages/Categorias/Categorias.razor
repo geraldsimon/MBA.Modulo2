@@ -6,7 +6,7 @@
 @if(categorias is not null)
 {
     <table class="table table-striped">
-        <thead><tr><th scope="col">Id</th><th scope="col">Nome</th>><th scope="col">Descrição</th></tr></thead>
+        <thead><tr><th scope="col">Id</th><th scope="col">Nome</th><th scope="col">Descrição</th></tr></thead>
         <tbody>
             @foreach(var categoria in categorias)
             {
@@ -42,7 +42,7 @@ else
         }
         catch (UnauthorizedAccessException)
         {
-            navigationManager.NavigateTo("notauthorized");
+            navigationManager.NavigateTo($"/NotAuthorizedMessage?msg={Uri.EscapeDataString("Usuário não autorizado")}");
         }
     }
 }
