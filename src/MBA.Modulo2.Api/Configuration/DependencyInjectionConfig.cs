@@ -1,9 +1,11 @@
 ﻿using MBA.Modulo2.Business.Notifications;
 using MBA.Modulo2.Business.Services.Implamentation;
+using MBA.Modulo2.Business.Services.Implementacao;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data;
 using MBA.Modulo2.Data.Interface;
 using MBA.Modulo2.Data.Repository.Implamentation;
+using MBA.Modulo2.Data.Repository.Interface;
 
 
 namespace MBA.Modulo2.Api.Configuration;
@@ -21,6 +23,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IVendedorRepository, VendedorRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IComentarioRepository, ComentarioRepository>();
+        services.AddScoped<IClienteRepository, ClienteRepository>();
 
         // Business
         services.AddScoped<IProdutoService, ProdutoService>();
@@ -28,6 +31,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IVendedorService, VendedorService>();
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<ICommentService, ComentarioService>();
+        services.AddScoped<ICustomerService, ClienteService>();
 
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<INotifier, Notificador>();

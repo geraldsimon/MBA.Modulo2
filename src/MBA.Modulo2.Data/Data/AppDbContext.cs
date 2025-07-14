@@ -19,6 +19,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<Produto> Products { get; set; } = null!;
     public DbSet<Post> Posts { get; set; } = null!;
     public DbSet<Comentario> Comments { get; set; } = null!;
+    public DbSet<Cliente> Customers { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
