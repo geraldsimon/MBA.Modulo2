@@ -10,5 +10,7 @@ namespace MBA.Modulo2.Data.Interface
         Task<Produto> GetByIdAsync(Guid? id);
         Task<Produto> GetByIdAsync(Guid? id, Guid? sellerId);
         Task<bool> GetAnyAsync(Guid id);
+
+        Task<Produto> DetalheProduto(Guid? id);
     }
 }

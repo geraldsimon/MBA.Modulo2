@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Models;
@@ -64,6 +65,21 @@ public class ProductController(IProdutoService productService,
         product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
 
         return product;
+    }
+
+    [HttpGet("{id:guid}/detalhes")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetByID2(Guid id)
+    {
+        var product = await DetalheProduto(id);
+
+        if (product == null)
+        {
+            ReportError("Only the user who created it can delete the record.");
+            return CustomResponse();
+        }
+
+        return Ok(product); // sem conversão para ProdutoViewModel
     }
 
     [HttpPost]
@@ -146,6 +162,11 @@ public class ProductController(IProdutoService productService,
     private async Task<ProdutoViewModel> GetProductByID(Guid id, Guid sellerId)
     {
         return _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id, sellerId));
+    }
+
+    private async Task<ProdutoDetalhesViewModel> DetalheProduto(Guid id)
+    {
+        return _mapper.Map<ProdutoDetalhesViewModel>(await _productService.DetalheProduto(id));
     }
 
     private async Task<string> UploadFile(string arquivo, string imgNome)

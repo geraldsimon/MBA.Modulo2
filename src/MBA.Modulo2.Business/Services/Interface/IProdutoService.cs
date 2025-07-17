@@ -10,6 +10,7 @@ namespace MBA.Modulo2.Business.Services.Interface
         Task<IEnumerable<Produto>> GetAllWithCategoryBySellerAsync(Guid id);
         Task<Produto> GetByIdAsync(Guid id, Guid sellerId);
         Task<Produto> GetByIdAsync(Guid? id);
+        Task<Produto> DetalheProduto(Guid? id);
         Task<bool> GetAnyAsync(Guid id);
         Task<bool> AddAsync(Produto product);
         Task<bool> DeleteAsync(Guid id);

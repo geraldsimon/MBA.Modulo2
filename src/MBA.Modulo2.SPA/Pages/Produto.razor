@@ -22,12 +22,14 @@ else
         @foreach (var product in products)
         {
             <div class="card m-2" style="width: 18rem;">
-                <img src="@imagePath+@product.Image" class="card-img-top" alt="@product.Name" />
+                <img src="@($"{imagePath}{product.Image}")" class="card-img-top" alt="@product.Name" />
+
                 <div class="card-body">
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">@product.Description</p>
                     <p><strong>Preço:</strong> @product.Price.ToString("C")</p>
                     <p><strong>Estoque:</strong> @product.Stock</p>
+                    <a href="/produtoDetail/@product.Id">Ver Detalhes</a>
                 </div>
             </div>
         }
