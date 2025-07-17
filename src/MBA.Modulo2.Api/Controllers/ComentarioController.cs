@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
@@ -18,7 +19,7 @@ public class ComentarioController(ICommentService commentService,
     private readonly IPostService _postService = postService;
     private readonly IMapper _mapper = mapper;
 
-    [HttpGet]
+    [HttpGet]    
     public async Task<IActionResult> GetAll()
     {
         var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
