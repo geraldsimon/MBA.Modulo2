@@ -16,4 +16,8 @@ public class AppDbContextBuild : IdentityDbContext<ApplicationUser, IdentityRole
     public DbSet<Produto> Products { get; set; } = null!;
     public DbSet<Post> Posts { get; set; } = null!;
     public DbSet<Comentario> Comments { get; set; } = null!;
+
+    public DbSet<Cliente> Clientes { get; set; } = null!;
+
+    public DbSet<Favorito> Favoritos { get; set; } = null!;
 }
