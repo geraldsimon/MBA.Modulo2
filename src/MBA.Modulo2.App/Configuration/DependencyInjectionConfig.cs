@@ -1,4 +1,5 @@
-﻿using MBA.Modulo2.Business.Services.Implamentation;
+﻿using MBA.Modulo2.Business.Notifications;
+using MBA.Modulo2.Business.Services.Implamentation;
 using MBA.Modulo2.Business.Services.Implementacao;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Interface;
@@ -17,6 +18,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<ICategoriaRepository, CategoriaRepository>();
         services.AddScoped<IVendedorRepository, VendedorRepository>();
         services.AddScoped<IClienteRepository, ClienteRepository>();
+        services.AddScoped<IDenunciaRepository, DenunciaRepository>();
 
         // Business
         services.AddScoped<IVendedorService, VendedorService>();
@@ -25,7 +27,8 @@ public static class DependencyInjectionConfig
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IUser, AspNetUser>();
         services.AddScoped<IClienteService, ClienteService>();
-
+        services.AddScoped<IDenunciaService, DenunciaService>();
+        services.AddScoped<INotifier, Notificador>();
 
         return services;
     }
