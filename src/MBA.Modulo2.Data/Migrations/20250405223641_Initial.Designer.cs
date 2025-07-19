@@ -21,7 +21,7 @@ namespace MBA.Modulo2.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProdutoVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -160,7 +160,7 @@ namespace MBA.Modulo2.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Product", b =>
+            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Produto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -358,7 +358,7 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Product", b =>
+            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Produto", b =>
                 {
                     b.HasOne("MBA.Modulo2.Data.Domain.Category", "Category")
                         .WithMany("Produtos")

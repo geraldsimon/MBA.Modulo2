@@ -12,7 +12,7 @@ namespace MBA.Modulo2.Api.Configuration
         {
             CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
             CreateMap<Produto, ProdutoViewModel>().ReverseMap();
-            CreateMap<Produto, ProductLoggedOutViewModel>().ReverseMap();
+            CreateMap<Produto, ProdutoLoggedOutViewModel>().ReverseMap();
             CreateMap<Post, PostViewModel>().ReverseMap();
             CreateMap<Comentario, ComentarioViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();

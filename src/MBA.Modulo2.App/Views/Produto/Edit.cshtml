@@ -12,7 +12,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card mb-6">
-            <div class="card-header"><div class="card-title">Edit Product</div></div>
+            <div class="card-header"><div class="card-title">Edit Produto</div></div>
             <div class="card-body">
                 <form asp-action="Edit" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -51,7 +51,7 @@
                         @if (!string.IsNullOrEmpty(Model.Image))
                         {
                             <br />
-                            <img src="~/images/@Url.Content(Model.Image)" alt="Product Image" width="150" />
+                            <img src="~/images/@Url.Content(Model.Image)" alt="Produto Image" width="150" />
                         }
                     </div>
 

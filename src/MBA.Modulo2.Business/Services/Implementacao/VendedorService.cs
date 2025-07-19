@@ -13,9 +13,9 @@ public class VendedorService(IVendedorRepository sellerRepository) : IVendedorSe
         await _vendedorRepository.AddAsync(seller);
     }
 
-    public async Task<Vendedor> GetByByIdWithProductAsync(Guid id)
+    public async Task<Vendedor> GetByByIdWithProdutoAsync(Guid id)
     {
-        return await _vendedorRepository.GetByByIdWithProductAsync(id);
+        return await _vendedorRepository.GetByByIdWithProdutoAsync(id);
     }
 
     public async Task<IEnumerable<Vendedor>> GetAllAsync()

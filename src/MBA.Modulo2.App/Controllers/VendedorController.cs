@@ -28,7 +28,7 @@ public class VendedorController(IVendedorService vendedorService,
     [ClaimsAuthorize("Vendedores", "ED")]
     public async Task<IActionResult> ToggleStatus(string id)
     {
-        var _vendedor = await _vendedorService.GetByByIdWithProductAsync(Guid.Parse(id));
+        var _vendedor = await _vendedorService.GetByByIdWithProdutoAsync(Guid.Parse(id));
 
         if (_vendedor == null) return NotFound();
 

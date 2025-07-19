@@ -11,7 +11,7 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
     public CategoriaRepository(AppDbContext context) : base(context) => _context = context;
 
 
-    public async Task<Categoria> GetByIdWithProductAsync(Guid id)
+    public async Task<Categoria> GetByIdWithProdutoAsync(Guid id)
     {
         return await _context.Categorias
             .AsNoTracking()
