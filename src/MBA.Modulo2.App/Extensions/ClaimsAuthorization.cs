@@ -1,51 +1,76 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MBA.Modulo2.Data.Domain;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+
 using System.Security.Claims;
 
-namespace AppSemTemplate.Extensions
+namespace AppSemTemplate.Extensions;
+
+public class CustomAuthorization
 {
-    public class CustomAuthorization
-    {
-        public static bool ValidarClaimsUsuario(HttpContext context, string claimName, string claimValue)
-        {
-            if (context.User.Identity == null) throw new InvalidOperationException();
+	public static async Task<bool> ValidarClaimsUsuarioAsync(HttpContext context, string claimName, string claimValue)
+	{
+		if (context.User.Identity == null) throw new InvalidOperationException();
 
-            return context.User.Identity.IsAuthenticated &&
-                   context.User.Claims.Any(c => c.Type == claimName && c.Value.Split(',').Contains(claimValue));
-        }
-    }
+		var userManager = context.RequestServices.GetService<UserManager<ApplicationUser>>();
 
-    public class RequisitoClaimFilter : IAuthorizationFilter
-    {
-        private readonly Claim _claim;
+		var userEmail = context.User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
-        public RequisitoClaimFilter(Claim claim)
-        {
-            _claim = claim;
-        }
+		if (!string.IsNullOrWhiteSpace(userEmail))
+		{
+			var user = await userManager.FindByEmailAsync(userEmail);
 
-        public void OnAuthorization(AuthorizationFilterContext context)
-        {
-            if (context.HttpContext.User.Identity == null) throw new InvalidOperationException();
+			if (user != null && await userManager.IsInRoleAsync(user, claimName))
+				return true;
+		}
 
-            if (!context.HttpContext.User.Identity.IsAuthenticated)
-            {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { area = "Identity", page = "/Account/Login", ReturnUrl = context.HttpContext.Request.Path.ToString() }));
-                return;
-            }
+		return context.User.Identity.IsAuthenticated &&
+			   context.User.Claims.Any(c => c.Type == claimName && c.Value.Split(',').Contains(claimValue));
+	}
+}
 
-            if (!CustomAuthorization.ValidarClaimsUsuario(context.HttpContext, _claim.Type, _claim.Value))
-            {
-                context.Result = new StatusCodeResult(403);
-            }
-        }
-    }
+public class RequisitoClaimFilter : IAuthorizationFilter
+{
+	private readonly Claim _claim;
 
-    public class ClaimsAuthorizeAttribute : TypeFilterAttribute
-    {
-        public ClaimsAuthorizeAttribute(string claimName, string claimValue) : base(typeof(RequisitoClaimFilter))
-        {
-            Arguments = new object[] { new Claim(claimName, claimValue) };
-        }
-    }
+	public RequisitoClaimFilter(Claim claim)
+	{
+		_claim = claim;
+	}
+
+	public async void OnAuthorization(AuthorizationFilterContext context)
+	{
+		try
+		{
+			if (context.HttpContext.User.Identity == null) throw new InvalidOperationException();
+
+			if (!context.HttpContext.User.Identity.IsAuthenticated)
+			{
+				context.Result = new RedirectToRouteResult(new RouteValueDictionary(new
+				{
+					area = "Identity",
+					page = "/Account/Login",
+					ReturnUrl = context.HttpContext.Request.Path.ToString()
+				}));
+				return;
+			}
+
+			if (!await CustomAuthorization.ValidarClaimsUsuarioAsync(context.HttpContext, _claim.Type, _claim.Value))
+				context.Result = new StatusCodeResult(403);
+		}
+		catch (Exception)
+		{
+			context.Result = new StatusCodeResult(403);
+		}
+	}
+}
+
+public class ClaimsAuthorizeAttribute : TypeFilterAttribute
+{
+	public ClaimsAuthorizeAttribute(string claimName, string claimValue) : base(typeof(RequisitoClaimFilter))
+	{
+		Arguments = new object[] { new Claim(claimName, claimValue) };
+	}
 }
