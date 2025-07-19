@@ -140,7 +140,7 @@ public class CategoriaController(ICategoryService categoryService, IMapper mappe
             return NotFound();
         }
 
-        if (category.Products.Any())
+        if (category.Produtos.Any())
         {
             TempData["Erro"] = $"The {category.Name} category cannot be deleted as it is already associated with products.";
             return RedirectToAction("Index");

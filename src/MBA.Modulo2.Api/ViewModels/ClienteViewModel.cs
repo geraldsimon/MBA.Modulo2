@@ -11,7 +11,5 @@ namespace MBA.Modulo2.Api.ViewModels
         public string Name { get; set; } = null!;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public ICollection<Produto> Favoritos { get; set; } = [];
     }
 }

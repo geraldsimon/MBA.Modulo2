@@ -30,5 +30,5 @@ public class ProdutoViewModel
     public Guid CategoryId { get; set; }
 
     // FK for Seller
-    public Guid SellerId { get; set; }
+    public Guid VendedorId { get; set; }
 }

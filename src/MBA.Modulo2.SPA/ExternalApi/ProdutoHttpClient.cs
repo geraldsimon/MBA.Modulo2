@@ -13,7 +13,7 @@ namespace MBA.Modulo2.Spa.ExternalApi
             _httpClient = httpClient;
         }
 
-        public async Task<List<ProductLoggedOutViewModel>> GetProductsAsync()
+        public async Task<List<ProductLoggedOutViewModel>> GetProdutosAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "api/Product?api-version=1.0");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));

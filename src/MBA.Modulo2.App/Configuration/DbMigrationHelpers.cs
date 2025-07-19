@@ -37,13 +37,13 @@ public static class DbMigrationHelpers
 
             await EnsureSeedAdminUserAsync(serviceProvider);
 
-            await EnsureSeedProducts(context, serviceProvider);
+            await EnsureSeedProdutos(context, serviceProvider);
         }
     }
 
-    private static async Task EnsureSeedProducts(AppDbContext context, IServiceProvider serviceProvider)
+    private static async Task EnsureSeedProdutos(AppDbContext context, IServiceProvider serviceProvider)
     {
-        if (await context.Sellers.AnyAsync())
+        if (await context.Vendedores.AnyAsync())
             return;
 
         using var scope = serviceProvider.CreateScope();
@@ -74,7 +74,7 @@ public static class DbMigrationHelpers
             await _user.AddClaimAsync(user, claim);
         }
 
-        await context.Sellers.AddAsync(new Vendedor()
+        await context.Vendedores.AddAsync(new Vendedor()
         {
             Id = idUser,
             Name = "Joao Melo",
@@ -83,7 +83,7 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Categories.AddAsync(new Categoria()
+        await context.Categorias.AddAsync(new Categoria()
         {
             Id = Guid.NewGuid(),
             Name = "LapTop",
@@ -92,12 +92,12 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        Guid guidCategory = await context.Categories.Where(c => c.Name == "LapTop").Select(c => c.Id).FirstOrDefaultAsync();
+        Guid guidCategory = await context.Categorias.Where(c => c.Name == "LapTop").Select(c => c.Id).FirstOrDefaultAsync();
 
-        await CreateProducts(context, idUser, guidCategory);
-        await CreateProducts(context, idUser, guidCategory);
-        await CreateProducts(context, idUser, guidCategory);
-        await CreateProducts(context, idUser, guidCategory);
+        await CreateProdutos(context, idUser, guidCategory);
+        await CreateProdutos(context, idUser, guidCategory);
+        await CreateProdutos(context, idUser, guidCategory);
+        await CreateProdutos(context, idUser, guidCategory);
     }
 
     private static async Task EnsureSeedAdminUserAsync(IServiceProvider serviceProvider)
@@ -150,15 +150,15 @@ public static class DbMigrationHelpers
         }
     }
 
-    private static async Task CreateProducts(AppDbContext context, Guid idUser, Guid guidCategory)
+    private static async Task CreateProdutos(AppDbContext context, Guid idUser, Guid guidCategory)
     {
-        await context.Products.AddAsync(new Produto()
+        await context.Produtos.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "Amazon Fire Max 11 tablet",
             Price = 229.99M,
             Description = "Amazon Fire Max 11 tablet (newest model) vivid 11” display, all-in-one for streaming, reading, and gaming, 14-hour battery life, optional stylus and keyboard, 64 GB, Gray",
-            SellerId = idUser,
+            VendedorId = idUser,
             Stock = 10,
             Image = "71troH2aUJL._AC_SX679_.jpg",
             CategoryId = guidCategory,
@@ -167,13 +167,13 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Products.AddAsync(new Produto()
+        await context.Produtos.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "Lenovo IdeaPad 15.6”",
             Price = 229.99M,
             Description = "Lenovo IdeaPad 15.6” FHD Touchscreen Laptop, 40GB RAM 2.5TB Storage (2TB SSD+512GB Docking Station Set), 6-Cores Intel Core i3, Windows 11 Pro with Microsoft Office Included, Plusera Earphones",
-            SellerId = idUser,
+            VendedorId = idUser,
             Stock = 10,
             Image = "71S+P-5tdpL._AC_SL1500_.jpg",
             CategoryId = guidCategory,
@@ -182,13 +182,13 @@ public static class DbMigrationHelpers
 
         await context.SaveChangesAsync();
 
-        await context.Products.AddAsync(new Produto()
+        await context.Produtos.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
             Name = "HP 14\" Ultral Light Laptop",
             Price = 229.99M,
             Description = "HP 14\" Ultral Light Laptop for Students and Business, Intel Quad-Core, 8GB RAM, 192GB Storage(64GB eMMC+128GB Ghost Manta SD Card), 1 Year Office 365, USB C, Win 11 S",
-            SellerId = idUser,
+            VendedorId = idUser,
             Stock = 10,
             Image = "81divYKpeTL._AC_SL1500_.jpg",
             CategoryId = guidCategory,
@@ -202,23 +202,23 @@ public static class DbMigrationHelpers
             Id = Guid.NewGuid(),
             Title = "Sample Post",
             Content = "This is a sample post content.",
-            SellerId = idUser,
+            VendedorId = idUser,
             CreatedAt = DateTime.UtcNow,
-            Comments = new List<Comentario>()
+            Comentarios = new List<Comentario>()
             {
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment.",
                     CreatedAt = DateTime.UtcNow,
-                    SellerId = idUser
+                    VendedorId = idUser
                 },
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment 2.",
                     CreatedAt = DateTime.UtcNow,
-                    SellerId = idUser
+                    VendedorId = idUser
                 }
             }
         });
@@ -228,23 +228,23 @@ public static class DbMigrationHelpers
             Id = Guid.NewGuid(),
             Title = "Sample Post",
             Content = "This another sample post content kkkk.",
-            SellerId = idUser,
+            VendedorId = idUser,
             CreatedAt = DateTime.UtcNow,
-            Comments = new List<Comentario>()
+            Comentarios = new List<Comentario>()
             {
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment kkk.",
                     CreatedAt = DateTime.UtcNow,
-                    SellerId = idUser
+                    VendedorId = idUser
                 },
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
                     Content = "This is a sample comment 2. kk",
                     CreatedAt = DateTime.UtcNow,
-                    SellerId = idUser
+                    VendedorId = idUser
                 }
             }
         });

@@ -18,10 +18,10 @@ namespace MBA.Modulo2.Api.Configuration
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();
 
             CreateMap<Produto, ProdutoDetalhesViewModel>()
-                .ForMember(dest => dest.Seller, opt => opt.MapFrom(src => src.Seller));
+                .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.Vendedor));
 
             CreateMap<Vendedor, VendedorViewModel>()
-                .ForMember(dest => dest.produtoReduzidos, opt => opt.MapFrom(src => src.Products))
+                .ForMember(dest => dest.produtoReduzidos, opt => opt.MapFrom(src => src.Produtos))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
         }
     }

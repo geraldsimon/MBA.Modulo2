@@ -50,7 +50,6 @@ namespace MBA.Modulo2.Api.Controllers
             }
 
             ClienteUpdate.Name = ClienteViewModel.Name;
-            ClienteUpdate.UpdatedAt = DateTime.UtcNow;
 
             await _clienteService.UpdateAsync(_mapper.Map<Cliente>(ClienteUpdate));
 

@@ -35,7 +35,7 @@ public class VendedorController(IVendedorService vendedorService,
         _vendedor.Active = !_vendedor.Active;
         await _vendedorService.UpdateAsync(_vendedor);
 
-        foreach (var produto in _vendedor.Products)
+        foreach (var produto in _vendedor.Produtos)
         {
             produto.Active = _vendedor.Active;
             await _produtoRepository.UpdateAsync(produto);

@@ -8,5 +8,5 @@ public class ComentarioViewModel
     public string Text { get; set; }
     public Guid PostId { get; set; }
     [JsonIgnore]
-    public Guid SellerId { get; set; }
+    public Guid VendedorId { get; set; }
 }

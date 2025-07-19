@@ -16,8 +16,8 @@ namespace MBA.Modulo2.Data.Repository.Implamentation;
 
     public async Task<Vendedor> GetByByIdWithProductAsync(Guid id)
     {
-        return await _context.Sellers
-                        .Include(c => c.Products)
+        return await _context.Vendedores
+                        .Include(c => c.Produtos)
                         .FirstOrDefaultAsync(m => m.Id == id);
     }
 

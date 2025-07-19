@@ -13,9 +13,9 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
 
     public async Task<Categoria> GetByIdWithProductAsync(Guid id)
     {
-        return await _context.Categories
+        return await _context.Categorias
             .AsNoTracking()
-            .Include(c => c.Products)
+            .Include(c => c.Produtos)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 }

@@ -42,7 +42,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         else
             TempData["UserID"] = Id;
 
-        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.GetAllWithCategoryBySellerAsync(Guid.Parse(Id)));
+        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.GetAllWithCategoryByVendedorAsync(Guid.Parse(Id)));
 
         foreach (var prodct in products)
         {
@@ -96,12 +96,12 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
 
         if (!category.Any())
         {
-            TempData["Erro"] = "Categories must be registered in advance to associate products.\r\n Please register at least one category.";
+            TempData["Erro"] = "Categorias must be registered in advance to associate products.\r\n Please register at least one category.";
             return RedirectToAction("Index", "Category");
         }
 
-        ViewBag.Categories = new SelectList(category, "Id", "Name");
-        ViewData["SellerId"] = _userManager.GetUserId(User);
+        ViewBag.Categorias = new SelectList(category, "Id", "Name");
+        ViewData["VendedorId"] = _userManager.GetUserId(User);
 
         return View();
     }
@@ -109,7 +109,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
     [ClaimsAuthorize("Produtos", "AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProdutoViewModel product, IFormFile ImageFile)
+    public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Stock,CategoryId,VendedorId")] ProdutoViewModel product, IFormFile ImageFile)
     {
         var _product = _mapper.Map<Produto>(product);
 
@@ -131,7 +131,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
 
         ViewData["CategoryId"] = new SelectList(categories, "Id", "Id", product.CategoryId);
         ViewData["Name"] = new SelectList(categories, "Name", "Name", product.Category);
-        ViewData["SellerId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _userManager.GetUserId(User);
         return View(_product);
     }
 
@@ -150,15 +150,15 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             return NotFound();
         }
 
-        ViewBag.Categories = new SelectList(await _categoryService.GetAllAsync(), "Id", "Name");
-        ViewData["SellerId"] = _userManager.GetUserId(User);
+        ViewBag.Categorias = new SelectList(await _categoryService.GetAllAsync(), "Id", "Name");
+        ViewData["VendedorId"] = _userManager.GetUserId(User);
         return View(product);
     }
 
     [ClaimsAuthorize("Produtos", "ED")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit([Required] Guid id, [Bind("Id,Name,Description,Price,Stock,CategoryId,SellerId")] ProdutoViewModel product, IFormFile ImageFile, string CurrentImage)
+    public async Task<IActionResult> Edit([Required] Guid id, [Bind("Id,Name,Description,Price,Stock,CategoryId,VendedorId")] ProdutoViewModel product, IFormFile ImageFile, string CurrentImage)
     {
         if (id != product.Id)
         {
@@ -201,7 +201,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
 
         var categories = await _categoryService.GetAllAsync();
         ViewData["CategoryId"] = new SelectList(categories, "Id", "Id", product.CategoryId);
-        ViewData["SellerId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _userManager.GetUserId(User);
         return View(_product);
     }
 

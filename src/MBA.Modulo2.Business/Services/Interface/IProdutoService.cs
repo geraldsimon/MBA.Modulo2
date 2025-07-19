@@ -7,7 +7,7 @@ namespace MBA.Modulo2.Business.Services.Interface
         Task<IEnumerable<Produto>> GetAllAsync();
         Task<IEnumerable<Produto>> GetAllByCategory(Guid id);
         Task<IEnumerable<Produto>> GetAllWithCategoryAsync();
-        Task<IEnumerable<Produto>> GetAllWithCategoryBySellerAsync(Guid id);
+        Task<IEnumerable<Produto>> GetAllWithCategoryByVendedorAsync(Guid id);
         Task<Produto> GetByIdAsync(Guid id, Guid sellerId);
         Task<Produto> GetByIdAsync(Guid? id);
         Task<Produto> DetalheProduto(Guid? id);
