@@ -45,4 +45,12 @@ namespace MBA.Modulo2.Api.Extensions
             }
         }
     }
+
+    public class CustomAuthorizeAttribute : TypeFilterAttribute
+    {
+        public CustomAuthorizeAttribute(string claimTypes = "", string claimValues = "") : base(typeof(RequisitoClaimFilter))
+        {
+            Arguments = new object[] { new Claim(claimTypes, claimValues) };
+        }
+    }
 }
