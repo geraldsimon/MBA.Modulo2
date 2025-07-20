@@ -25,7 +25,7 @@ public class ProdutoController(IProdutoService productService,
     [AllowAnonymous]
     public async Task<IEnumerable<ProdutoLoggedOutViewModel>> GetAll()
     {
-        var productList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.GetAllAsync());
+        var productList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.GetAllWithCategoryAsync());
 
         foreach (var product in productList)
         {
