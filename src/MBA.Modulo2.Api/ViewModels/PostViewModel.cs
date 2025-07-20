@@ -8,6 +8,6 @@ public class PostViewModel
     public string Title { get; set; }
     public string Content { get; set; }
     [JsonIgnore] 
-    public Guid SellerId { get; set; }
-    public List<ComentarioViewModel> Comments { get; set; }
+    public Guid VendedorId { get; set; }
+    public List<ComentarioViewModel> Comentarios { get; set; }
 }

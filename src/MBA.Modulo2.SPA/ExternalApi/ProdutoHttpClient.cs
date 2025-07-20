@@ -4,32 +4,45 @@ using System.Text.Json;
 
 namespace MBA.Modulo2.Spa.ExternalApi
 {
-    public class ProdutoHttpClient
+    public class ProdutoHttpClient(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly string _api = "api/Produto";
 
-        public ProdutoHttpClient(HttpClient httpClient)
+        public async Task<List<ProdutoLoggedOutViewModel>> GetProdutosAsync()
         {
-            _httpClient = httpClient;
-        }
-
-        public async Task<List<ProductLoggedOutViewModel>> GetProductsAsync()
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/Product?api-version=1.0");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}?api-version=1.0");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
 
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-            // Fixing CS0121 by explicitly specifying JsonSerializerOptions
             var json = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
-            var products = JsonSerializer.Deserialize<List<ProductLoggedOutViewModel>>(json, options);
+            var products = JsonSerializer.Deserialize<List<ProdutoLoggedOutViewModel>>(json, options);
 
-            return products ?? new List<ProductLoggedOutViewModel>();
+            return products ?? [];
+        }
+
+        public async Task<ProdutoDetalhesViewModel> GetProdutoDetalheAsync(Guid id)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}/{id }/detalhes?api-version=1.0");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var products = JsonSerializer.Deserialize<ProdutoDetalhesViewModel>(json, options);
+
+            return products ?? new ProdutoDetalhesViewModel();
         }
     }
 }

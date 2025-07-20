@@ -21,9 +21,9 @@ public class PostController(IPostService postService,
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PostViewModel>>> GetAll()
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        var postViewModels = _mapper.Map<IEnumerable<PostViewModel>>(await _postService.GetAllAsync(sellerId));
+        var postViewModels = _mapper.Map<IEnumerable<PostViewModel>>(await _postService.GetAllAsync(vendedorId));
 
         return Ok(postViewModels);
     }
@@ -50,10 +50,10 @@ public class PostController(IPostService postService,
         {
             return BadRequest(ModelState);
         }
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
         var post = _mapper.Map<Post>(postViewModel);
-        post.SellerId = sellerId;
+        post.VendedorId = vendedorId;
         post.CreatedAt = DateTime.UtcNow;
 
         await _postService.AddAsync(post);
@@ -72,9 +72,9 @@ public class PostController(IPostService postService,
             return BadRequest();
         }
 
-        // Get sellerId from the logged-in user
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
-        postViewModel.SellerId = sellerId;
+        // Get vendedorId  from the logged-in user
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        postViewModel.VendedorId = vendedorId;
         var post = _mapper.Map<Post>(postViewModel);
 
 
@@ -85,7 +85,7 @@ public class PostController(IPostService postService,
             return CustomResponse();
         }
 
-        await _postService.UpdateAsync(post, sellerId);
+        await _postService.UpdateAsync(post, vendedorId);
 
         return NoContent();
     }
@@ -94,7 +94,7 @@ public class PostController(IPostService postService,
     [Authorize]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
         var postUpdate = await _postService.GetByIdAsync(id);
         if (postUpdate == null)
@@ -103,7 +103,7 @@ public class PostController(IPostService postService,
             return CustomResponse();
         }
 
-        await _postService.DeleteAsync(id, sellerId);
+        await _postService.DeleteAsync(id, vendedorId);
 
         return NoContent();
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
@@ -9,21 +10,21 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ComentarioController(ICommentService commentService,
+public class ComentarioController(IComentarioService commentService,
                                IPostService postService,
                                IMapper mapper, 
                                INotifier notifier) : MainController(notifier)
 {
-    private readonly ICommentService _commentService = commentService;
+    private readonly IComentarioService _commentService = commentService;
     private readonly IPostService _postService = postService;
     private readonly IMapper _mapper = mapper;
 
-    [HttpGet]
+    [HttpGet]    
     public async Task<IActionResult> GetAll()
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        var comments = await _commentService.GetAllAsync(sellerId);
+        var comments = await _commentService.GetAllAsync(vendedorId);
 
         var viewModel = _mapper.Map<IEnumerable<ComentarioViewModel>>(comments);
         return Ok(viewModel);
@@ -82,9 +83,9 @@ public class ComentarioController(ICommentService commentService,
 
         var comment = _mapper.Map<Comentario>(commentViewModel);
 
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        await _commentService.UpdateAsync(comment, sellerId);
+        await _commentService.UpdateAsync(comment, vendedorId);
         
         return NoContent();
     }
@@ -99,9 +100,9 @@ public class ComentarioController(ICommentService commentService,
             return CustomResponse();
         }
 
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        await _commentService.DeleteAsync(id, sellerId);
+        await _commentService.DeleteAsync(id, vendedorId);
         return NoContent();
     }
 }

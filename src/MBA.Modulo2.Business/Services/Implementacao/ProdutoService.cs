@@ -4,7 +4,7 @@ using MBA.Modulo2.Data.Models;
 
 namespace MBA.Modulo2.Business.Services.Implamentation;
 
-public class ProdutoService(IProdutoRepository productRepository) : IProductService
+public class ProdutoService(IProdutoRepository productRepository) : IProdutoService
 {
     private readonly IProdutoRepository _productRepository = productRepository;
 
@@ -23,9 +23,9 @@ public class ProdutoService(IProdutoRepository productRepository) : IProductServ
         return await _productRepository.GetAllWithCategoryAsync();
     }
 
-    public async Task<IEnumerable<Produto>> GetAllWithCategoryBySellerAsync(Guid id)
+    public async Task<IEnumerable<Produto>> GetAllWithCategoryByVendedorAsync(Guid id)
     {
-        return await _productRepository.GetAllWithCategoryBySellerAsync(id);
+        return await _productRepository.GetAllWithCategoryByVendedorAsync(id);
     }
 
     public async Task<Produto> GetByIdAsync(Guid id, Guid sellerId)
@@ -60,4 +60,11 @@ public class ProdutoService(IProdutoRepository productRepository) : IProductServ
     {
         await _productRepository.UpdateAsync(product);
     }
+
+
+    public async Task<Produto> DetalheProduto(Guid? id)
+    {
+        return await _productRepository.DetalheProduto(id);
+    }
+
 }

@@ -1,0 +1,71 @@
+﻿@using MBA.Modulo2.App.ViewModels
+@model IEnumerable<VendedorViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<br />
+<br />
+<br />
+<br />
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card mb-10">
+            <div class="card-header">
+                <div class="form-group" style="display: flex; justify-content: space-between;">
+                    <div><h3>Vendedores</h3></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:70%; text-align:center">@Html.DisplayNameFor(model => model.Name)</th>
+                            <th style="width:05%; text-align:center">Status</th>
+                            <th style="width:25%; text-align:center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="align-middle">
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@(item.Active ? "Ativo" : "Inativo")</td>
+                                <td style="text-align:center">
+                                    <div class="d-flex gap-1">
+                                        <form asp-action="ToggleStatus" method="post">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-sm @(item.Active ? "btn-danger" : "btn-success")">
+                                                @(item.Active ? "Desativar" : "Ativar")
+                                            </button>
+                                        </form>
+
+                                        <form asp-controller="Produto" asp-action="Index" method="post">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button disabled="@(!item.Active)" type="submit" class="btn btn-sm btn-success">
+                                                Editar Produtos
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (TempData["Erro"] != null)
+                    {
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="alert alert-danger" style="white-space: pre-line;">
+                                        @TempData["Erro"]
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        TempData["Erro"] = null;
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

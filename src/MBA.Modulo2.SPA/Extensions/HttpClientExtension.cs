@@ -14,6 +14,11 @@ namespace MBA.Modulo2.Spa.Extensions
                 client.Timeout = TimeSpan.FromSeconds(180);
             });
 
+            services.AddHttpClient<ClienteHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri(clientRefitMBA);
+                client.Timeout = TimeSpan.FromSeconds(180);
+            });
             return services;
         }
     }

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace MBA.Modulo2.App.ViewModels;
 
-public class ProductViewModel
+public class ProdutoViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     
@@ -25,7 +25,7 @@ public class ProductViewModel
     public int Stock { get; set; }
 
     public string Image { get; set; }
-
+    public bool Active { get; set; }
 
     [JsonIgnore]
     public IFormFile ImageFile { get; set; }
@@ -33,7 +33,7 @@ public class ProductViewModel
     public Guid CategoryId { get; set; }
     public Categoria Category { get; set; } = null!;
 
-    // FK for Seller
-    public Guid SellerId { get; set; }
-    public Vendedor Seller { get; set; } = null!;
+    // FK for Vendedor
+    public Guid VendedorId { get; set; }
+    public Vendedor Vendedor { get; set; } = null!;
 }

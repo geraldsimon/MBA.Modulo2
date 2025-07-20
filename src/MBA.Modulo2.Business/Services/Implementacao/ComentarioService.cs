@@ -4,7 +4,7 @@ using MBA.Modulo2.Data.Models;
 
 namespace MBA.Modulo2.Business.Services.Implamentation;
 
-public class ComentarioService(IComentarioRepository commentRepository) : ICommentService
+public class ComentarioService(IComentarioRepository commentRepository) : IComentarioService
 {
     private readonly IComentarioRepository _commentRepository = commentRepository;
 
@@ -32,7 +32,7 @@ public class ComentarioService(IComentarioRepository commentRepository) : IComme
             throw new ArgumentException("Post not found.");
         }
 
-        if (existingPost.SellerId != sellerId)
+        if (existingPost.VendedorId != sellerId)
         {
             throw new UnauthorizedAccessException("You are not authorized to update this post.");
         }
@@ -49,7 +49,7 @@ public class ComentarioService(IComentarioRepository commentRepository) : IComme
             throw new ArgumentException("Post not found.");
         }
 
-        if (post.SellerId != sellerId)
+        if (post.VendedorId != sellerId)
         {
             throw new UnauthorizedAccessException("You are not authorized to delete this post.");
         }

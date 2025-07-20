@@ -29,7 +29,7 @@ namespace MBA.Modulo2.Business.Services.Implamentation
                 throw new ArgumentException("Post not found.");
             }
 
-            if (existingPost.SellerId != sellerId)
+            if (existingPost.VendedorId != sellerId)
             {
                 throw new UnauthorizedAccessException("You are not authorized to update this post.");
             }
@@ -46,7 +46,7 @@ namespace MBA.Modulo2.Business.Services.Implamentation
                 throw new ArgumentException("Post not found.");
             }
 
-            if (post.SellerId != sellerId)
+            if (post.VendedorId != sellerId)
             {
                 throw new UnauthorizedAccessException("You are not authorized to delete this post.");
             }

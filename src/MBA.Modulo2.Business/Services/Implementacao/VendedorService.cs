@@ -4,12 +4,27 @@ using MBA.Modulo2.Data.Models;
 
 namespace MBA.Modulo2.Business.Services.Implamentation;
 
-public class VendedorService(IVendedorRepository sellerRepository) : ISellerService
+public class VendedorService(IVendedorRepository sellerRepository) : IVendedorService
 {
-    private readonly IVendedorRepository _sellerRepository = sellerRepository;
+    private readonly IVendedorRepository _vendedorRepository = sellerRepository;
 
     public async Task AddAsync(Vendedor seller)
     {
-        await _sellerRepository.AddAsync(seller);
+        await _vendedorRepository.AddAsync(seller);
+    }
+
+    public async Task<Vendedor> GetByByIdWithProdutoAsync(Guid id)
+    {
+        return await _vendedorRepository.GetByByIdWithProdutoAsync(id);
+    }
+
+    public async Task<IEnumerable<Vendedor>> GetAllAsync()
+    {
+        return await _vendedorRepository.GetAllAsync();
+    }
+    
+    public async Task UpdateAsync(Vendedor vendedor)
+    {
+        await _vendedorRepository.UpdateAsync(vendedor);
     }
 }

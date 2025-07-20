@@ -14,8 +14,8 @@ namespace MBA.Modulo2.Data.Repository.Implamentation
         {
             return await _context.Posts
                             .AsNoTracking()
-                            .Where(p => p.SellerId == sellerId)
-                            .Include(c => c.Comments)
+                            .Where(p => p.VendedorId == sellerId)
+                            .Include(c => c.Comentarios)
                             .ToListAsync();
         }
     }

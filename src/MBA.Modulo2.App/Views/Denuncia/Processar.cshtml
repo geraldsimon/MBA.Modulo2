@@ -1,0 +1,101 @@
+@model MBA.Modulo2.App.ViewModels.ProcessarDenunciaViewModel
+
+@{
+    ViewData["Title"] = "Processar Denúncia";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-gavel"></i> Processar Denúncia</h4>
+            </div>
+            <div class="card-body">
+                <!-- Informações da Denúncia -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-info">
+                            <div class="card-header bg-info text-white">
+                                <h5>Informações da Denúncia</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Produto:</strong> @Model.Denuncia?.ProdutoNome</p>
+                                <p><strong>Tipo:</strong> @Model.Denuncia?.Tipo</p>
+                                <p><strong>Denunciante:</strong> @Model.Denuncia?.DenuncianteEmail</p>
+                                <p><strong>Data:</strong> @Model.Denuncia?.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+                                <p><strong>Status Atual:</strong> 
+                                    <span class="badge bg-secondary">@Model.Denuncia?.Status</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-warning">
+                            <div class="card-header bg-warning">
+                                <h5>Motivo da Denúncia</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>@Model.Denuncia?.Motivo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário de Processamento -->
+                <form asp-action="Processar" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="NovoStatus" class="form-label"></label>
+                                <select asp-for="NovoStatus" class="form-select">
+                                    <option value="">Selecione o novo status</option>
+                                    <option value="2">Em Análise</option>
+                                    <option value="3">Aprovada (Remover Produto)</option>
+                                    <option value="4">Rejeitada</option>
+                                </select>
+                                <span asp-validation-for="NovoStatus" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ObservacaoAdmin" class="form-label"></label>
+                        <textarea asp-for="ObservacaoAdmin" class="form-control" rows="4" 
+                                  placeholder="Adicione observações sobre a decisão tomada..."></textarea>
+                        <span asp-validation-for="ObservacaoAdmin" class="text-danger"></span>
+                        <small class="form-text text-muted">Máximo 1000 caracteres</small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Atenção:</strong>
+                        <ul class="mb-0">
+                            <li><strong>Aprovar:</strong> O produto será desativado e removido da visualização pública</li>
+                            <li><strong>Rejeitar:</strong> A denúncia será arquivada e o produto permanecerá ativo</li>
+                            <li><strong>Em Análise:</strong> Marca a denúncia para análise posterior</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Processar Denúncia
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="fas fa-eye"></i> Ver Detalhes
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Voltar à Lista
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
