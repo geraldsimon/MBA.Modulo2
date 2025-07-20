@@ -1,31 +1,58 @@
 ﻿@using MBA.Modulo2.App.ViewModels
+@using Microsoft.AspNetCore.Identity
+@using MBA.Modulo2.Data.Domain
+@inject SignInManager<ApplicationUser> signInManager
 @model List<ProdutoViewModel>
 
 @{
     ViewData["Title"] = "Vitrine de Produtos";
 }
+
+@section Styles {
+	<link href="~/css/vitrine.css" rel="stylesheet" />
+}
+
 <div class="container mt-4">
     <h2 class="mb-4">Produto List</h2>
     <div class="row">
         @foreach (var product in Model)
         {
             <div class="col-md-2 mb-2">
-                <div class="card">
-                    <img src="~/images/@Url.Content(product.Image)" class="card-img-top" alt="@product.Name" width="150px">
-
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text">
-                            @((product.Description?.Length ?? 0) > 10
-                                ? product.Description.Substring(0, 10) + "..."
-                                : product.Description ?? "")
-                        </p>
-                        <p class="card-text"><b>Category:</b> @product.Category.Name</p>
-                        <h6 class="text-primary">$@product.Price.ToString("F2")</h6>
-                        @* <a href="#" class="btn btn-success">Buy Now</a> *@
+                <div class="card product-card">
+                    <!-- Options Button -->
+                    <div class="card-options">
+                        <button class="options-btn" data-product-id="@product.Id" onclick="toggleDropdown(event, this)">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu" id="dropdown-@product.Id">
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                <a href="/Denuncia/Create?produtoId=@product.Id" class="dropdown-item text-warning">
+                                    <i class="fas fa-flag"></i>
+                                    Denunciar
+                                </a>
+                            }
                     </div>
                 </div>
+
+                <img src="~/images/@Url.Content(product.Image)" class="card-img-top" alt="@product.Name" width="150px">
+
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">
+                        @((product.Description?.Length ?? 0) > 10
+                                                ? product.Description.Substring(0, 10) + "..."
+                                                : product.Description ?? "")
+                    </p>
+                    <p class="card-text"><b>Category:</b> @product.Category.Name</p>
+                    <h6 class="text-primary">$@product.Price.ToString("F2")</h6>
+                </div>
             </div>
+        </div>
         }
     </div>
 </div>
+
+@section Scripts {
+	<script src="~/js/vitrine.js"></script>
+}
