@@ -6,6 +6,6 @@
         public string Name { get; set; } = null!;
         public bool Active { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public ICollection<ProdutoViewModel> Products { get; set; } = [];
+        public ICollection<ProdutoViewModel> Produtos { get; set; } = [];
     }
 }

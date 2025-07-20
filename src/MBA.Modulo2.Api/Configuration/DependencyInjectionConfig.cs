@@ -25,14 +25,14 @@ public static class DependencyInjectionConfig
 		services.AddScoped<IClienteRepository, ClienteRepository>();
 		services.AddScoped<IDenunciaRepository, DenunciaRepository>();
 
-		// Business
-		services.AddScoped<IProdutoService, ProdutoService>();
-		services.AddScoped<ICategoryService, CategoriaService>();
-		services.AddScoped<IVendedorService, VendedorService>();
-		services.AddScoped<IPostService, PostService>();
-		services.AddScoped<ICommentService, ComentarioService>();
-		services.AddScoped<IClienteService, ClienteService>();
-		services.AddScoped<IDenunciaService, DenunciaService>();
+        // Business
+        services.AddScoped<IProdutoService, ProdutoService>();
+        services.AddScoped<ICategoryService, CategoriaService>();
+        services.AddScoped<IVendedorService, VendedorService>();
+        services.AddScoped<IPostService, PostService>();
+        services.AddScoped<IComentarioService, ComentarioService>();
+        services.AddScoped<IClienteService, ClienteService>();
+        services.AddScoped<IDenunciaService, DenunciaService>();
 
 		services.AddScoped<IImageService, ImageService>();
 		services.AddScoped<INotifier, Notificador>();

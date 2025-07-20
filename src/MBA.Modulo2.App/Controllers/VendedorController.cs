@@ -28,14 +28,14 @@ public class VendedorController(IVendedorService vendedorService,
     [ClaimsAuthorize("Vendedores", "ED")]
     public async Task<IActionResult> ToggleStatus(string id)
     {
-        var _vendedor = await _vendedorService.GetByByIdWithProductAsync(Guid.Parse(id));
+        var _vendedor = await _vendedorService.GetByByIdWithProdutoAsync(Guid.Parse(id));
 
         if (_vendedor == null) return NotFound();
 
         _vendedor.Active = !_vendedor.Active;
         await _vendedorService.UpdateAsync(_vendedor);
 
-        foreach (var produto in _vendedor.Products)
+        foreach (var produto in _vendedor.Produtos)
         {
             produto.Active = _vendedor.Active;
             await _produtoRepository.UpdateAsync(produto);
