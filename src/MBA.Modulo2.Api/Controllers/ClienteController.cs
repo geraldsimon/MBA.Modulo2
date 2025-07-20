@@ -20,6 +20,7 @@ namespace MBA.Modulo2.Api.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<ClienteViewModel>> Add([FromBody] ClienteViewModel clienteViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -30,6 +31,7 @@ namespace MBA.Modulo2.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Update(Guid id, ClienteViewModel ClienteViewModel)
         {
             if (id != ClienteViewModel.Id)
@@ -57,7 +59,8 @@ namespace MBA.Modulo2.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ClienteViewModel>> GetByID(Guid id)
+        [AllowAnonymous]
+        public async Task<ActionResult<ClienteViewModel>> GetClienteByID(Guid id)
         {
             return _mapper.Map<ClienteViewModel>(await GeClienteByID(id));
         }

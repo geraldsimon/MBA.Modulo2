@@ -4,12 +4,12 @@ using System.Text.Json;
 
 namespace MBA.Modulo2.Spa.ExternalApi
 {
-    public class ProdutoHttpClient(HttpClient httpClient)
+    public class ClienteHttpClient(HttpClient httpClient)
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly string _api = "api/Produto";
+        private readonly string _api = "api/Cliente";
 
-        public async Task<List<ProdutoLoggedOutViewModel>> GetProdutosAsync()
+        public async Task<ClienteViewModel> GetClienteAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}?api-version=1.0");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
@@ -22,14 +22,14 @@ namespace MBA.Modulo2.Spa.ExternalApi
             {
                 PropertyNameCaseInsensitive = true
             };
-            var products = JsonSerializer.Deserialize<List<ProdutoLoggedOutViewModel>>(json, options);
+            var cliente = JsonSerializer.Deserialize<ClienteViewModel>(json, options);
 
-            return products ?? [];
+            return cliente ?? new ClienteViewModel();
         }
 
-        public async Task<ProdutoDetalhesViewModel> GetProdutoDetalheAsync(Guid id)
+        public async Task<ProdutoDetalhesViewModel> GetClienteByIdAsync(Guid id)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}/{id }/detalhes?api-version=1.0");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}/{id}?api-version=1.0");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
 
             var response = await _httpClient.SendAsync(request);
@@ -44,5 +44,6 @@ namespace MBA.Modulo2.Spa.ExternalApi
 
             return products ?? new ProdutoDetalhesViewModel();
         }
+
     }
 }

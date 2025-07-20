@@ -2,7 +2,6 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
 
-
 @inject ProdutoHttpClient ProdutoApi
 
 @if (products == null)
@@ -159,7 +158,7 @@ else
     {
         try
         {
-            products = await ProdutoApi.GetProdDetalhes(Id);
+            products = await ProdutoApi.GetProdutoDetalheAsync(Id);
         }
         catch (Exception ex)
         {
