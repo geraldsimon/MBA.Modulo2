@@ -2,6 +2,7 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
 @inject ProdutoHttpClient ProdutoApi
+
 <PageTitle>Lista de Produtos</PageTitle>
 
 <h3>Lista de Produtos</h3>
@@ -37,18 +38,18 @@ else
 }
 
 @code {
-    private List<ProductLoggedOutViewModel> products;
+    private List<ProdutoLoggedOutViewModel> products;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            products = await ProdutoApi.GetProductsAsync();
+            products = await ProdutoApi.GetProdutosAsync();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
-            products = new List<ProductLoggedOutViewModel>();
+            products = new List<ProdutoLoggedOutViewModel>();
         }
     }
 }

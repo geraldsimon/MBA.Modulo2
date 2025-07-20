@@ -11,9 +11,9 @@ public class AppDbContextBuild : IdentityDbContext<ApplicationUser, IdentityRole
     : base(options)
     {
     }
-    public DbSet<Vendedor> Sellers { get; set; }
-    public DbSet<Categoria> Categories { get; set; } = null!;
-    public DbSet<Produto> Products { get; set; } = null!;
+    public DbSet<Vendedor> Vendedores { get; set; }
+    public DbSet<Categoria> Categorias { get; set; } = null!;
+    public DbSet<Produto> Produtos { get; set; } = null!;
     public DbSet<Post> Posts { get; set; } = null!;
-    public DbSet<Comentario> Comments { get; set; } = null!;
+    public DbSet<Comentario> Comentarios { get; set; } = null!;
 }

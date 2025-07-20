@@ -12,7 +12,7 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
-public class ProductController(IProdutoService productService,
+public class ProdutoController(IProdutoService productService,
                                 IImageService imageService,
                                 IMapper mapper,
                                 INotifier notifier) : MainController(notifier)
@@ -23,9 +23,9 @@ public class ProductController(IProdutoService productService,
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IEnumerable<ProductLoggedOutViewModel>> GetAll()
+    public async Task<IEnumerable<ProdutoLoggedOutViewModel>> GetAll()
     {
-        var productList = _mapper.Map<IEnumerable<ProductLoggedOutViewModel>>(await _productService.GetAllAsync());
+        var productList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.GetAllAsync());
 
         foreach (var product in productList)
         {
@@ -35,11 +35,11 @@ public class ProductController(IProdutoService productService,
         return productList;
     }
 
-    [HttpGet("{id:guid}/category")]
+    [HttpGet("{id:guid}/categoria")]
     [AllowAnonymous]
-    public async Task<IEnumerable<ProductLoggedOutViewModel>> GetAllByCategory(Guid id)
+    public async Task<IEnumerable<ProdutoLoggedOutViewModel>> GetAllByCategory(Guid id)
     {
-        var productsByCategoryList = _mapper.Map<IEnumerable<ProductLoggedOutViewModel>>(await _productService.GetAllByCategory(id));
+        var productsByCategoryList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.GetAllByCategory(id));
 
         foreach (var product in productsByCategoryList)
         {
@@ -52,9 +52,9 @@ public class ProductController(IProdutoService productService,
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ProdutoViewModel>> GetByID(Guid id)
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        var product = await GetProductByID(id, sellerId);
+        var product = await GetProdutoByID(id, vendedorId);
 
         if (product == null)
         {
@@ -114,9 +114,9 @@ public class ProductController(IProdutoService productService,
 
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        var productUpdate = await GetProductByID(id, sellerId);
+        var productUpdate = await GetProdutoByID(id, vendedorId);
         if (productUpdate == null)
         {
             ReportError("Only the user who created it can make changes.");
@@ -139,9 +139,9 @@ public class ProductController(IProdutoService productService,
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<ProdutoViewModel>> Delete(Guid id)
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
 
-        var product = await GetProductByID(id, sellerId);
+        var product = await GetProdutoByID(id, vendedorId);
 
         if (product == null)
         {
@@ -159,9 +159,9 @@ public class ProductController(IProdutoService productService,
         return CustomResponse(HttpStatusCode.NoContent);
     }
 
-    private async Task<ProdutoViewModel> GetProductByID(Guid id, Guid sellerId)
+    private async Task<ProdutoViewModel> GetProdutoByID(Guid id, Guid vendedorId)
     {
-        return _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id, sellerId));
+        return _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id, vendedorId));
     }
 
     private async Task<ProdutoDetalhesViewModel> DetalheProduto(Guid id)

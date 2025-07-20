@@ -6,10 +6,10 @@ namespace MBA.Modulo2.Business.Services.Interface
     {
         Task<IEnumerable<Categoria>> GetAllAsync();
         Task<Categoria> GetByIdAsync(Guid id);
-        Task<Categoria> GetByIdWithProductAsync(Guid id);
+        Task<Categoria> GetByIdWithProdutoAsync(Guid id);
         Task<Categoria> GetByNameAsync(string name);
-        Task AddAsync(Categoria category);
-        Task UpdateAsync(Categoria category);
+        Task AddAsync(Categoria categoria);
+        Task UpdateAsync(Categoria categoria);
         Task DeleteAsync(Guid id);
     }
 }

@@ -2,7 +2,6 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
 
-
 @inject ProdutoHttpClient ProdutoApi
 
 @if (products == null)
@@ -109,7 +108,7 @@ else
                         <div class="card-body d-flex flex-column h-100">
                             <h5 class="card-title">INFORMAÇÕES GERAIS</h5>
                             <div style="margin:5%">
-                                <h3 class="card-text">NOME : @products.Seller.Name </h3>
+                                    <h3 class="card-text">NOME : @products.Vendedor.Name </h3>
 
                             </div>
                             
@@ -126,7 +125,7 @@ else
                     <div class="card-body">
                         <h5 class="card-title mb-3">OUTROS PRODUTOS DO VENDEDOR</h5>
                         <div class="row">
-                            @foreach (var produ in products.Seller.produtoReduzidos)
+                            @foreach (var produ in products.Vendedor.produtoReduzidos)
                             {
                                 <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                                     <div class="card h-100">
@@ -159,7 +158,7 @@ else
     {
         try
         {
-            products = await ProdutoApi.GetProdDetalhes(Id);
+            products = await ProdutoApi.GetProdutoDetalheAsync(Id);
         }
         catch (Exception ex)
         {

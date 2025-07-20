@@ -4,7 +4,7 @@ namespace MBA.Modulo2.Data.Interface
 {
     public interface IProdutoRepository : IRepository<Produto>
     {
-        Task<List<Produto>> GetAllWithCategoryBySellerAsync(Guid Id);
+        Task<List<Produto>> GetAllWithCategoryByVendedorAsync(Guid Id);
         Task<List<Produto>> GetAllByCategory(Guid id);
         Task<List<Produto>> GetAllWithCategoryAsync();
         Task<Produto> GetByIdAsync(Guid? id);

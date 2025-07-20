@@ -51,7 +51,7 @@ namespace MBA.Modulo2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Categorias",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -61,7 +61,7 @@ namespace MBA.Modulo2.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Categorias", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,7 +71,7 @@ namespace MBA.Modulo2.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     Content = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -81,7 +81,7 @@ namespace MBA.Modulo2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sellers",
+                name: "Vendedores",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -91,7 +91,7 @@ namespace MBA.Modulo2.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sellers", x => x.Id);
+                    table.PrimaryKey("PK_Vendedores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -201,20 +201,20 @@ namespace MBA.Modulo2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
+                name: "Comentarios",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.PrimaryKey("PK_Comentarios", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Posts_PostId",
+                        name: "FK_Comentarios_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
@@ -222,7 +222,7 @@ namespace MBA.Modulo2.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Produtos",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -232,22 +232,22 @@ namespace MBA.Modulo2.Data.Migrations
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Produtos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
+                        name: "FK_Produtos_Categorias_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "Categorias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Products_Sellers_SellerId",
-                        column: x => x.SellerId,
-                        principalTable: "Sellers",
+                        name: "FK_Produtos_Vendedores_VendedorId",
+                        column: x => x.VendedorId,
+                        principalTable: "Vendedors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -292,19 +292,19 @@ namespace MBA.Modulo2.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_PostId",
-                table: "Comments",
+                name: "IX_Comentarios_PostId",
+                table: "Comentarios",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId",
-                table: "Products",
+                name: "IX_Produtos_CategoryId",
+                table: "Produtos",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_SellerId",
-                table: "Products",
-                column: "SellerId");
+                name: "IX_Produtos_VendedorId",
+                table: "Produtos",
+                column: "VendedorId");
         }
 
         /// <inheritdoc />
@@ -326,10 +326,10 @@ namespace MBA.Modulo2.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Comentarios");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Produtos");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -341,10 +341,10 @@ namespace MBA.Modulo2.Data.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Categorias");
 
             migrationBuilder.DropTable(
-                name: "Sellers");
+                name: "Vendedores");
         }
     }
 }

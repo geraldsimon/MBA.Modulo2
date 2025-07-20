@@ -12,30 +12,30 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
 
     public async Task<List<Produto>> GetAllWithCategoryAsync()
     {
-        return await _context.Products
+        return await _context.Produtos
                         .Include(c => c.Category)
                         .ToListAsync();
     }
 
     public async Task<List<Produto>> GetAllByCategory(Guid id)
     {
-        return await _context.Products
+        return await _context.Produtos
                         .Where(c => c.CategoryId == id)
                         .Include(c => c.Category)
                         .ToListAsync();
     }
 
-    public async Task<List<Produto>> GetAllWithCategoryBySellerAsync(Guid Id)
+    public async Task<List<Produto>> GetAllWithCategoryByVendedorAsync(Guid Id)
     {
-        return await _context.Products.Where(s => s.SellerId == Id)
+        return await _context.Produtos.Where(s => s.VendedorId == Id)
                         .Include(c => c.Category)
-                        .Include(s => s.Seller)
+                        .Include(s => s.Vendedor)
                         .ToListAsync();
     }
 
     public async Task<Produto> GetByIdAsync(Guid? id)
     {
-        return await _context.Products
+        return await _context.Produtos
             .AsNoTracking()
             .Include(p => p.Category)
             .FirstOrDefaultAsync(m => m.Id == id);
@@ -43,33 +43,33 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
 
     public async Task<Produto> GetByIdAsync(Guid? id, Guid? sellerId)
     {
-        return await _context.Products
-            .Where(p => p.Id == id && p.SellerId == sellerId)
+        return await _context.Produtos
+            .Where(p => p.Id == id && p.VendedorId == sellerId)
             .AsNoTracking()
             .Include(c => c.Category)
-            .Include(s => s.Seller)
+            .Include(s => s.Vendedor)
             .FirstOrDefaultAsync();
     }
 
     public async Task<bool> GetAnyAsync(Guid id)
     {
-        return await _context.Products.AnyAsync(e => e.Id == id);
+        return await _context.Produtos.AnyAsync(e => e.Id == id);
     }
 
     public async Task<Produto> DetalheProduto(Guid? id)
     {
-        var produto = await _context.Products
+        var produto = await _context.Produtos
             .AsNoTracking()
             .Include(p => p.Category)
-            .Include(p => p.Seller)
+            .Include(p => p.Vendedor)
             .FirstOrDefaultAsync(m => m.Id == id);
 
         if (produto != null)
         {
             // Carrega os produtos do vendedor separadamente
-            produto.Seller.Products = await _context.Products
+            produto.Vendedor.Produtos = await _context.Produtos
                 .AsNoTracking()
-                .Where(p => p.SellerId == produto.SellerId && p.Id != produto.Id)
+                .Where(p => p.VendedorId == produto.VendedorId && p.Id != produto.Id)
                 .ToListAsync();
         }
 

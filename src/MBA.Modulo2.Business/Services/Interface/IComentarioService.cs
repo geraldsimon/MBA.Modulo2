@@ -2,7 +2,7 @@
 
 namespace MBA.Modulo2.Business.Services.Interface
 {
-    public interface ICommentService
+    public interface IComentarioService
     {
         Task<IEnumerable<Comentario>> GetAllAsync(Guid sellerId);
         Task<Comentario> GetByIdAsync(Guid id);
