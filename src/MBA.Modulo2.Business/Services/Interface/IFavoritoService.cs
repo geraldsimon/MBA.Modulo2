@@ -6,6 +6,13 @@ namespace MBA.Modulo2.Business.Services.Interface
     {
         Task AddAsync(Favorito favorito);
 
-        Task<IEnumerable<Favorito>> GetAllAsync();
+        Task DeleteProdutoFavorito(Guid idCliente, Guid idProduto);
+
+        Task<Favorito> GetByIdProdutofavorito(Guid idCliente, Guid idProduto);
+
+        Task<IEnumerable<Favorito>> GetByIdFavoritosClienteAsync(Guid idCliente);
+
+        Task DeletarTodosProdutosFavorito(Guid idCliente);
+
     }
 }

@@ -12,9 +12,24 @@ namespace MBA.Modulo2.Business.Services.Implementacao
             await _favoritoRepository.AddAsync(favorito);
         }
 
-        public async Task<IEnumerable<Favorito>> GetAllAsync()
+        public async Task DeletarTodosProdutosFavorito(Guid idCliente)
         {
-            return await _favoritoRepository.GetAllAsync();
+            await _favoritoRepository.DeletarTodosProdutosFavoritoAsync(idCliente);
+        }
+
+        public async Task DeleteProdutoFavorito(Guid idCliente, Guid idProduto)
+        {
+            await _favoritoRepository.DeletarProdutoFavorito(idCliente, idProduto);
+        }
+
+        public async Task<IEnumerable<Favorito>> GetByIdFavoritosClienteAsync(Guid idCliente)
+        {
+            return await _favoritoRepository.GetByIdFavoritosClienteAsync(idCliente);
+        }
+
+        public async Task<Favorito> GetByIdProdutofavorito(Guid idCliente, Guid idProduto)
+        {
+            return await _favoritoRepository.GetByIdProdutoFavoritoAsync(idCliente, idProduto);
         }
     }
 }
