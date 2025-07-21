@@ -2,7 +2,7 @@
 
 namespace MBA.Modulo2.Spa.Models
 {
-    public class UserToken
+    public class UserTokenModel
     {
         public string Id { get; set; }
         public string Email { get; set; }

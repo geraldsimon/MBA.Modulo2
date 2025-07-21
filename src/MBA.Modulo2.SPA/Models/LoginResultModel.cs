@@ -1,8 +1,8 @@
 ﻿namespace MBA.Modulo2.Spa.Models
 {
-    public class LoginResult
+    public class LoginResultModel
     {
         public bool Success { get; set; }
-        public LoginData Data { get; set; }
+        public LoginDataModel Data { get; set; }
     }
 }

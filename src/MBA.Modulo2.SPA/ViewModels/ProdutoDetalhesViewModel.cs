@@ -15,8 +15,6 @@ namespace MBA.Modulo2.Spa.ViewModels
         public string ImageUpload { get; set; }
         public Guid VendedorId { get; set; }
         public VendedorViewModel Vendedor { get; set; }
-
         public CategoriaViewModel Category { get; set; }
     }
-
 }

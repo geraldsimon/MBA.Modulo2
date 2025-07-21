@@ -9,6 +9,11 @@ namespace MBA.Modulo2.Spa.ExternalApi
         private readonly HttpClient _httpClient = httpClient;
         private readonly string _api = "api/Produto";
 
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
         public async Task<List<ProdutoLoggedOutViewModel>> GetProdutosAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}?api-version=1.0");
@@ -18,11 +23,8 @@ namespace MBA.Modulo2.Spa.ExternalApi
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var products = JsonSerializer.Deserialize<List<ProdutoLoggedOutViewModel>>(json, options);
+
+            var products = JsonSerializer.Deserialize<List<ProdutoLoggedOutViewModel>>(json, _jsonSerializerOptions);
 
             return products ?? [];
         }
@@ -36,11 +38,8 @@ namespace MBA.Modulo2.Spa.ExternalApi
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var products = JsonSerializer.Deserialize<ProdutoDetalhesViewModel>(json, options);
+
+            var products = JsonSerializer.Deserialize<ProdutoDetalhesViewModel>(json, _jsonSerializerOptions);
 
             return products ?? new ProdutoDetalhesViewModel();
         }
