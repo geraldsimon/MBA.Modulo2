@@ -10,6 +10,6 @@ namespace MBA.Modulo2.Data.Domain
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public IEnumerable<Favorito> Favoritos { get; set; }
+        public ICollection<Produto> Favoritos { get; set; } = [];
     }
 }
