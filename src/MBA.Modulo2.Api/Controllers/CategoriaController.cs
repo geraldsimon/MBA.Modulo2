@@ -10,47 +10,47 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
-public class CategoriaController(ICategoryService categoryService,
+public class CategoriaController(ICategoryService categoriaService,
                                   IMapper mapper,
                                   INotifier notifier) : MainController(notifier)
 {
-    private readonly ICategoryService _categoryService = categoryService;
+    private readonly ICategoryService _categoriaService = categoriaService;
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     public async Task<IEnumerable<CategoriaViewModel>> GetAll()
     {
-        return _mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoryService.GetAllAsync());
+        return _mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoriaService.GetAllAsync());
     }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<CategoriaViewModel>> GetById(Guid id)
     {
-        var categoryViewModel = await GetByIdAsync(id);
+        var categoriaViewModel = await GetByIdAsync(id);
 
-        if (categoryViewModel == null)
+        if (categoriaViewModel == null)
         {
             ReportError("This Category does not exist.");
             return CustomResponse();
         }
 
-        return categoryViewModel;
+        return categoriaViewModel;
     }
 
     [HttpPost]
-    public async Task<ActionResult<CategoriaViewModel>> Add(CategoriaViewModel categoryViewModel)
+    public async Task<ActionResult<CategoriaViewModel>> Add(CategoriaViewModel categoriaViewModel)
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        await _categoryService.AddAsync(_mapper.Map<Categoria>(categoryViewModel));
+        await _categoriaService.AddAsync(_mapper.Map<Categoria>(categoriaViewModel));
 
-        return CustomResponse(categoryViewModel);
+        return CustomResponse(categoriaViewModel);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, CategoriaViewModel categoryViewModel)
+    public async Task<IActionResult> Update(Guid id, CategoriaViewModel categoriaViewModel)
     {
-        if (id != categoryViewModel.Id)
+        if (id != categoriaViewModel.Id)
         {
             ReportError("The IDs provided are not the same");
             return CustomResponse();
@@ -58,15 +58,15 @@ public class CategoriaController(ICategoryService categoryService,
 
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var categoryUpdate = await _categoryService.GetByIdWithProductAsync(id);
+        var categoriaUpdate = await _categoriaService.GetByIdWithProdutoAsync(id);
 
-        if (categoryUpdate == null)
+        if (categoriaUpdate == null)
         {
-            ReportError("This category does not exist");
+            ReportError("This categoria does not exist");
             return CustomResponse();
         }
         
-            await _categoryService.UpdateAsync(_mapper.Map<Categoria>(categoryViewModel));
+            await _categoriaService.UpdateAsync(_mapper.Map<Categoria>(categoriaViewModel));
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
@@ -74,21 +74,21 @@ public class CategoriaController(ICategoryService categoryService,
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<CategoriaViewModel>> DeleteAsync(Guid id)
     {
-        var category = await GetByIdAsync(id);
+        var categoria = await GetByIdAsync(id);
 
-        if (category == null)
+        if (categoria == null)
         {
-            ReportError("This category does not exist");
+            ReportError("This categoria does not exist");
             return CustomResponse();
         }
 
-        await _categoryService.DeleteAsync(id);
+        await _categoriaService.DeleteAsync(id);
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
 
     private async Task<CategoriaViewModel> GetByIdAsync(Guid id)
     {
-        return _mapper.Map<CategoriaViewModel>(await _categoryService.GetByIdWithProductAsync(id));
+        return _mapper.Map<CategoriaViewModel>(await _categoriaService.GetByIdWithProdutoAsync(id));
     }
 }

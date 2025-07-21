@@ -25,5 +25,10 @@ namespace MBA.Modulo2.App.Extensions
             return permissoes.Contains(requiredPermission);
         }
 
+        public static string GetUserId(this ClaimsPrincipal user)
+        {
+            return user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
+
     }
 }

@@ -15,7 +15,7 @@
         <div class="card mb-10">
             <div class="card-header">
                 <div class="form-group" style="display: flex; justify-content: space-between;">
-                    <div><h3>Products</h3></div>
+                    <div><h3>Produtos</h3></div>
                     @if (User.ProdutosPermissao("VI"))
                     {
                         <div><a class="btn btn-primary" asp-action="Create">Create New</a></div>
@@ -45,7 +45,7 @@
                                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Stock)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
-                                <td><img src="~/images/@Html.DisplayFor(model => item.Image)" alt="Product Image" style="width: 150px; height: auto;" /></td>
+                                <td><img src="~/images/@Html.DisplayFor(model => item.Image)" alt="Produto Image" style="width: 150px; height: auto;" /></td>
                                 <td>
                                     @if (User.ProdutosPermissao("VI"))
                                     {
@@ -65,6 +65,13 @@
                                             </button>
                                         </form>
                                     }
+                                    <form asp-action="ToggleStatusProduto" method="post">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm @(item.Active ? "btn-danger" : "btn-success")">
+                                            @(item.Active ? "Desativar" : "Ativar")
+                                        </button>
+                                    </form>
+
                                     
                                 </td>
                             </tr>

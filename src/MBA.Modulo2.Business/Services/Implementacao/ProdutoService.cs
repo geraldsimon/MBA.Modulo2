@@ -23,9 +23,9 @@ public class ProdutoService(IProdutoRepository productRepository) : IProdutoServ
         return await _productRepository.GetAllWithCategoryAsync();
     }
 
-    public async Task<IEnumerable<Produto>> GetAllWithCategoryBySellerAsync(Guid id)
+    public async Task<IEnumerable<Produto>> GetAllWithCategoryByVendedorAsync(Guid id)
     {
-        return await _productRepository.GetAllWithCategoryBySellerAsync(id);
+        return await _productRepository.GetAllWithCategoryByVendedorAsync(id);
     }
 
     public async Task<Produto> GetByIdAsync(Guid id, Guid sellerId)
@@ -60,4 +60,11 @@ public class ProdutoService(IProdutoRepository productRepository) : IProdutoServ
     {
         await _productRepository.UpdateAsync(product);
     }
+
+
+    public async Task<Produto> DetalheProduto(Guid? id)
+    {
+        return await _productRepository.DetalheProduto(id);
+    }
+
 }

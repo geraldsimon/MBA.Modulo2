@@ -1,7 +1,9 @@
 ﻿@page "/produto"
 @using MBA.Modulo2.Spa.ExternalApi
+@* @using MBA.Modulo2.Spa.Functions *@
 @using MBA.Modulo2.Spa.ViewModels
 @inject ProdutoHttpClient ProdutoApi
+
 <PageTitle>Lista de Produtos</PageTitle>
 
 <h3>Lista de Produtos</h3>
@@ -22,12 +24,14 @@ else
         @foreach (var product in products)
         {
             <div class="card m-2" style="width: 18rem;">
-                <img src="@imagePath+@product.Image" class="card-img-top" alt="@product.Name" />
+                <img src="@($"{imagePath}{product.Image}")" class="card-img-top" alt="@product.Name" />
+
                 <div class="card-body">
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">@product.Description</p>
                     <p><strong>Preço:</strong> @product.Price.ToString("C")</p>
                     <p><strong>Estoque:</strong> @product.Stock</p>
+                    <a href="/produtoDetail/@product.Id">Ver Detalhes</a>
                 </div>
             </div>
         }
@@ -35,18 +39,18 @@ else
 }
 
 @code {
-    private List<ProductLoggedOutViewModel> products;
+    private List<ProdutoLoggedOutViewModel> products;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            products = await ProdutoApi.GetProductsAsync();
+            products = await ProdutoApi.GetProdutosAsync();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
-            products = new List<ProductLoggedOutViewModel>();
+            products = new List<ProdutoLoggedOutViewModel>();
         }
     }
 }

@@ -1,0 +1,26 @@
+﻿@page "/NotAuthorizedMessage"
+@inject NavigationManager NavigationManager
+
+<h3 class="erroMessage">@ErrorMessage</h3>
+
+@code {
+    private bool carregado = false;
+    public string ErrorMessage { get; set; } = "Acesso negado.";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!carregado && firstRender)
+        {
+            var uri = new Uri(NavigationManager.Uri);
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+            if (query.TryGetValue("msg", out var msg))
+            {
+                ErrorMessage = msg;
+                StateHasChanged(); 
+            }
+
+            carregado = true;
+        }
+    }
+}

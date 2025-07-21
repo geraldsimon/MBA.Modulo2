@@ -18,7 +18,7 @@ namespace MBA.Modulo2.Data.Migrations
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
+            modelBuilder.HasAnnotation("ProdutoVersion", "8.0.6");
 
             modelBuilder.Entity("MBA.Modulo2.Data.Domain.ApplicationUser", b =>
                 {
@@ -99,7 +99,7 @@ namespace MBA.Modulo2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Categoria", b =>
@@ -116,7 +116,7 @@ namespace MBA.Modulo2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Comentario", b =>
@@ -134,14 +134,14 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("SellerId")
+                    b.Property<Guid>("VendedorId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comentarios");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Post", b =>
@@ -156,7 +156,7 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("SellerId")
+                    b.Property<Guid>("VendedorId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -194,8 +194,11 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("SellerId")
+                    b.Property<Guid>("VendedorId")
                         .HasColumnType("TEXT");
+                    
+                    b.Property<int>("Active")
+                        .HasColumnType("INT");
 
                     b.Property<int>("Stock")
                         .HasColumnType("INTEGER");
@@ -206,9 +209,9 @@ namespace MBA.Modulo2.Data.Migrations
 
                     b.HasIndex("ClienteId");
 
-                    b.HasIndex("SellerId");
+                    b.HasIndex("VendedorId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Produtos");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Vendedor", b =>
@@ -220,12 +223,15 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Active")
+                        .HasColumnType("INT");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sellers");
+                    b.ToTable("Vendedores");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -357,7 +363,7 @@ namespace MBA.Modulo2.Data.Migrations
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Comentario", b =>
                 {
                     b.HasOne("MBA.Modulo2.Data.Models.Post", "Post")
-                        .WithMany("Comments")
+                        .WithMany("Comentarios")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -368,7 +374,7 @@ namespace MBA.Modulo2.Data.Migrations
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Produto", b =>
                 {
                     b.HasOne("MBA.Modulo2.Data.Models.Categoria", "Category")
-                        .WithMany("Products")
+                        .WithMany("Produtos")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -377,15 +383,15 @@ namespace MBA.Modulo2.Data.Migrations
                         .WithMany("Favorites")
                         .HasForeignKey("ClienteId");
 
-                    b.HasOne("MBA.Modulo2.Data.Models.Vendedor", "Seller")
-                        .WithMany("Products")
-                        .HasForeignKey("SellerId")
+                    b.HasOne("MBA.Modulo2.Data.Models.Vendedor", "Vendedor")
+                        .WithMany("Produtos")
+                        .HasForeignKey("VendedorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
 
-                    b.Navigation("Seller");
+                    b.Navigation("Vendedor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -446,17 +452,17 @@ namespace MBA.Modulo2.Data.Migrations
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Categoria", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Produtos");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Post", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("Comentarios");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Vendedor", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Produtos");
                 });
 #pragma warning restore 612, 618
         }

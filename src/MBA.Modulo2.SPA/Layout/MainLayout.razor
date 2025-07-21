@@ -6,11 +6,21 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <LoginDisplay />
+            <a href="#" target="_blank">Projeto Spa</a>
         </div>
 
         <article class="content px-4">
             @Body
         </article>
+
+        <Footer />
+
     </main>
+</div>
+
+<div id="blazor-error-ui">
+    ocorreu um Erro inesperado
+    <a href="" class="reload">Recarregar</a>
+    <a class="dismiss">X</a>
 </div>
