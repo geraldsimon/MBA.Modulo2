@@ -1,6 +1,7 @@
 ﻿@page "/cadastro"
-@inject IAuthService AuthService
+@using MBA.Modulo2.Spa.ExternalApi
 @inject NavigationManager NavigationManager
+@inject AuthHttpClient AuthHttpApi
 
 <h1>Cadastro</h1>
 
@@ -58,7 +59,7 @@
         ShowErrors = false;
         try
         {
-            var result = await AuthService.novocadastro(cadUserModel);
+            var result = await AuthHttpApi.NovoCadastroAsync(cadUserModel);
 
             if (result.Success)
             {

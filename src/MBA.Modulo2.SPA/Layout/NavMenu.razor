@@ -22,26 +22,30 @@
         <span class="bi bi-box-seam-fill nav-icon" aria-hidden="true"></span> Produto
     </NavLink>
 </div>
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="vendedor">
-        <span class="bi bi-person-walking nav-icon" aria-hidden="true"></span> Vendedor
-    </NavLink>
-</div>
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="favoritos">
-        <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
-    </NavLink>
-</div>
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="Categorias">
-        <span class="bi bi-file-ruled-fill nav-icon" aria-hidden="true"></span> Categorias
-    </NavLink>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="vendedor">
+                <span class="bi bi-person-walking nav-icon" aria-hidden="true"></span> Vendedor
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="favoritos">
+                <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Categorias">
+                <span class="bi bi-file-ruled-fill nav-icon" aria-hidden="true"></span> Categorias
+            </NavLink>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {

@@ -1,6 +1,9 @@
 ﻿@page "/categorias"
-@inject ICategoriaService _categoriaService
+@using MBA.Modulo2.Spa.ExternalApi
+@using MBA.Modulo2.Spa.Shared
+@using MBA.Modulo2.Spa.ViewModels
 @inject NavigationManager navigationManager
+@inject CategoriaHttpClient CategoriaApi
 
 <h1>Categorias</h1>
 @if(categorias is not null)
@@ -29,15 +32,15 @@ else
 
 
 @code {
-    private IEnumerable<CategoriaDTO> categorias = new List<CategoriaDTO>();
 
-    private string? erroMessage;
+    private List<CategoriaViewModel> categorias = new List<CategoriaViewModel>();
+    readonly string erroMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            categorias = await _categoriaService.GetCategorias();
+             categorias = await CategoriaApi.GetCategoriasAsync(); 
 
         }
         catch (UnauthorizedAccessException)

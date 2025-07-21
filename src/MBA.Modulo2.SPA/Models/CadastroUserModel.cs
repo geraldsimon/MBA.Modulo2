@@ -6,16 +6,16 @@ namespace MBA.Modulo2.Spa.Models
     {
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Email inválido")]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Informe a senha")]
         [DataType(DataType.Password)]
-        public string? Password { get; set; }
+        public string Password { get; set; }
 
         [Required(ErrorMessage = "Confirme a senha")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "As senhas não coincidem")]
-        public string? ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; }
 
     }
 }

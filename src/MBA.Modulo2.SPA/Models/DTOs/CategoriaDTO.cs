@@ -2,7 +2,7 @@
 
 namespace MBA.Modulo2.Spa.Models.DTOs
 {
-    public class CategoriaDTO
+    public class CategoriaDto
     {
         public Guid Id { get; set; }
 

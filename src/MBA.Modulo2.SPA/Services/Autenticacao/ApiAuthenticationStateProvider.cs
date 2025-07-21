@@ -1,10 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Globalization;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace MBA.Modulo2.Spa.Services.Autentica
+namespace MBA.Modulo2.Spa.Services.Autenticacao
 {
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {
@@ -48,7 +47,7 @@ namespace MBA.Modulo2.Spa.Services.Autentica
             NotifyAuthenticationStateChanged(authState);
         }
 
-        private bool TokenExpirou(string dataToken)
+        private static bool TokenExpirou(string dataToken)
         {
             DateTime dataAtualUtc = DateTime.UtcNow;
             DateTime dataExpiracao = DateTime.Parse(dataToken, null, System.Globalization.DateTimeStyles.RoundtripKind);
@@ -56,7 +55,7 @@ namespace MBA.Modulo2.Spa.Services.Autentica
             return dataExpiracao < dataAtualUtc;
         }
 
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        private static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var claims = new List<Claim>();
             var payload = jwt.Split('.')[1];
@@ -87,7 +86,7 @@ namespace MBA.Modulo2.Spa.Services.Autentica
             return claims;
         }
 
-        private byte[] ParseBase64WithoutPadding(string base64)
+        private static byte[] ParseBase64WithoutPadding(string base64)
         {
             switch (base64.Length % 4)
             {

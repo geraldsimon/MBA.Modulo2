@@ -1,4 +1,6 @@
 ﻿@page "/logout"
+@using MBA.Modulo2.Spa.Services.Autenticacao
+@using MBA.Modulo2.Spa.Services.Autenticacao.Interface
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -6,7 +8,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await AuthService.Logout();
+         await AuthService.Logout();
         NavigationManager.NavigateTo("/");
     }   
 }

@@ -1,34 +1,21 @@
+using Blazored.LocalStorage;
 using MBA.Modulo2.Spa;
-using MBA.Modulo2.Spa.Extensions;
+using MBA.Modulo2.Spa.Configuration;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
-using MBA.Modulo2.Spa.Services.Autentica;
-using MBA.Modulo2.Spa.Services.Api;
-
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
  
 builder.Services.AddHttpClients();
+
 builder.Services.AddServices();
 
-builder.Services.AddHttpClient("ApiSpa", options =>
-{
-    options.BaseAddress = new Uri("https://localhost:7015/");
-}).AddHttpMessageHandler<CustomHttpHandler>();
-
-builder.Services.AddScoped<CustomHttpHandler>();
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+ 
 builder.Services.AddBlazoredLocalStorage();
+
 builder.Services.AddAuthorizationCore();
-
-builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ICategoriaService, CategoriaService>();
-
-
 
 await builder.Build().RunAsync();
