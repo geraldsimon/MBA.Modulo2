@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MBA.Modulo2.Data.Domain;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MBA.Modulo2.Data.Models;
@@ -25,4 +26,6 @@ public class Produto
 
     public Guid VendedorId { get; set; }
     public Vendedor Vendedor { get; set; } = null!;
+
+    public IEnumerable<Favorito> Favoritos { get; set; }
 }

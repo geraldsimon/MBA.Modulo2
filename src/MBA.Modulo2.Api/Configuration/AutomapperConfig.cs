@@ -16,6 +16,7 @@ namespace MBA.Modulo2.Api.Configuration
             CreateMap<Post, PostViewModel>().ReverseMap();
             CreateMap<Comentario, ComentarioViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();
+            CreateMap<Favorito, FavoritoViewModel>().ReverseMap();
 
             CreateMap<Produto, ProdutoDetalhesViewModel>()
                 .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.Vendedor));
