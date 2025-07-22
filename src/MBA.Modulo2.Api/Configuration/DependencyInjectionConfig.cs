@@ -24,6 +24,7 @@ public static class DependencyInjectionConfig
 		services.AddScoped<IComentarioRepository, ComentarioRepository>();
 		services.AddScoped<IClienteRepository, ClienteRepository>();
 		services.AddScoped<IDenunciaRepository, DenunciaRepository>();
+		services.AddScoped<IFavoritoRepository, FavoritoRepository>();
 
         // Business
         services.AddScoped<IProdutoService, ProdutoService>();
@@ -33,6 +34,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IComentarioService, ComentarioService>();
         services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<IDenunciaService, DenunciaService>();
+        services.AddScoped<IFavoritoService, FavoritoService>();
 
 		services.AddScoped<IImageService, ImageService>();
 		services.AddScoped<INotifier, Notificador>();
