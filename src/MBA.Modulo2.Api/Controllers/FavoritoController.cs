@@ -20,7 +20,7 @@ namespace MBA.Modulo2.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _favoritoService.AddAsync(_mapper.Map<Favorito>(favoritoViewModel));
+            await _favoritoService.AdicionaAsync(_mapper.Map<Favorito>(favoritoViewModel));
 
             return CustomResponse(favoritoViewModel);
         }
@@ -39,7 +39,7 @@ namespace MBA.Modulo2.Api.Controllers
             }
                 
 
-            await _favoritoService.DeleteProdutoFavorito(idCliente, idProduto);
+            await _favoritoService.ExcluirProdutoFavorito(idCliente, idProduto);
 
             return CustomResponse(HttpStatusCode.NoContent);
         }
@@ -49,7 +49,7 @@ namespace MBA.Modulo2.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var favoritos = await _favoritoService.GetByIdFavoritosClienteAsync(idCliente);
+            var favoritos = await _favoritoService.PegarPorIdFavoritosClienteAsync(idCliente);
 
             if (favoritos == null || favoritos.Count() <= 0)
             {
@@ -57,7 +57,7 @@ namespace MBA.Modulo2.Api.Controllers
                 return CustomResponse();
             }
 
-            await _favoritoService.DeletarTodosProdutosFavorito(idCliente);
+            await _favoritoService.ExcluirTodosProdutosFavoritoAsync(idCliente);
 
             return CustomResponse(HttpStatusCode.NoContent);
         }
@@ -65,12 +65,12 @@ namespace MBA.Modulo2.Api.Controllers
         [HttpGet("{idCliente:guid}")]
         public async Task<IEnumerable<FavoritoViewModel>> GetFavoritosCliente(Guid idCliente)
         {
-            return _mapper.Map<IEnumerable<FavoritoViewModel>>(await _favoritoService.GetByIdFavoritosClienteAsync(idCliente));
+            return _mapper.Map<IEnumerable<FavoritoViewModel>>(await _favoritoService.PegarPorIdFavoritosClienteAsync(idCliente));
         }
 
         private async Task<FavoritoViewModel> GetByIdAsync(Guid idCliente, Guid idProduto)
         {
-            return _mapper.Map<FavoritoViewModel>(await _favoritoService.GetByIdProdutofavorito(idCliente, idProduto));
+            return _mapper.Map<FavoritoViewModel>(await _favoritoService.PegarPorIdProdutoFavoritoAsync(idCliente, idProduto));
         }
 
         

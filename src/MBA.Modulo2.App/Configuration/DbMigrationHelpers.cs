@@ -73,12 +73,21 @@ public static class DbMigrationHelpers
         {
             await _user.AddClaimAsync(user, claim);
         }
-
+        var idVendedor = Guid.NewGuid();
         await context.Vendedores.AddAsync(new Vendedor()
         {
-            Id = idUser,
-            Name = "Joao Melo",
-            CreatedAt = DateTime.UtcNow,
+            Id = idVendedor,
+            ApplicationUserId = idUser,
+            Nome = "Joao Melo",
+            CriadoEm = DateTime.UtcNow,
+        });
+
+        await context.Clientes.AddAsync(new Cliente()
+        {
+            Id = Guid.NewGuid(),
+            ApplicationUserId = idUser,
+            Nome = "Joao Melo",
+            CriadoEm = DateTime.UtcNow,
         });
 
         await context.SaveChangesAsync();
@@ -86,18 +95,19 @@ public static class DbMigrationHelpers
         await context.Categorias.AddAsync(new Categoria()
         {
             Id = Guid.NewGuid(),
-            Name = "LapTop",
-            Description = "LapTop",
+            Nome = "LapTop",
+            Descricao = "LapTop",
         });
 
         await context.SaveChangesAsync();
 
-        Guid guidCategory = await context.Categorias.Where(c => c.Name == "LapTop").Select(c => c.Id).FirstOrDefaultAsync();
+        Guid guidCategoria = await context.Categorias.Where(c => c.Nome == "LapTop").Select(c => c.Id).FirstOrDefaultAsync();
 
-        await CreateProdutos(context, idUser, guidCategory);
-        await CreateProdutos(context, idUser, guidCategory);
-        await CreateProdutos(context, idUser, guidCategory);
-        await CreateProdutos(context, idUser, guidCategory);
+        await CreateProdutos(context, idVendedor, guidCategoria);
+        await CreateProdutos(context, idVendedor, guidCategoria);
+        await CreateProdutos(context, idVendedor, guidCategoria);
+        await CreateProdutos(context, idVendedor, guidCategoria);
+        await CreateProdutos(context, idVendedor, guidCategoria);
     }
 
     private static async Task EnsureSeedAdminUserAsync(IServiceProvider serviceProvider)
@@ -119,6 +129,8 @@ public static class DbMigrationHelpers
             };
 
             await _user.CreateAsync(adminUser, adminPassword);
+
+
         }
 
         var claimsToAdd = new[]
@@ -132,7 +144,7 @@ public static class DbMigrationHelpers
             new Claim("Vendedores", "AD"),
             new Claim("Vendedores", "ED"),
             new Claim("Vendedores", "EX"),
-            
+
             new Claim("Produtos", "MVI"),
             new Claim("Produtos", "MED"),
             new Claim("Produtos", "TS"),
@@ -150,19 +162,19 @@ public static class DbMigrationHelpers
         }
     }
 
-    private static async Task CreateProdutos(AppDbContext context, Guid idUser, Guid guidCategory)
+    private static async Task CreateProdutos(AppDbContext context, Guid idUser, Guid guidCategoria)
     {
         await context.Produtos.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
-            Name = "Amazon Fire Max 11 tablet",
-            Price = 229.99M,
-            Description = "Amazon Fire Max 11 tablet (newest model) vivid 11” display, all-in-one for streaming, reading, and gaming, 14-hour battery life, optional stylus and keyboard, 64 GB, Gray",
+            Nome = "Amazon Fire Max 11 tablet",
+            Preco = 229.99M,
+            Descricao = "Amazon Fire Max 11 tablet (newest model) vivid 11” display, all-in-one for streaming, reading, and gaming, 14-hour battery life, optional stylus and keyboard, 64 GB, Gray",
             VendedorId = idUser,
-            Stock = 10,
-            Image = "71troH2aUJL._AC_SX679_.jpg",
-            CategoryId = guidCategory,
-            Active = true
+            Estoque = 10,
+            Imagem = "71troH2aUJL._AC_SX679_.jpg",
+            CategoriaId = guidCategoria,
+            Ativo = true
         });
 
         await context.SaveChangesAsync();
@@ -170,14 +182,14 @@ public static class DbMigrationHelpers
         await context.Produtos.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
-            Name = "Lenovo IdeaPad 15.6”",
-            Price = 229.99M,
-            Description = "Lenovo IdeaPad 15.6” FHD Touchscreen Laptop, 40GB RAM 2.5TB Storage (2TB SSD+512GB Docking Station Set), 6-Cores Intel Core i3, Windows 11 Pro with Microsoft Office Included, Plusera Earphones",
+            Nome = "Lenovo IdeaPad 15.6”",
+            Preco = 229.99M,
+            Descricao = "Lenovo IdeaPad 15.6” FHD Touchscreen Laptop, 40GB RAM 2.5TB Storage (2TB SSD+512GB Docking Station Set), 6-Cores Intel Core i3, Windows 11 Pro with Microsoft Office Included, Plusera Earphones",
             VendedorId = idUser,
-            Stock = 10,
-            Image = "71S+P-5tdpL._AC_SL1500_.jpg",
-            CategoryId = guidCategory,
-            Active = true
+            Estoque = 10,
+            Imagem = "71S+P-5tdpL._AC_SL1500_.jpg",
+            CategoriaId = guidCategoria,
+            Ativo = true
         });
 
         await context.SaveChangesAsync();
@@ -185,14 +197,14 @@ public static class DbMigrationHelpers
         await context.Produtos.AddAsync(new Produto()
         {
             Id = Guid.NewGuid(),
-            Name = "HP 14\" Ultral Light Laptop",
-            Price = 229.99M,
-            Description = "HP 14\" Ultral Light Laptop for Students and Business, Intel Quad-Core, 8GB RAM, 192GB Storage(64GB eMMC+128GB Ghost Manta SD Card), 1 Year Office 365, USB C, Win 11 S",
+            Nome = "HP 14\" Ultral Light Laptop",
+            Preco = 229.99M,
+            Descricao = "HP 14\" Ultral Light Laptop for Students and Business, Intel Quad-Core, 8GB RAM, 192GB Storage(64GB eMMC+128GB Ghost Manta SD Card), 1 Year Office 365, USB C, Win 11 S",
             VendedorId = idUser,
-            Stock = 10,
-            Image = "81divYKpeTL._AC_SL1500_.jpg",
-            CategoryId = guidCategory,
-            Active = true
+            Estoque = 10,
+            Imagem = "81divYKpeTL._AC_SL1500_.jpg",
+            CategoriaId = guidCategoria,
+            Ativo = true
         });
 
         await context.SaveChangesAsync();
@@ -200,24 +212,24 @@ public static class DbMigrationHelpers
         await context.Posts.AddAsync(new Post()
         {
             Id = Guid.NewGuid(),
-            Title = "Sample Post",
-            Content = "This is a sample post content.",
+            Titulo = "Sample Post",
+            Conteudo = "This is a sample post content.",
             VendedorId = idUser,
-            CreatedAt = DateTime.UtcNow,
+            CriadoEm = DateTime.UtcNow,
             Comentarios = new List<Comentario>()
             {
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
-                    Content = "This is a sample comment.",
-                    CreatedAt = DateTime.UtcNow,
+                    Conteudo = "This is a sample comment.",
+                    CriadoEm = DateTime.UtcNow,
                     VendedorId = idUser
                 },
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
-                    Content = "This is a sample comment 2.",
-                    CreatedAt = DateTime.UtcNow,
+                    Conteudo = "This is a sample comment 2.",
+                    CriadoEm = DateTime.UtcNow,
                     VendedorId = idUser
                 }
             }
@@ -226,24 +238,24 @@ public static class DbMigrationHelpers
         await context.Posts.AddAsync(new Post()
         {
             Id = Guid.NewGuid(),
-            Title = "Sample Post",
-            Content = "This another sample post content kkkk.",
+            Titulo = "Sample Post",
+            Conteudo = "This another sample post content kkkk.",
             VendedorId = idUser,
-            CreatedAt = DateTime.UtcNow,
+            CriadoEm = DateTime.UtcNow,
             Comentarios = new List<Comentario>()
             {
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
-                    Content = "This is a sample comment kkk.",
-                    CreatedAt = DateTime.UtcNow,
+                    Conteudo = "This is a sample comment kkk.",
+                    CriadoEm = DateTime.UtcNow,
                     VendedorId = idUser
                 },
                 new Comentario()
                 {
                     Id = Guid.NewGuid(),
-                    Content = "This is a sample comment 2. kk",
-                    CreatedAt = DateTime.UtcNow,
+                    Conteudo = "This is a sample comment 2. kk",
+                    CriadoEm = DateTime.UtcNow,
                     VendedorId = idUser
                 }
             }

@@ -6,9 +6,9 @@ public class CategoriaViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required(ErrorMessage = "The name field is mandatory.")]
-    public string Name { get; set; } = null!;
+    [Required(ErrorMessage = "O Nome é obrigatório.")]
+    public string Nome { get; set; } = null!;
 
-    [Required(ErrorMessage = "The Description field is mandatory.")]
+    [Required(ErrorMessage = "A Description é obrigatória.")]
     public string Description { get; set; }
 }

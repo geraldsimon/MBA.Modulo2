@@ -25,7 +25,7 @@ namespace MBA.Modulo2.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _clienteService.AddAsync(_mapper.Map<Cliente>(clienteViewModel));
+            await _clienteService.AdicionaAsync(_mapper.Map<Cliente>(clienteViewModel));
 
             return CustomResponse(clienteViewModel);
         }
@@ -51,9 +51,9 @@ namespace MBA.Modulo2.Api.Controllers
                 return CustomResponse();
             }
 
-            ClienteUpdate.Name = ClienteViewModel.Name;
+            ClienteUpdate.Nome = ClienteViewModel.Nome;
 
-            await _clienteService.UpdateAsync(_mapper.Map<Cliente>(ClienteUpdate));
+            await _clienteService.AlteraAsync(_mapper.Map<Cliente>(ClienteUpdate));
 
             return CustomResponse(HttpStatusCode.NoContent);
         }
@@ -77,14 +77,14 @@ namespace MBA.Modulo2.Api.Controllers
                 return CustomResponse();
             }
 
-            await _clienteService.DeleteAsync(id);
+            await _clienteService.ExcluiAsync(id);
 
             return CustomResponse(HttpStatusCode.NoContent);
         }
 
         private async Task<Cliente> GeClienteByID(Guid id)
         {
-            var cliente = await _clienteService.GetByIdAsync(id);
+            var cliente = await _clienteService.PegarPorIdAsync(id);
             if (cliente == null)
             {
                 ReportError("Client not found.");

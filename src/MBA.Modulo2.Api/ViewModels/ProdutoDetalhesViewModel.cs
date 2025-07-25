@@ -6,18 +6,18 @@ namespace MBA.Modulo2.Api.ViewModels
     public class ProdutoDetalhesViewModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; } = null!;
-        public string Description { get; set; }
+        public string Nome { get; set; } = null!;
+        public string Descricao { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
-        public string Image { get; set; }
-        public string ImageUpload { get; set; }
+        public decimal Preco { get; set; }
+        public int Estoque { get; set; }
+        public string Imagem { get; set; }
+        public string ImagemUpload { get; set; }
         public Guid VendedorId { get; set; }
         public VendedorViewModel Vendedor { get; set; }
 
-        public CategoriaViewModel Category { get; set; }
+        public CategoriaViewModel Categoria { get; set; }
     }
 
 

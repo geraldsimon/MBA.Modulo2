@@ -4,6 +4,6 @@ namespace MBA.Modulo2.Data.Interface
 {
     public interface IPostRepository : IRepository<Post>
     {
-        Task<List<Post>> GetAllAsync(Guid sellerId);
+        Task<List<Post>> PegarTodosAsync(Guid sellerId);
     }
 }

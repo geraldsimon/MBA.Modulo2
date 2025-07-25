@@ -7,29 +7,29 @@ namespace MBA.Modulo2.Business.Services.Implementacao
     public class FavoritoService(IFavoritoRepository favoritoRepository) : IFavoritoService
     {
         private readonly IFavoritoRepository _favoritoRepository = favoritoRepository;
-        public async Task AddAsync(Favorito favorito)
+        public async Task AdicionaAsync(Favorito favorito)
         {
-            await _favoritoRepository.AddAsync(favorito);
+            await _favoritoRepository.AdicionaAsync(favorito);
         }
 
-        public async Task DeletarTodosProdutosFavorito(Guid idCliente)
+        public async Task ExcluirTodosProdutosFavoritoAsync(Guid idCliente)
         {
-            await _favoritoRepository.DeletarTodosProdutosFavoritoAsync(idCliente);
+            await _favoritoRepository.ExcluirTodosProdutosFavoritoAsync(idCliente);
         }
 
-        public async Task DeleteProdutoFavorito(Guid idCliente, Guid idProduto)
+        public async Task ExcluirProdutoFavorito(Guid idCliente, Guid idProduto)
         {
-            await _favoritoRepository.DeletarProdutoFavorito(idCliente, idProduto);
+            await _favoritoRepository.ExcluirProdutoFavorito(idCliente, idProduto);
         }
 
-        public async Task<IEnumerable<Favorito>> GetByIdFavoritosClienteAsync(Guid idCliente)
+        public async Task<IEnumerable<Favorito>> PegarPorIdFavoritosClienteAsync(Guid idCliente)
         {
-            return await _favoritoRepository.GetByIdFavoritosClienteAsync(idCliente);
+            return await _favoritoRepository.PegarPorIdFavoritosClienteAsync(idCliente);
         }
 
-        public async Task<Favorito> GetByIdProdutofavorito(Guid idCliente, Guid idProduto)
+        public async Task<Favorito> PegarPorIdProdutoFavoritoAsync(Guid idCliente, Guid idProduto)
         {
-            return await _favoritoRepository.GetByIdProdutoFavoritoAsync(idCliente, idProduto);
+            return await _favoritoRepository.PegarPorIdProdutoFavoritoAsync(idCliente, idProduto);
         }
     }
 }

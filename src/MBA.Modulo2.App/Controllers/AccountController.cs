@@ -62,7 +62,7 @@ public class AccountController(IVendedorService VendedorService,
                 EmailConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Senha);
 
 
             if (result.Succeeded)
@@ -74,17 +74,17 @@ public class AccountController(IVendedorService VendedorService,
                 Vendedor vendedor = new()
                 {
                     Id = (Guid)userId,
-                    Name = model.Name,
+                    Nome = model.Nome,
                 };
-                await _VendedorService.AddAsync(vendedor);
+                await _VendedorService.AdicionaAsync(vendedor);
 
                 Cliente cliente = new()
                 {
                     Id = (Guid)userId,
-                    Name = model.Name,
-                    CreatedAt = DateTime.UtcNow
+                    Nome = model.Nome,
+                    CriadoEm = DateTime.UtcNow
                 };
-                await _clienteService.AddAsync(cliente);
+                await _clienteService.AdicionaAsync(cliente);
 
                 await _signInManager.SignOutAsync();
             }

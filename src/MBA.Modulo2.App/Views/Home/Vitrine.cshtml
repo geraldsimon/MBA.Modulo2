@@ -35,17 +35,17 @@
                     </div>
                 </div>
 
-                <img src="~/images/@Url.Content(product.Image)" class="card-img-top" alt="@product.Name" width="150px">
+                <img src="~/images/@Url.Content(product.Imagem)" class="card-img-top" alt="@product.Nome" width="150px">
 
                 <div class="card-body">
-                    <h5 class="card-title">@product.Name</h5>
+                    <h5 class="card-title">@product.Nome</h5>
                     <p class="card-text">
-                        @((product.Description?.Length ?? 0) > 10
-                                                ? product.Description.Substring(0, 10) + "..."
-                                                : product.Description ?? "")
+                        @((product.Descricao?.Length ?? 0) > 10
+                                                ? product.Descricao.Substring(0, 10) + "..."
+                                                : product.Descricao ?? "")
                     </p>
-                    <p class="card-text"><b>Category:</b> @product.Category.Name</p>
-                    <h6 class="text-primary">$@product.Price.ToString("F2")</h6>
+                    <p class="card-text"><b>Category:</b> @product.Categoria.Nome</p>
+                    <h6 class="text-primary">$@product.Preco.ToString("F2")</h6>
                 </div>
             </div>
         </div>

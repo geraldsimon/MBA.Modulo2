@@ -52,13 +52,13 @@ public class DenunciaController : Controller
 		return View(denunciaViewModel);
 	}
 
-	public async Task<IActionResult> Create(Guid produtoId)
+	public async Task<IActionResult> Create(Guid? produtoId)
 	{
-		var produto = await _produtoService.GetByIdAsync(produtoId);
+		var produto = await _produtoService.PegaPorIdAsync(produtoId);
 		if (produto == null) return NotFound();
 
 		var usuarioId = Guid.Parse(User.GetUserId());
-		var denunciaId = await _denunciaService.UsuarioJaDenunciouProdutoAsync(usuarioId, produtoId);
+		var denunciaId = await _denunciaService.UsuarioJaDenunciouProdutoAsync(usuarioId, (Guid)produtoId);
 
 		if (denunciaId != Guid.Empty)
 		{
@@ -68,8 +68,8 @@ public class DenunciaController : Controller
 
 		var viewModel = new CriarDenunciaViewModel
 		{
-			ProdutoId = produtoId,
-			ProdutoNome = produto.Name
+			ProdutoId = (Guid)produtoId,
+			ProdutoNome = produto.Nome
 		};
 
 		ViewBag.Tipos = Enum.GetValues<TipoDenuncia>()
@@ -89,8 +89,8 @@ public class DenunciaController : Controller
 	{
 		if (!ModelState.IsValid)
 		{
-			var produto = await _produtoService.GetByIdAsync(viewModel.ProdutoId);
-			viewModel.ProdutoNome = produto?.Name;
+			var produto = await _produtoService.PegaPorIdAsync(viewModel?.ProdutoId);
+			viewModel.ProdutoNome = produto?.Nome;
 			return View(viewModel);
 		}
 
@@ -104,8 +104,8 @@ public class DenunciaController : Controller
 			foreach (var notificacao in _notifier.GetNotifications())
 				ModelState.AddModelError(string.Empty, notificacao.Message);
 
-			var produto = await _produtoService.GetByIdAsync(viewModel.ProdutoId);
-			viewModel.ProdutoNome = produto?.Name;
+			var produto = await _produtoService.PegaPorIdAsync(viewModel?.ProdutoId);
+			viewModel.ProdutoNome = produto?.Nome;
 			return View(viewModel);
 		}
 

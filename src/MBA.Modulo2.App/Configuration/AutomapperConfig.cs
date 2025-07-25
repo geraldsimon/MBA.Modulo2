@@ -15,7 +15,7 @@ public class AutomapperConfig : Profile
 		CreateMap<Vendedor, VendedorViewModel>().ReverseMap();
 
 		CreateMap<Denuncia, DenunciaViewModel>()
-			.ForMember(dest => dest.ProdutoNome, opt => opt.MapFrom(src => src.Produto.Name))
+			.ForMember(dest => dest.ProdutoNome, opt => opt.MapFrom(src => src.Produto.Nome))
 			.ForMember(dest => dest.DenuncianteEmail, opt => opt.MapFrom(src => src.Denunciante.Email))
 			.ForMember(dest => dest.AdminResponsavelEmail,
 				opt => opt.MapFrom(src => src.AdminResponsavel != null ? src.AdminResponsavel.Email : null))

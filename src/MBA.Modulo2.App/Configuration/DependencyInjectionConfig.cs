@@ -23,7 +23,7 @@ public static class DependencyInjectionConfig
         // Business
         services.AddScoped<IVendedorService, VendedorService>();
         services.AddScoped<IProdutoService, ProdutoService>();
-        services.AddScoped<ICategoryService, CategoriaService>();
+        services.AddScoped<ICategoriaService, CategoriaService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IUser, AspNetUser>();
         services.AddScoped<IClienteService, ClienteService>();
