@@ -4,6 +4,6 @@ namespace MBA.Modulo2.Data.Interface
 {
     public interface ICategoriaRepository : IRepository<Categoria>
     {
-        Task<Categoria> GetByIdWithProductAsync(Guid id);
+        Task<Categoria> PegarPorIdComProdutoAsync(Guid id);
     }
 }

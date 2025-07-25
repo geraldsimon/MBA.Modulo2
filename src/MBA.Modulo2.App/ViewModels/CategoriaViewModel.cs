@@ -6,11 +6,11 @@ public class CategoriaViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required(ErrorMessage = "The name field is mandatory.")]
-    public string Name { get; set; } = null!;
+    [Required(ErrorMessage = "O nome é obrigatorio.")]
+    public string Nome { get; set; } = null!;
 
-    [Required(ErrorMessage = "The Description field is mandatory.")]
-    public string Description { get; set; }
+    [Required(ErrorMessage = "A descricao é obrigatoria.")]
+    public string Descricao { get; set; }
 
-    public ICollection<ProdutoViewModel> Products { get; set; } = [];
+    public ICollection<ProdutoViewModel> Produtos { get; set; } = [];
 }

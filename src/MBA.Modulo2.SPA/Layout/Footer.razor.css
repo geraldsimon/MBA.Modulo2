@@ -1,0 +1,26 @@
+﻿.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background-color: darkgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0;
+    gap: 2px;
+}
+
+.footer p {
+    margin: 0;
+    line-height: 1.2; 
+    font-size: 0.85rem;
+}
+
+.footer a {
+    margin: 0 6px;
+    text-decoration: none;
+    color: #000;
+    font-size: 0.85rem;
+}

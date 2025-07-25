@@ -1,16 +1,16 @@
 ﻿namespace MBA.Modulo2.Shared.ViewModels;
 
-public class ProductLoggedOutViewModel
+public class ProdutoLoggedOutViewModel
 {
-
-    public string Name { get; set; } = null!;
+    public Guid Id { get; set; } = new Guid();
+    public string Nome { get; set; } = null!;
     
-    public string Description { get; set; }
+    public string Descricao { get; set; }
 
     public decimal Price { get; set; }
 
-    public int Stock { get; set; }
-    public string Image { get; set; }
+    public int Preco { get; set; }
+    public string Imagem { get; set; }
 
-    public string ImageUpload { get; set; }
+    public string ImagemUpload { get; set; }
 }

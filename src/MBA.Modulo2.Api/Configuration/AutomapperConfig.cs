@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MBA.Modulo2.Api.ViewModels;
+using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using MBA.Modulo2.Shared.ViewModels;
 
@@ -11,9 +12,18 @@ namespace MBA.Modulo2.Api.Configuration
         {
             CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
             CreateMap<Produto, ProdutoViewModel>().ReverseMap();
-            CreateMap<Produto, ProductLoggedOutViewModel>().ReverseMap();
+            CreateMap<Produto, ProdutoLoggedOutViewModel>().ReverseMap();
             CreateMap<Post, PostViewModel>().ReverseMap();
             CreateMap<Comentario, ComentarioViewModel>().ReverseMap();
+            CreateMap<Cliente, ClienteViewModel>().ReverseMap();
+            CreateMap<Favorito, FavoritoViewModel>().ReverseMap();
+
+            CreateMap<Produto, ProdutoDetalhesViewModel>()
+                .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.Vendedor));
+
+            CreateMap<Vendedor, VendedorViewModel>()
+                .ForMember(dest => dest.produtoReduzidos, opt => opt.MapFrom(src => src.Produtos))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nome));
         }
     }
 }

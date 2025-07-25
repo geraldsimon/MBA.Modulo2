@@ -18,7 +18,12 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
           integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
           crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/dist/css/adminlte.css" />
+    @RenderSection("Styles", required: false)
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
@@ -31,7 +36,7 @@
                         </a>
                     </li>
                     <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                      @if (signInManager.IsSignedIn(User))
+                    @if (signInManager.IsSignedIn(User))
                     {
                         <li class="nav-item d-none d-md-block"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Vitrine">Vitrine de Produtos</a></li>
                     }
@@ -64,10 +69,21 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon bi bi-pencil-square"></i>
                                     <p>
-                                        Registrations
+                                        Registros
                                         <i class="nav-arrow bi bi-chevron-right"></i>
                                     </p>
                                 </a>
+                                @if (User.VendedoresPermissao("VI"))
+                                {
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Vendedor" asp-action="Index">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                Vendedor
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
                                 @if (User.CategoriasPermissao("VI"))
                                 {
                                     <ul class="nav nav-treeview">
@@ -79,15 +95,45 @@
                                         </li>
                                     </ul>
                                 }
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a class="nav-link" asp-area="" asp-controller="Produto" asp-action="Index">
-                                            <i class="nav-icon bi bi-circle"></i>
-                                            Produto
-                                        </a>
-                                    </li>
-                                </ul>
+                                @if (User.ProdutosPermissao("VI"))
+                                {
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Produto" asp-action="Index">
+                                                <i class="nav-icon bi bi-circle"></i>
+                                                Produto
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
                             </li>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon bi bi-shield-exclamation"></i>
+                                        <p>
+                                            Moderação
+                                            <i class="nav-arrow bi bi-chevron-right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Denuncia" asp-action="Index">
+                                                <i class="nav-icon bi bi-flag"></i>
+                                                Denúncias Pendentes
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Denuncia" asp-action="Historico">
+                                                <i class="nav-icon bi bi-clock-history"></i>
+                                                Histórico
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
                         }
                     </ul>
                 </nav>

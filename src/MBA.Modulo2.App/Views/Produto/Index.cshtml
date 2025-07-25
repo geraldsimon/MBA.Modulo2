@@ -1,8 +1,10 @@
-﻿@using MBA.Modulo2.App.ViewModels
+﻿@using MBA.Modulo2.App.Extensions
+@using MBA.Modulo2.App.ViewModels
 @model IEnumerable<ProdutoViewModel>
 
 @{
     ViewData["Title"] = "Index";
+    char pipe = (char)124;
 }
 <br />
 <br />
@@ -13,37 +15,64 @@
         <div class="card mb-10">
             <div class="card-header">
                 <div class="form-group" style="display: flex; justify-content: space-between;">
-                    <div><h3>Products</h3></div>
-                    <div><a class="btn btn-primary" asp-action="Create">Create New</a></div>
+                    <div><h3>Produtos</h3></div>
+                    @if (User.ProdutosPermissao("VI"))
+                    {
+                        <div><a class="btn btn-primary" asp-action="Create">Create New</a></div>
+                    }
                 </div>
             </div>
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width:20%; text-align:center">@Html.DisplayNameFor(model => model.Name)</th>
-                            <th style="width:30%; text-align:center">@Html.DisplayNameFor(model => model.Description)</th>
-                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Price)</th>
-                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Stock)</th>
-                            <th style="width:15%; text-align:center">@Html.DisplayNameFor(model => model.Category)</th>
-                            <th style="width:10%; text-align:center">@Html.DisplayNameFor(model => model.Image)</th>
+                            <th style="width:20%; text-align:center">@Html.DisplayNameFor(model => model.Nome)</th>
+                            <th style="width:30%; text-align:center">@Html.DisplayNameFor(model => model.Descricao)</th>
+                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Preco)</th>
+                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Estoque)</th>
+                            <th style="width:15%; text-align:center">@Html.DisplayNameFor(model => model.Categoria)</th>
+                            <th style="width:10%; text-align:center">@Html.DisplayNameFor(model => model.Imagem)</th>
                             <th style="width:15%; text-align:center"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
+
                             <tr class="align-middle">
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
-                                <td><img src="~/images/@Html.DisplayFor(model => item.Image)" alt="Product Image" style="width: 150px; height: auto;" /></td>
+                                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Preco)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Estoque)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Categoria.Nome)</td>
+                                <td><img src="~/images/@Html.DisplayFor(model => item.Imagem)" alt="Produto Image" style="width: 150px; height: auto;" /></td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    @if (User.ProdutosPermissao("VI"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                        @pipe
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                        @pipe
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    }
+                                    
+                                    @if (User.ProdutosPermissao("TS"))
+                                    {
+                                        <form asp-action="ToggleStatus" method="post">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-sm @(item.Ativo ? "btn-danger" : "btn-success")">
+                                                @(item.Ativo ? "Desativar" : "Ativar")
+                                            </button>
+                                        </form>
+                                    }
+                                    <form asp-action="ToggleStatusProduto" method="post">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm @(item.Ativo ? "btn-danger" : "btn-success")">
+                                            @(item.Ativo ? "Desativar" : "Ativar")
+                                        </button>
+                                    </form>
+
+                                    
                                 </td>
                             </tr>
                         }
@@ -65,4 +94,11 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+@functions {
+    public bool HasClaim(string type, string value)
+    {
+        var claim = User.Claims.FirstOrDefault(c => c.Type == type);
+        return claim != null && claim.Value.Split(',').Contains(value);
+    }
+}

@@ -4,9 +4,9 @@
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Name { get; set; } = null!;
+        public string Nome { get; set; } = null!;
 
-        public string Description { get; set; }
-        public ICollection<Produto> Products { get; set; } = [];
+        public string Descricao { get; set; }
+        public ICollection<Produto> Produtos { get; set; } = [];
     }
 }

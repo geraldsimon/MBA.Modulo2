@@ -13,7 +13,7 @@
         <div class="card mb-6">
             <div class="card-header">
                 <div class="form-group" style="display: flex; justify-content: space-between;">
-                    <div><h3>Categories</h3></div>
+                    <div><h3>Categorias</h3></div>
                     <div><a class="btn btn-primary" asp-action="Create">Create New</a></div>
                 </div>
             </div>
@@ -21,8 +21,8 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width:37%; text-align:center">@Html.DisplayNameFor(model => model.Name)</th>
-                            <th style="width:37%; text-align:center">@Html.DisplayNameFor(model => model.Description)</th>
+                            <th style="width:37%; text-align:center">@Html.DisplayNameFor(model => model.Nome)</th>
+                            <th style="width:37%; text-align:center">@Html.DisplayNameFor(model => model.Descricao)</th>
                             <th style="width:25%; text-align:center"></th>
                         </tr>
                     </thead>
@@ -30,8 +30,8 @@
                         @foreach (var item in Model)
                         {
                             <tr class="align-middle">
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

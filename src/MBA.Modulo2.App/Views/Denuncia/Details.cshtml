@@ -1,0 +1,91 @@
+@using MBA.Modulo2.Data.Domain.Enums
+@model MBA.Modulo2.App.ViewModels.DenunciaViewModel
+
+@{
+    ViewData["Title"] = "Detalhes da Denúncia";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-flag"></i> Detalhes da Denúncia</h4>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DataCriacao)</dt>
+                    <dd class="col-sm-9">@Model.DataCriacao.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ProdutoNome)</dt>
+                    <dd class="col-sm-9">@Model.ProdutoNome</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Tipo)</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-warning">
+                            @Html.DisplayFor(model => model.Tipo)
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DenuncianteEmail)</dt>
+                    <dd class="col-sm-9">@Model.DenuncianteEmail</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Status)</dt>
+                    <dd class="col-sm-9">
+                        @{
+                            var statusClass = Model.Status switch
+                            {
+                                StatusDenuncia.Pendente => "bg-secondary",
+                                StatusDenuncia.EmAnalise => "bg-warning",
+                                StatusDenuncia.Aprovada => "bg-success",
+                                StatusDenuncia.Rejeitada => "bg-danger",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @statusClass">
+                            @Html.DisplayFor(model => model.Status)
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Motivo)</dt>
+                    <dd class="col-sm-9">
+                        <div class="border p-3 bg-light">
+                            @Model.Motivo
+                        </div>
+                    </dd>
+
+                    @if (Model.DataResolucao.HasValue)
+                    {
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DataResolucao)</dt>
+                        <dd class="col-sm-9">@Model.DataResolucao?.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.AdminResponsavelEmail)</dt>
+                        <dd class="col-sm-9">@Model.AdminResponsavelEmail</dd>
+
+                        @if (!string.IsNullOrEmpty(Model.ObservacaoAdmin))
+                        {
+                            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ObservacaoAdmin)</dt>
+                            <dd class="col-sm-9">
+                                <div class="border p-3 bg-light">
+                                    @Model.ObservacaoAdmin
+                                </div>
+                            </dd>
+                        }
+                    }
+                </dl>
+
+                <div class="form-group">
+                    @if (Model.Status == StatusDenuncia.Pendente || 
+                         Model.Status == StatusDenuncia.EmAnalise)
+                    {
+                        <a asp-action="Processar" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="fas fa-gavel"></i> Processar Denúncia
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar à Lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

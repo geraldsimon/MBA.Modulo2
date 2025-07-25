@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Models;
@@ -11,49 +12,49 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
-public class ProductController(IProductService productService,
+public class ProdutoController(IProdutoService productService,
                                 IImageService imageService,
                                 IMapper mapper,
                                 INotifier notifier) : MainController(notifier)
 {
-    private readonly IProductService _productService = productService;
+    private readonly IProdutoService _productService = productService;
     private readonly IImageService _imageService = imageService;
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IEnumerable<ProductLoggedOutViewModel>> GetAll()
+    public async Task<IEnumerable<ProdutoLoggedOutViewModel>> GetAll()
     {
-        var productList = _mapper.Map<IEnumerable<ProductLoggedOutViewModel>>(await _productService.GetAllAsync());
+        var productList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.PegarTodosComCategoriaAsync());
 
         foreach (var product in productList)
         {
-            product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
+            product.ImagemUpload = _imageService.ConvertImageToBase64(product.Imagem);
         }
 
         return productList;
     }
 
-    [HttpGet("{id:guid}/category")]
+    [HttpGet("{id:guid}/categoria")]
     [AllowAnonymous]
-    public async Task<IEnumerable<ProductLoggedOutViewModel>> GetAllByCategory(Guid id)
+    public async Task<IEnumerable<ProdutoLoggedOutViewModel>> PegarTodosPorCategoria(Guid id)
     {
-        var productsByCategoryList = _mapper.Map<IEnumerable<ProductLoggedOutViewModel>>(await _productService.GetAllByCategory(id));
+        var produtosPorCategoriaList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.PegarTodosPorCatgoria(id));
 
-        foreach (var product in productsByCategoryList)
+        foreach (var product in produtosPorCategoriaList)
         {
-            product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
+            product.ImagemUpload = _imageService.ConvertImageToBase64(product.Imagem);
         }
 
-        return productsByCategoryList;
+        return produtosPorCategoriaList;
     }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ProdutoViewModel>> GetByID(Guid id)
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        var product = await GetProductByID(id, sellerId);
+        var product = await GetProdutoByID(id, vendedorId);
 
         if (product == null)
         {
@@ -61,9 +62,24 @@ public class ProductController(IProductService productService,
             return CustomResponse();
         }
 
-        product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
+        product.ImagemUpload = _imageService.ConvertImageToBase64(product.Imagem);
 
         return product;
+    }
+
+    [HttpGet("{id:guid}/detalhes")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetByID2(Guid id)
+    {
+        var product = await DetalheProduto(id);
+
+        if (product == null)
+        {
+            ReportError("Only the user who created it can delete the record.");
+            return CustomResponse();
+        }
+
+        return Ok(product); // sem conversão para ProdutoViewModel
     }
 
     [HttpPost]
@@ -71,18 +87,18 @@ public class ProductController(IProductService productService,
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var completeName = $"{Guid.NewGuid()}_{produtoViewModel.Image}".Trim();
+        var completeName = $"{Guid.NewGuid()}_{produtoViewModel.Imagem}".Trim();
 
-        var fileName = await UploadFile(produtoViewModel.ImageUpload, completeName);
+        var fileName = await UploadFile(produtoViewModel.ImagemUpload, completeName);
 
         if (string.IsNullOrEmpty(fileName))
         {
             return CustomResponse(ModelState);
         }
 
-        produtoViewModel.Image = fileName;
+        produtoViewModel.Imagem = fileName;
 
-        await _productService.AddAsync(_mapper.Map<Produto>(produtoViewModel));
+        await _productService.AdicionaAsync(_mapper.Map<Produto>(produtoViewModel));
 
         return CustomResponse(produtoViewModel);
     }
@@ -98,24 +114,24 @@ public class ProductController(IProductService productService,
 
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        var productUpdate = await GetProductByID(id, sellerId);
+        var productUpdate = await GetProdutoByID(id, vendedorId);
         if (productUpdate == null)
         {
             ReportError("Only the user who created it can make changes.");
             return CustomResponse();
         }
 
-        var fileName = await UpdateFile(produtoViewModel.ImageUpload, produtoViewModel.Name, productUpdate.Image);
+        var fileName = await UpdateFile(produtoViewModel.ImagemUpload, produtoViewModel.Nome, productUpdate.Imagem);
 
-        productUpdate.Stock = produtoViewModel.Stock;
-        productUpdate.Price = produtoViewModel.Price;
-        productUpdate.Name = produtoViewModel.Name;
-        productUpdate.Description = produtoViewModel.Description;
-        productUpdate.Image = fileName;
+        productUpdate.Estoque = produtoViewModel.Estoque;
+        productUpdate.Preco = produtoViewModel.Preco;
+        productUpdate.Nome = produtoViewModel.Nome;
+        productUpdate.Descricao = produtoViewModel.Descricao;
+        productUpdate.Imagem = fileName;
 
-        await _productService.UpdateAsync(_mapper.Map<Produto>(productUpdate));
+        await _productService.AlteraAsync(_mapper.Map<Produto>(productUpdate));
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
@@ -123,9 +139,9 @@ public class ProductController(IProductService productService,
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<ProdutoViewModel>> Delete(Guid id)
     {
-        var sellerId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        var product = await GetProductByID(id, sellerId);
+        var product = await GetProdutoByID(id, vendedorId);
 
         if (product == null)
         {
@@ -133,19 +149,24 @@ public class ProductController(IProductService productService,
             return CustomResponse();
         }
 
-        var entity = await _productService.GetByIdAsync(id);
+        var entity = await _productService.PegaPorIdAsync((Guid?)id);
 
-        if (await _productService.DeleteAsync(id))
+        if (await _productService.ExcluiAsync(id))
         {
-            UpdateFile(entity.Image);
+            UpdateFile(entity.Imagem);
         }
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
 
-    private async Task<ProdutoViewModel> GetProductByID(Guid id, Guid sellerId)
+    private async Task<ProdutoViewModel> GetProdutoByID(Guid id, Guid vendedorId)
     {
-        return _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id, sellerId));
+        return _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id, vendedorId));
+    }
+
+    private async Task<ProdutoDetalhesViewModel> DetalheProduto(Guid id)
+    {
+        return _mapper.Map<ProdutoDetalhesViewModel>(await _productService.DetalheProduto(id));
     }
 
     private async Task<string> UploadFile(string arquivo, string imgNome)

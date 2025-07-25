@@ -13,41 +13,42 @@ namespace MBA.Modulo2.Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Status",
-                table: "Sellers");
+                table: "Vendedores");
 
             migrationBuilder.DropColumn(
                 name: "Status",
-                table: "Products");
+                table: "Produtos");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "ClienteId",
-                table: "Products",
+                table: "Produtos",
                 type: "TEXT",
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Clientes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    CriadoEm = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ClienteId",
-                table: "Products",
+                name: "IX_Produtos_ClienteId",
+                table: "Produtos",
                 column: "ClienteId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Products_Customers_ClienteId",
-                table: "Products",
+                name: "FK_Produtos_Clientes_ClienteId",
+                table: "Produtos",
                 column: "ClienteId",
-                principalTable: "Customers",
+                principalTable: "Clientes",
                 principalColumn: "Id");
         }
 
@@ -55,30 +56,30 @@ namespace MBA.Modulo2.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Products_Customers_ClienteId",
-                table: "Products");
+                name: "FK_Produtos_Customers_ClienteId",
+                table: "Produtos");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Clientes");
 
             migrationBuilder.DropIndex(
-                name: "IX_Products_ClienteId",
-                table: "Products");
+                name: "IX_Produtos_ClienteId",
+                table: "Produtos");
 
             migrationBuilder.DropColumn(
                 name: "ClienteId",
-                table: "Products");
+                table: "Produtos");
 
             migrationBuilder.AddColumn<int>(
                 name: "Status",
-                table: "Sellers",
+                table: "Vendedores",
                 type: "INTEGER",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
                 name: "Status",
-                table: "Products",
+                table: "Produtos",
                 type: "INTEGER",
                 nullable: false,
                 defaultValue: 0);

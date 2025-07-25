@@ -11,11 +11,11 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
     public CategoriaRepository(AppDbContext context) : base(context) => _context = context;
 
 
-    public async Task<Categoria> GetByIdWithProductAsync(Guid id)
+    public async Task<Categoria> PegarPorIdComProdutoAsync(Guid id)
     {
-        return await _context.Categories
+        return await _context.Categorias
             .AsNoTracking()
-            .Include(c => c.Products)
+            .Include(c => c.Produtos)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 }

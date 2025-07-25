@@ -12,11 +12,11 @@ namespace MBA.Modulo2.Data.Repository.Implamentation
         public ComentarioRepository(AppDbContext context) : base(context) => _context = context;
 
 
-        public async Task<List<Comentario>> GetAllAsync(Guid sellerId)
+        public async Task<List<Comentario>> PegarTodosAsync(Guid sellerId)
         {
-            return await _context.Comments
+            return await _context.Comentarios
                             .AsNoTracking()
-                            .Where(p => p.SellerId == sellerId)
+                            .Where(p => p.VendedorId == sellerId)
                             .ToListAsync();
         }
     }

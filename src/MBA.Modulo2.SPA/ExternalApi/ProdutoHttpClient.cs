@@ -4,32 +4,44 @@ using System.Text.Json;
 
 namespace MBA.Modulo2.Spa.ExternalApi
 {
-    public class ProdutoHttpClient
+    public class ProdutoHttpClient(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly string _api = "api/Produto";
 
-        public ProdutoHttpClient(HttpClient httpClient)
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
-            _httpClient = httpClient;
-        }
+            PropertyNameCaseInsensitive = true
+        };
 
-        public async Task<List<ProductLoggedOutViewModel>> GetProductsAsync()
+        public async Task<List<ProdutoLoggedOutViewModel>> GetProdutosAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/Product?api-version=1.0");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}?api-version=1.0");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
 
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-            // Fixing CS0121 by explicitly specifying JsonSerializerOptions
             var json = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var products = JsonSerializer.Deserialize<List<ProductLoggedOutViewModel>>(json, options);
 
-            return products ?? new List<ProductLoggedOutViewModel>();
+            var products = JsonSerializer.Deserialize<List<ProdutoLoggedOutViewModel>>(json, _jsonSerializerOptions);
+
+            return products ?? [];
+        }
+
+        public async Task<ProdutoDetalhesViewModel> GetProdutoDetalheAsync(Guid id)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}/{id }/detalhes?api-version=1.0");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var products = JsonSerializer.Deserialize<ProdutoDetalhesViewModel>(json, _jsonSerializerOptions);
+
+            return products ?? new ProdutoDetalhesViewModel();
         }
     }
 }

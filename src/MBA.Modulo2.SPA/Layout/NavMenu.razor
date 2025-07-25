@@ -7,35 +7,45 @@
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="produto">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Produto
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
+<div class="nav-item px-3">
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+        <span class="bi bi-house-door-fill nav-icon" aria-hidden="true"></span> Home
+    </NavLink>
 </div>
+<div class="nav-item px-3">
+    <NavLink class="nav-link" href="counter">
+        <span class="bi bi-plus-square-fill nav-icon" aria-hidden="true"></span> Counter
+    </NavLink>
+</div>
+<div class="nav-item px-3">
+    <NavLink class="nav-link" href="produto">
+        <span class="bi bi-box-seam-fill nav-icon" aria-hidden="true"></span> Produto
+    </NavLink>
+</div>
+<AuthorizeView>
+    <Authorized>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="vendedor">
+                <span class="bi bi-person-walking nav-icon" aria-hidden="true"></span> Vendedor
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="favoritos">
+                <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Categorias">
+                <span class="bi bi-file-ruled-fill nav-icon" aria-hidden="true"></span> Categorias
+            </NavLink>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {

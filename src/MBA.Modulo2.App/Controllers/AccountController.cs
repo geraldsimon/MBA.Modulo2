@@ -1,4 +1,5 @@
 ﻿using MBA.Modulo2.App.ViewModels;
+using MBA.Modulo2.Business.Services.Implementacao;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
@@ -7,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MBA.Modulo2.App.Controllers;
 
-public class AccountController(ISellerService sellerService,
-                         SignInManager<ApplicationUser> signInManager,
-                         UserManager<ApplicationUser> userManager) : Controller
+public class AccountController(IVendedorService VendedorService,
+                               IClienteService clienteService,
+                               SignInManager<ApplicationUser> signInManager,
+                               UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly ISellerService _sellerService = sellerService;
+    private readonly IVendedorService _VendedorService = VendedorService;
+    private readonly IClienteService _clienteService = clienteService;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
@@ -59,7 +62,7 @@ public class AccountController(ISellerService sellerService,
                 EmailConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Senha);
 
 
             if (result.Succeeded)
@@ -67,13 +70,22 @@ public class AccountController(ISellerService sellerService,
                 await _signInManager.SignInAsync(user, false);
                 var logedUser = await _userManager.GetUserAsync(User);
                 var userId = logedUser?.Id;
-                Vendedor saller = new()
+
+                Vendedor vendedor = new()
                 {
                     Id = (Guid)userId,
-                    Name = model.Name,
+                    Nome = model.Nome,
                 };
+                await _VendedorService.AdicionaAsync(vendedor);
 
-                await _sellerService.AddAsync(saller);
+                Cliente cliente = new()
+                {
+                    Id = (Guid)userId,
+                    Nome = model.Nome,
+                    CriadoEm = DateTime.UtcNow
+                };
+                await _clienteService.AdicionaAsync(cliente);
+
                 await _signInManager.SignOutAsync();
             }
             

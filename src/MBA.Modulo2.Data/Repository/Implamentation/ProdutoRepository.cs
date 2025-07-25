@@ -10,49 +10,72 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
 
     public ProdutoRepository(AppDbContext context) : base(context) => _context = context;
 
-    public async Task<List<Produto>> GetAllWithCategoryAsync()
+    public async Task<List<Produto>> PegaTodosComCategoriasAsync()
     {
-        return await _context.Products
-                        .Include(c => c.Category)
+        return await _context.Produtos
+                        .Include(c => c.Categoria)
+                        .Where(c => c.Ativo)
                         .ToListAsync();
     }
 
-    public async Task<List<Produto>> GetAllByCategory(Guid id)
+    public async Task<List<Produto>> PegarTodosPorCategoriaAsync(Guid id)
     {
-        return await _context.Products
-                        .Where(c => c.CategoryId == id)
-                        .Include(c => c.Category)
+        return await _context.Produtos
+                        .Where(c => c.CategoriaId == id)
+                        .Include(c => c.Categoria)
                         .ToListAsync();
     }
 
-    public async Task<List<Produto>> GetAllWithCategoryBySellerAsync(Guid Id)
+    public async Task<List<Produto>> PegaTodosComCategoriasPorVendedorAsync(Guid Id)
     {
-        return await _context.Products.Where(s => s.SellerId == Id)
-                        .Include(c => c.Category)
-                        .Include(s => s.Seller)
+        return await _context.Produtos.Where(s => s.VendedorId == Id)
+                        .Include(c => c.Categoria)
+                        .Include(s => s.Vendedor)
                         .ToListAsync();
     }
 
-    public async Task<Produto> GetByIdAsync(Guid? id)
+    public async Task<Produto> PegaPorIdAsync(Guid? id)
     {
-        return await _context.Products
+        return await _context.Produtos
             .AsNoTracking()
-            .Include(p => p.Category)
+            .Include(p => p.Categoria)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 
-    public async Task<Produto> GetByIdAsync(Guid? id, Guid? sellerId)
+    public async Task<Produto> PegaPorIdAsync(Guid? id, Guid? sellerId)
     {
-        return await _context.Products
-            .Where(p => p.Id == id && p.SellerId == sellerId)
+        return await _context.Produtos
+            .Where(p => p.Id == id && p.VendedorId == sellerId)
             .AsNoTracking()
-            .Include(c => c.Category)
-            .Include(s => s.Seller)
+            .Include(c => c.Categoria)
+            .Include(s => s.Vendedor)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<bool> GetAnyAsync(Guid id)
+    public async Task<bool> PegaPorIdAsync(Guid id)
     {
-        return await _context.Products.AnyAsync(e => e.Id == id);
+        return await _context.Produtos.AnyAsync(e => e.Id == id);
     }
+
+    public async Task<Produto> DetalheProduto(Guid? id)
+    {
+        var produto = await _context.Produtos
+            .AsNoTracking()
+            .Include(p => p.Categoria)
+            .Include(p => p.Vendedor)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (produto != null)
+        {
+            // Carrega os produtos do vendedor separadamente
+            produto.Vendedor.Produtos = await _context.Produtos
+                .AsNoTracking()
+                .Where(p => p.VendedorId == produto.VendedorId && p.Id != produto.Id)
+                .ToListAsync();
+        }
+
+        return produto;
+    }
+
+
 }
