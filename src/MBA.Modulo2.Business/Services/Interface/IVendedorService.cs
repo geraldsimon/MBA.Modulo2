@@ -4,9 +4,9 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface IVendedorService
     {
-        Task AddAsync(Vendedor seller);
-        Task<Vendedor> GetByByIdWithProdutoAsync(Guid id);
-        Task<IEnumerable<Vendedor>> GetAllAsync();
-        Task UpdateAsync(Vendedor vendedor);
+        Task AdicionaAsync(Vendedor seller);
+        Task<Vendedor> PegarPorIdComProdutosAsync(Guid id);
+        Task<IEnumerable<Vendedor>> PegarTodosAsync();
+        Task AlteraAsync(Vendedor vendedor);
     }
 }

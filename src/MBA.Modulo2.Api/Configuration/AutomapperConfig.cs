@@ -23,7 +23,7 @@ namespace MBA.Modulo2.Api.Configuration
 
             CreateMap<Vendedor, VendedorViewModel>()
                 .ForMember(dest => dest.produtoReduzidos, opt => opt.MapFrom(src => src.Produtos))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nome));
         }
     }
 }

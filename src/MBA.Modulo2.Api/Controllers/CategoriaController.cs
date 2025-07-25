@@ -10,17 +10,17 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
-public class CategoriaController(ICategoryService categoriaService,
+public class CategoriaController(ICategoriaService categoriaService,
                                   IMapper mapper,
                                   INotifier notifier) : MainController(notifier)
 {
-    private readonly ICategoryService _categoriaService = categoriaService;
+    private readonly ICategoriaService _categoriaService = categoriaService;
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     public async Task<IEnumerable<CategoriaViewModel>> GetAll()
     {
-        return _mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoriaService.GetAllAsync());
+        return _mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoriaService.PegarTodosAsync());
     }
 
     [HttpGet("{id:guid}")]
@@ -42,7 +42,7 @@ public class CategoriaController(ICategoryService categoriaService,
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        await _categoriaService.AddAsync(_mapper.Map<Categoria>(categoriaViewModel));
+        await _categoriaService.AdicionaAsync(_mapper.Map<Categoria>(categoriaViewModel));
 
         return CustomResponse(categoriaViewModel);
     }
@@ -58,7 +58,7 @@ public class CategoriaController(ICategoryService categoriaService,
 
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var categoriaUpdate = await _categoriaService.GetByIdWithProdutoAsync(id);
+        var categoriaUpdate = await _categoriaService.PegarPorIdComProdutoAsync(id);
 
         if (categoriaUpdate == null)
         {
@@ -66,7 +66,7 @@ public class CategoriaController(ICategoryService categoriaService,
             return CustomResponse();
         }
         
-            await _categoriaService.UpdateAsync(_mapper.Map<Categoria>(categoriaViewModel));
+            await _categoriaService.AlteraAsync(_mapper.Map<Categoria>(categoriaViewModel));
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
@@ -82,13 +82,13 @@ public class CategoriaController(ICategoryService categoriaService,
             return CustomResponse();
         }
 
-        await _categoriaService.DeleteAsync(id);
+        await _categoriaService.ExcluiAsync(id);
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
 
     private async Task<CategoriaViewModel> GetByIdAsync(Guid id)
     {
-        return _mapper.Map<CategoriaViewModel>(await _categoriaService.GetByIdWithProdutoAsync(id));
+        return _mapper.Map<CategoriaViewModel>(await _categoriaService.PegarPorIdComProdutoAsync(id));
     }
 }

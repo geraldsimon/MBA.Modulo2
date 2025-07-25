@@ -21,7 +21,7 @@ public class HomeController(IProdutoService productService, IMapper mapper) : Co
     [Authorize]
     public async Task<IActionResult> Vitrine()
     {
-        return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.GetAllWithCategoryAsync()));
+        return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.PegarTodosComCategoriaAsync()));
     }
 
     public IActionResult Privacy()

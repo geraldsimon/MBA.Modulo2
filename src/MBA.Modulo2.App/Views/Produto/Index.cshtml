@@ -26,12 +26,12 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width:20%; text-align:center">@Html.DisplayNameFor(model => model.Name)</th>
-                            <th style="width:30%; text-align:center">@Html.DisplayNameFor(model => model.Description)</th>
-                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Price)</th>
-                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Stock)</th>
-                            <th style="width:15%; text-align:center">@Html.DisplayNameFor(model => model.Category)</th>
-                            <th style="width:10%; text-align:center">@Html.DisplayNameFor(model => model.Image)</th>
+                            <th style="width:20%; text-align:center">@Html.DisplayNameFor(model => model.Nome)</th>
+                            <th style="width:30%; text-align:center">@Html.DisplayNameFor(model => model.Descricao)</th>
+                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Preco)</th>
+                            <th style="width:5%; text-align:center">@Html.DisplayNameFor(model => model.Estoque)</th>
+                            <th style="width:15%; text-align:center">@Html.DisplayNameFor(model => model.Categoria)</th>
+                            <th style="width:10%; text-align:center">@Html.DisplayNameFor(model => model.Imagem)</th>
                             <th style="width:15%; text-align:center"></th>
                         </tr>
                     </thead>
@@ -40,12 +40,12 @@
                         {
 
                             <tr class="align-middle">
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
-                                <td><img src="~/images/@Html.DisplayFor(model => item.Image)" alt="Produto Image" style="width: 150px; height: auto;" /></td>
+                                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Preco)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Estoque)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Categoria.Nome)</td>
+                                <td><img src="~/images/@Html.DisplayFor(model => item.Imagem)" alt="Produto Image" style="width: 150px; height: auto;" /></td>
                                 <td>
                                     @if (User.ProdutosPermissao("VI"))
                                     {
@@ -60,15 +60,15 @@
                                     {
                                         <form asp-action="ToggleStatus" method="post">
                                             <input type="hidden" name="id" value="@item.Id" />
-                                            <button type="submit" class="btn btn-sm @(item.Active ? "btn-danger" : "btn-success")">
-                                                @(item.Active ? "Desativar" : "Ativar")
+                                            <button type="submit" class="btn btn-sm @(item.Ativo ? "btn-danger" : "btn-success")">
+                                                @(item.Ativo ? "Desativar" : "Ativar")
                                             </button>
                                         </form>
                                     }
                                     <form asp-action="ToggleStatusProduto" method="post">
                                         <input type="hidden" name="id" value="@item.Id" />
-                                        <button type="submit" class="btn btn-sm @(item.Active ? "btn-danger" : "btn-success")">
-                                            @(item.Active ? "Desativar" : "Ativar")
+                                        <button type="submit" class="btn btn-sm @(item.Ativo ? "btn-danger" : "btn-success")">
+                                            @(item.Ativo ? "Desativar" : "Ativar")
                                         </button>
                                     </form>
 

@@ -24,7 +24,7 @@ namespace MBA.Modulo2.Data.Migrations
                 table: "Produtos");
 
             migrationBuilder.AlterColumn<bool>(
-                name: "Active",
+                name: "Ativo",
                 table: "Vendedores",
                 type: "INTEGER",
                 nullable: false,
@@ -32,7 +32,7 @@ namespace MBA.Modulo2.Data.Migrations
                 oldType: "INT");
 
             migrationBuilder.AlterColumn<bool>(
-                name: "Active",
+                name: "Ativo",
                 table: "Produtos",
                 type: "INTEGER",
                 nullable: false,
@@ -77,7 +77,7 @@ namespace MBA.Modulo2.Data.Migrations
                 name: "Favoritos");
 
             migrationBuilder.AlterColumn<int>(
-                name: "Active",
+                name: "Ativo",
                 table: "Vendedores",
                 type: "INT",
                 nullable: false,
@@ -85,7 +85,7 @@ namespace MBA.Modulo2.Data.Migrations
                 oldType: "INTEGER");
 
             migrationBuilder.AlterColumn<int>(
-                name: "Active",
+                name: "Ativo",
                 table: "Produtos",
                 type: "INT",
                 nullable: false,

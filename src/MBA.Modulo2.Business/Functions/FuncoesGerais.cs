@@ -2,9 +2,9 @@
 
 namespace MBA.Modulo2.Business.Functions
 {
-    public static class GeneralFunctions
+    public static class FuncoesGerais
     {
-        public static Guid GetUserIdFromToken(string authorizationHeader)
+        public static Guid PegarOIdDoUsuarioPeloToken(string authorizationHeader)
         {
             var token = authorizationHeader.Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();

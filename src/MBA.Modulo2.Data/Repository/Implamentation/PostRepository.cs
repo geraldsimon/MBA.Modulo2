@@ -10,7 +10,7 @@ namespace MBA.Modulo2.Data.Repository.Implamentation
 
         public PostRepository(AppDbContext context) : base(context) => _context = context;
 
-        public async Task<List<Post>> GetAllAsync(Guid sellerId)
+        public async Task<List<Post>> PegarTodosAsync(Guid sellerId)
         {
             return await _context.Posts
                             .AsNoTracking()

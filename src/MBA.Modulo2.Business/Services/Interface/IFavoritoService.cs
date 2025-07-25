@@ -4,15 +4,15 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface IFavoritoService
     {
-        Task AddAsync(Favorito favorito);
+        Task AdicionaAsync(Favorito favorito);
 
-        Task DeleteProdutoFavorito(Guid idCliente, Guid idProduto);
+        Task ExcluirProdutoFavorito(Guid idCliente, Guid idProduto);
 
-        Task<Favorito> GetByIdProdutofavorito(Guid idCliente, Guid idProduto);
+        Task<Favorito> PegarPorIdProdutoFavoritoAsync(Guid idCliente, Guid idProduto);
 
-        Task<IEnumerable<Favorito>> GetByIdFavoritosClienteAsync(Guid idCliente);
+        Task<IEnumerable<Favorito>> PegarPorIdFavoritosClienteAsync(Guid idCliente);
 
-        Task DeletarTodosProdutosFavorito(Guid idCliente);
+        Task ExcluirTodosProdutosFavoritoAsync(Guid idCliente);
 
     }
 }

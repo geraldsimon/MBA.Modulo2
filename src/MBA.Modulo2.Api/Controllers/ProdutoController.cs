@@ -25,11 +25,11 @@ public class ProdutoController(IProdutoService productService,
     [AllowAnonymous]
     public async Task<IEnumerable<ProdutoLoggedOutViewModel>> GetAll()
     {
-        var productList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.GetAllWithCategoryAsync());
+        var productList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.PegarTodosComCategoriaAsync());
 
         foreach (var product in productList)
         {
-            product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
+            product.ImagemUpload = _imageService.ConvertImageToBase64(product.Imagem);
         }
 
         return productList;
@@ -37,22 +37,22 @@ public class ProdutoController(IProdutoService productService,
 
     [HttpGet("{id:guid}/categoria")]
     [AllowAnonymous]
-    public async Task<IEnumerable<ProdutoLoggedOutViewModel>> GetAllByCategory(Guid id)
+    public async Task<IEnumerable<ProdutoLoggedOutViewModel>> PegarTodosPorCategoria(Guid id)
     {
-        var productsByCategoryList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.GetAllByCategory(id));
+        var produtosPorCategoriaList = _mapper.Map<IEnumerable<ProdutoLoggedOutViewModel>>(await _productService.PegarTodosPorCatgoria(id));
 
-        foreach (var product in productsByCategoryList)
+        foreach (var product in produtosPorCategoriaList)
         {
-            product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
+            product.ImagemUpload = _imageService.ConvertImageToBase64(product.Imagem);
         }
 
-        return productsByCategoryList;
+        return produtosPorCategoriaList;
     }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ProdutoViewModel>> GetByID(Guid id)
     {
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
         var product = await GetProdutoByID(id, vendedorId);
 
@@ -62,7 +62,7 @@ public class ProdutoController(IProdutoService productService,
             return CustomResponse();
         }
 
-        product.ImageUpload = _imageService.ConvertImageToBase64(product.Image);
+        product.ImagemUpload = _imageService.ConvertImageToBase64(product.Imagem);
 
         return product;
     }
@@ -87,18 +87,18 @@ public class ProdutoController(IProdutoService productService,
     {
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var completeName = $"{Guid.NewGuid()}_{produtoViewModel.Image}".Trim();
+        var completeName = $"{Guid.NewGuid()}_{produtoViewModel.Imagem}".Trim();
 
-        var fileName = await UploadFile(produtoViewModel.ImageUpload, completeName);
+        var fileName = await UploadFile(produtoViewModel.ImagemUpload, completeName);
 
         if (string.IsNullOrEmpty(fileName))
         {
             return CustomResponse(ModelState);
         }
 
-        produtoViewModel.Image = fileName;
+        produtoViewModel.Imagem = fileName;
 
-        await _productService.AddAsync(_mapper.Map<Produto>(produtoViewModel));
+        await _productService.AdicionaAsync(_mapper.Map<Produto>(produtoViewModel));
 
         return CustomResponse(produtoViewModel);
     }
@@ -114,7 +114,7 @@ public class ProdutoController(IProdutoService productService,
 
         if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
         var productUpdate = await GetProdutoByID(id, vendedorId);
         if (productUpdate == null)
@@ -123,15 +123,15 @@ public class ProdutoController(IProdutoService productService,
             return CustomResponse();
         }
 
-        var fileName = await UpdateFile(produtoViewModel.ImageUpload, produtoViewModel.Name, productUpdate.Image);
+        var fileName = await UpdateFile(produtoViewModel.ImagemUpload, produtoViewModel.Nome, productUpdate.Imagem);
 
-        productUpdate.Stock = produtoViewModel.Stock;
-        productUpdate.Price = produtoViewModel.Price;
-        productUpdate.Name = produtoViewModel.Name;
-        productUpdate.Description = produtoViewModel.Description;
-        productUpdate.Image = fileName;
+        productUpdate.Estoque = produtoViewModel.Estoque;
+        productUpdate.Preco = produtoViewModel.Preco;
+        productUpdate.Nome = produtoViewModel.Nome;
+        productUpdate.Descricao = produtoViewModel.Descricao;
+        productUpdate.Imagem = fileName;
 
-        await _productService.UpdateAsync(_mapper.Map<Produto>(productUpdate));
+        await _productService.AlteraAsync(_mapper.Map<Produto>(productUpdate));
 
         return CustomResponse(HttpStatusCode.NoContent);
     }
@@ -139,7 +139,7 @@ public class ProdutoController(IProdutoService productService,
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<ProdutoViewModel>> Delete(Guid id)
     {
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
         var product = await GetProdutoByID(id, vendedorId);
 
@@ -149,11 +149,11 @@ public class ProdutoController(IProdutoService productService,
             return CustomResponse();
         }
 
-        var entity = await _productService.GetByIdAsync(id);
+        var entity = await _productService.PegaPorIdAsync((Guid?)id);
 
-        if (await _productService.DeleteAsync(id))
+        if (await _productService.ExcluiAsync(id))
         {
-            UpdateFile(entity.Image);
+            UpdateFile(entity.Imagem);
         }
 
         return CustomResponse(HttpStatusCode.NoContent);
@@ -161,7 +161,7 @@ public class ProdutoController(IProdutoService productService,
 
     private async Task<ProdutoViewModel> GetProdutoByID(Guid id, Guid vendedorId)
     {
-        return _mapper.Map<ProdutoViewModel>(await _productService.GetByIdAsync(id, vendedorId));
+        return _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id, vendedorId));
     }
 
     private async Task<ProdutoDetalhesViewModel> DetalheProduto(Guid id)
