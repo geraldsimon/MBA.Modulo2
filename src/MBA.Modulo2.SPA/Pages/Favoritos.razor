@@ -1,7 +1,74 @@
 ﻿@page "/favoritos"
+@using MBA.Modulo2.Spa.ExternalApi
+@using MBA.Modulo2.Spa.ViewModels
+@inject FavoritoHttpClient FavoritoApi
 
-<PageTitle>Favoritos</PageTitle>
+<PageTitle>Lista de Produtos Favoritos</PageTitle>
 
-<h1>Favoritos</h1>
+@if (favoritos == null)
+{
+    <p>Carregando produtos favoritados...</p>
+}
+else if (favoritos.Count == 0)
+{
+    <p>Nenhum Favorito ate o momento.</p>
+}
+else
+{
+    var imagePath = $"https://localhost:7009/images/";
 
-pagina de itens favoritos.
+    <div class="container mt-4" style="padding-bottom:8%">
+        <div class="bg-primary text-white p-2 rounded-top">
+            <h5 class="mb-0" style="margin-left:3%">PRODUTOS FAVORITOS</h5>
+        </div>
+
+        <div class="card border rounded-bottom shadow">
+
+
+
+            <div class="card mb-3 w-100">
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var fav in favoritos)
+                        {
+                            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                                <div class="card h-100">
+                                    <img src="@($"{imagePath}{fav.Produto.Imagem}")" class="card-img-top" alt="@fav.Produto.Nome" style="object-fit: cover; height: 200px;" />
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">@fav.Produto.Nome</h5>
+                                        <p class="card-text">@fav.Produto.Descricao</p>
+                                        <p><strong>Preço:</strong> @fav.Produto.Preco.ToString("C")</p>
+                                        <p><strong>Estoque:</strong> @fav.Produto.Estoque</p>
+                                        <a class="btn btn-primary mt-auto" href="/produtoDetail/@fav.Produto.Id">Ver Detalhes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+}
+
+@code {
+    private List<FavoritoDoClienteViewModel> favoritos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Guid idCliente = Guid.Parse("D0598681-C633-41A2-91A4-39053F7F0057");
+            favoritos = await FavoritoApi.PegarosFavoritos(idCliente);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
+            favoritos = new List<FavoritoDoClienteViewModel>();
+        }
+    }
+}

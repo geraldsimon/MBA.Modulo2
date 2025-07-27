@@ -63,9 +63,9 @@ namespace MBA.Modulo2.Api.Controllers
         }
 
         [HttpGet("{idCliente:guid}")]
-        public async Task<IEnumerable<FavoritoViewModel>> GetFavoritosCliente(Guid idCliente)
+        public async Task<IEnumerable<FavoritoDoClienteViewModel>> GetFavoritosCliente(Guid idCliente)
         {
-            return _mapper.Map<IEnumerable<FavoritoViewModel>>(await _favoritoService.PegarPorIdFavoritosClienteAsync(idCliente));
+            return _mapper.Map<IEnumerable<FavoritoDoClienteViewModel>>(await _favoritoService.PegarPorIdFavoritosClienteAsync(idCliente));
         }
 
         private async Task<FavoritoViewModel> GetByIdAsync(Guid idCliente, Guid idProduto)
