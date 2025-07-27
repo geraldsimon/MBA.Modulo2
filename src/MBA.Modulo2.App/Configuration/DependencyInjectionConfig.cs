@@ -29,6 +29,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<IDenunciaService, DenunciaService>();
         services.AddScoped<INotifier, Notificador>();
+        services.AddSingleton<AppState>();
 
         return services;
     }

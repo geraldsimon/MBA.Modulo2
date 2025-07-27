@@ -6,6 +6,7 @@ namespace MBA.Modulo2.Business.Services.Interface
     {
         Task AdicionaAsync(Vendedor seller);
         Task<Vendedor> PegarPorIdComProdutosAsync(Guid id);
+        Task<Vendedor> PegarVendedorPorAspNetUserIdAsync(Guid id);
         Task<IEnumerable<Vendedor>> PegarTodosAsync();
         Task AlteraAsync(Vendedor vendedor);
     }

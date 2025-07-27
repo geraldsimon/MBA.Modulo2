@@ -1,5 +1,5 @@
-﻿using MBA.Modulo2.App.ViewModels;
-using MBA.Modulo2.Business.Services.Implementacao;
+﻿using MBA.Modulo2.App.Configuration;
+using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
@@ -8,13 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MBA.Modulo2.App.Controllers;
 
-public class AccountController(IVendedorService VendedorService,
+public class AccountController(IVendedorService vendedorService,
                                IClienteService clienteService,
+                               AppState appState,
                                SignInManager<ApplicationUser> signInManager,
                                UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly IVendedorService _VendedorService = VendedorService;
+    private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IClienteService _clienteService = clienteService;
+    private readonly AppState _appState = appState;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
@@ -29,9 +31,18 @@ public class AccountController(IVendedorService VendedorService,
         if (ModelState.IsValid)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-
             if (result.Succeeded)
             {
+                if (_appState.UserStateId == null)
+                {
+                    _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
+                    var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
+                    _appState.VendedorStateId = vendedor.Id;
+
+                    var cliente = await _clienteService.PegarClintePorAspNetUserIdAsync((Guid)_appState.UserStateId);
+                    _appState.ClienteStateId = cliente.Id;
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -71,24 +82,33 @@ public class AccountController(IVendedorService VendedorService,
                 var logedUser = await _userManager.GetUserAsync(User);
                 var userId = logedUser?.Id;
 
+                var vendedorId = Guid.NewGuid();
                 Vendedor vendedor = new()
                 {
-                    Id = (Guid)userId,
+                    Id = vendedorId,
                     Nome = model.Nome,
+                    ApplicationUserId = user.Id,
+                    CriadoEm = DateTime.UtcNow,
                 };
-                await _VendedorService.AdicionaAsync(vendedor);
+                await _vendedorService.AdicionaAsync(vendedor);
 
+                var clienteId = Guid.NewGuid();
                 Cliente cliente = new()
                 {
-                    Id = (Guid)userId,
+                    Id = clienteId,
                     Nome = model.Nome,
+                    ApplicationUserId = user.Id,
                     CriadoEm = DateTime.UtcNow
                 };
-                await _clienteService.AdicionaAsync(cliente);
+                
+                _appState.UserStateId = (Guid)userId;
+                _appState.VendedorStateId = vendedorId;
+                _appState.ClienteStateId = clienteId;
 
+                await _clienteService.AdicionaAsync(cliente);
                 await _signInManager.SignOutAsync();
             }
-            
+
 
             if (result.Succeeded)
             {
@@ -105,7 +125,7 @@ public class AccountController(IVendedorService VendedorService,
             }
         }
         return View(model);
-   }
+    }
 
     public async Task<IActionResult> Logout()
     {

@@ -6,6 +6,7 @@ namespace MBA.Modulo2.Business.Services.Interface
     {
         Task<IEnumerable<Cliente>> PegarTodosAsync();
         Task<Cliente> PegarPorIdAsync(Guid id);
+        Task<Cliente> PegarClintePorAspNetUserIdAsync(Guid id);
         Task<bool> ExcluiAsync(Guid id);
         Task AlteraAsync(Cliente cliente);
         Task AdicionaAsync(Cliente customer);

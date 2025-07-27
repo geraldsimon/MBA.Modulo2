@@ -1,14 +1,11 @@
 using AppSemTemplate.Extensions;
-
 using AutoMapper;
-
 using MBA.Modulo2.App.Extensions;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Domain.Enums;
 using MBA.Modulo2.Data.Domain.Extensions;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -44,8 +41,13 @@ public class DenunciaController : Controller
 
 	[ClaimsAuthorize("Admin", "Admin")]
 	public async Task<IActionResult> Details(Guid id)
-	{
-		var denuncia = await _denunciaService.ObterDenunciaPorIdAsync(id);
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var denuncia = await _denunciaService.ObterDenunciaPorIdAsync(id);
 		if (denuncia == null) return NotFound();
 
 		var denunciaViewModel = _mapper.Map<DenunciaViewModel>(denuncia);
@@ -53,8 +55,13 @@ public class DenunciaController : Controller
 	}
 
 	public async Task<IActionResult> Create(Guid? produtoId)
-	{
-		var produto = await _produtoService.PegaPorIdAsync(produtoId);
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var produto = await _produtoService.PegaPorIdAsync(produtoId);
 		if (produto == null) return NotFound();
 
 		var usuarioId = Guid.Parse(User.GetUserId());
@@ -115,8 +122,13 @@ public class DenunciaController : Controller
 
 	[ClaimsAuthorize("Admin", "Admin")]
 	public async Task<IActionResult> Processar(Guid id)
-	{
-		var denuncia = await _denunciaService.ObterDenunciaPorIdAsync(id);
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var denuncia = await _denunciaService.ObterDenunciaPorIdAsync(id);
 		if (denuncia == null) return NotFound();
 
 		var viewModel = new ProcessarDenunciaViewModel
