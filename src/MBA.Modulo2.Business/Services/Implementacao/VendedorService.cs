@@ -18,6 +18,11 @@ public class VendedorService(IVendedorRepository sellerRepository) : IVendedorSe
         return await _vendedorRepository.PegarPorIdComProdutosAsync(id);
     }
 
+    public async Task<Vendedor> PegarVendedorPorAspNetUserIdAsync(Guid id)
+    {
+        return await _vendedorRepository.PegarPorAspNetUserIdAsync(id);
+    }
+
     public async Task<IEnumerable<Vendedor>> PegarTodosAsync()
     {
         return await _vendedorRepository.PegarTodosAsync();

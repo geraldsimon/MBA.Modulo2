@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
@@ -10,12 +9,12 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ComentarioController(IComentarioService commentService,
+public class ComentarioController(IComentarioService comentatiotService,
                                IPostService postService,
                                IMapper mapper, 
                                INotifier notifier) : MainController(notifier)
 {
-    private readonly IComentarioService _commentService = commentService;
+    private readonly IComentarioService _commentService = comentatiotService;
     private readonly IPostService _postService = postService;
     private readonly IMapper _mapper = mapper;
 
@@ -36,7 +35,7 @@ public class ComentarioController(IComentarioService commentService,
         var comment = await _commentService.PegarPorIdAsync(id);
         if (comment == null)
         {
-            ReportError("This comment does not exist.");
+            ReportError("Este comentário não existe.");
             return CustomResponse();
         }
 
@@ -52,7 +51,7 @@ public class ComentarioController(IComentarioService commentService,
         var post = await _postService.PegarPorIdAsync(commentViewModel.PostId);
         if (post == null)
         {
-            ReportError("The comment post ID does not exist, please insert an existing post");
+            ReportError("O ID do comentário não existe, insira um post existente");
             return CustomResponse();
         }
 
@@ -65,19 +64,19 @@ public class ComentarioController(IComentarioService commentService,
     public async Task<IActionResult> Update(Guid id, ComentarioViewModel commentViewModel)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        if (id != commentViewModel.Id) return BadRequest("Mismatched comment ID");
+        if (id != commentViewModel.Id) return BadRequest("ID de comentário incompatível");
 
         var post = await _postService.PegarPorIdAsync(commentViewModel.PostId);
         if (post == null)
         {
-            ReportError("This post does not exist");
+            ReportError("Esta postagem não existe");
             return CustomResponse();
         }
 
         var commentValidate = await _commentService.PegarPorIdAsync(id);
         if (commentValidate == null)
         {
-            ReportError("This comment does not exist.");
+            ReportError("Este comentário não existe.");
             return CustomResponse();
         }
 
@@ -96,7 +95,7 @@ public class ComentarioController(IComentarioService commentService,
         var commentValidate = await _commentService.PegarPorIdAsync(id);
         if (commentValidate == null)
         {
-            ReportError("This comment does not exist.");
+            ReportError("Este comentário não existe.");
             return CustomResponse();
         }
 
