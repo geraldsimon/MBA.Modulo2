@@ -189,6 +189,14 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             return NotFound();
         }
 
+        var productUpdate = await _productService.PegaPorIdAsync((Guid)id, (Guid)_appState.VendedorStateId);
+        if (productUpdate == null)
+        {
+            ReportError("Somente o usuário que o criou pode fazer alterações.");
+            return CustomResponse();
+        }
+
+
         if (ImageFile != null && ImageFile.Length > 0)
         {
             var imgPrefixo = Guid.NewGuid() + "_";
@@ -201,7 +209,14 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             product.Imagem = CurrentImage;
         }
 
-        var _product = _mapper.Map<Produto>(product);
+        productUpdate.Estoque = product.Estoque;
+        productUpdate.Preco = product.Preco;
+        productUpdate.Nome = product.Nome;
+        productUpdate.Descricao = product.Descricao;
+        productUpdate.Imagem = product.Imagem;
+
+
+        var _product = _mapper.Map<Produto>(productUpdate);
 
         if (ModelState.IsValid)
         {

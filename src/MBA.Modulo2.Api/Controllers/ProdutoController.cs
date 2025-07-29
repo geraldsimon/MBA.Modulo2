@@ -58,7 +58,7 @@ public class ProdutoController(IProdutoService productService,
 
         if (product == null)
         {
-            ReportError("Only the user who created it can delete the record.");
+            ReportError("Somente o usuário que o criou pode excluir o registro.");
             return CustomResponse();
         }
 
@@ -75,7 +75,7 @@ public class ProdutoController(IProdutoService productService,
 
         if (product == null)
         {
-            ReportError("Only the user who created it can delete the record.");
+            ReportError("Somente o usuário que o criou pode excluir o registro.");
             return CustomResponse();
         }
 
@@ -108,7 +108,7 @@ public class ProdutoController(IProdutoService productService,
     {
         if (id != produtoViewModel.Id)
         {
-            ReportError("The IDs provided are not the same!");
+            ReportError("Os IDs fornecidos não são os mesmos!");
             return CustomResponse();
         }
 
@@ -119,7 +119,7 @@ public class ProdutoController(IProdutoService productService,
         var productUpdate = await GetProdutoByID(id, vendedorId);
         if (productUpdate == null)
         {
-            ReportError("Only the user who created it can make changes.");
+            ReportError("Somente o usuário que o criou pode fazer alterações.");
             return CustomResponse();
         }
 
@@ -145,7 +145,7 @@ public class ProdutoController(IProdutoService productService,
 
         if (product == null)
         {
-            ReportError("Only the user who created it can delete the record.");
+            ReportError("Somente o usuário que o criou pode excluir o registro.");
             return CustomResponse();
         }
 
@@ -173,7 +173,7 @@ public class ProdutoController(IProdutoService productService,
     {
         if (string.IsNullOrEmpty(arquivo))
         {
-            ReportError("Please provide an image for this product!");
+            ReportError("Por favor, forneça uma imagem para este produto!");
             return string.Empty;
         }
 
@@ -186,7 +186,7 @@ public class ProdutoController(IProdutoService productService,
     {
         if (string.IsNullOrEmpty(arquivo))
         {
-            ReportError("Please provide an image for this product!");
+            ReportError("Por favor, forneça uma imagem para este produto!");
             return string.Empty;
         }
 
@@ -199,7 +199,7 @@ public class ProdutoController(IProdutoService productService,
     {
         if (string.IsNullOrEmpty(delete))
         {
-            ReportError("Please provide an image for this product!");
+            ReportError("Por favor, forneça uma imagem para este produto!");
             return;
         }
 
