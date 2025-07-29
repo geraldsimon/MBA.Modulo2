@@ -1,5 +1,6 @@
 ﻿using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
+using MBA.Modulo2.Business.Services.Implementacao;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -15,12 +16,15 @@ namespace MBA.Modulo2.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController(INotifier notifier,
                       SignInManager<ApplicationUser> signInManager,
+                      IClienteService clienteService,
                       UserManager<ApplicationUser> userManager,
                       IOptions<AppSettings> appSettings) : MainController(notifier)
 {
+    private readonly IClienteService _clienteService = clienteService;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly AppSettings _appSettings = appSettings.Value;
+
 
     [HttpPost("newAccount")]
     public async Task<ActionResult> NewAccount(RegisterUserViewModel registerUser)
@@ -37,6 +41,19 @@ public class AuthController(INotifier notifier,
         var result = await _userManager.CreateAsync(identityUser, registerUser.Password);
         if (result.Succeeded)
         {
+
+            var clienteId = Guid.NewGuid();
+            Cliente cliente = new()
+            {
+                Id = clienteId,
+                Nome = registerUser.Nome,
+                ApplicationUserId = identityUser.Id,
+                CriadoEm = DateTime.UtcNow
+            };
+
+
+            await _clienteService.AdicionaAsync(cliente);
+
             await _signInManager.SignInAsync(identityUser, false);
 
             return CustomResponse(await GenerateJwt(identityUser.Email));
