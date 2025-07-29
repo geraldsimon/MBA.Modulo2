@@ -1,22 +1,33 @@
-# ** DeveloperStore - Aplicação de  Gestão de Mini Loja Virtual Simples com MVC e API RESTful**
+# ** DeveloperStore - Aplicação de  Gestão de Mini Loja Virtual com MVC, API RESTful e SPA**
 
 ## **1. Apresentação**
 
-Bem-vindo ao repositório do projeto **DeveloperStore**. Este projeto é uma entrega do MBA DevXpert Full Stack .NET e é referente ao módulo **Introdução ao Desenvolvimento ASP.NET Core**.
-O objetivo principal desenvolver uma aplicação de Gestão de Mini Loja Virtual com Cadastro de Produtos e Categorias
-que permite aos usuários criar, editar, visualizar e excluir Produtos e categorias, tanto através de uma interface Web utilizando MVC quanto através de uma API RESTful.
+Bem-vindo ao repositório do projeto DeveloperStore,esse projeto faz parte da entrega do MBA DevXpert Full Stack .NET, referente ao Módulo 2 – Desenvolvimento Full-Stack Avançado com ASP.NET Core.
+O objetivo é dar continuidade ao sistema desenvolvido no Módulo 01, evoluindo de uma simples plataforma de gestão de produtos para uma loja virtual completa.
+Nesta nova versão, foram implementadas funcionalidades que não estavam presentes anteriormente, tais como:
+Cadastro e login de vendedores;
+Cadastro e login de clientes;
+CRUD de categorias e produtos com vínculo entre eles;
+Visualização pública de produtos;
+Lista de favoritos para clientes autenticados;
+Painel de moderação para administradores.
 
-A Aplicação MVC e API RESTful compartilha da camada de business, camada de dados e consequenemente a base de dados.
+Com isso, é possível realizar o controle completo (CRUD) de vendedores, clientes, produtos e categorias, utilizando três aplicações distintas:
+   1º MVC (Model-View-Controller): Responsável pelo cadastro/login de vendedores, gerenciamento de produtos e categorias, além do painel administrativo.
+   2º API RESTful: Responsável pela centralização das regras de negócio e comunicação entre as aplicações.
+   3º SPA (Single Page Application): Desenvolvida com Blazor, essa aplicação é voltada ao cliente final, permitindo navegação pública e funcionalidades autenticadas (como favoritar produtos).
+
+a aplicação MVC e a API RESTful compartilham a mesma camada de negócio, camada de dados e base de dados, já a aplicação SPA se comunica exclusivamente com a API via requisições HTTP, utilizando autenticação JWT para operações seguras.
 
 
 ### **Autor(es)**
 - **Alberto Luis Tarastchuck Borges**
+- **Diego Lobo**
 - **Douglas dos Santos Costa**
 - **Geraldo Alves Simao Junior**
 - **José Ricardo de Castro** 
 - **Leonardo da Silva Rocha**
 - **Silvio Cesar Kinaake**
-- **Diego Lobo**
 
 ## **2. Proposta do Projeto**
 
