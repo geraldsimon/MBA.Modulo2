@@ -18,14 +18,13 @@ namespace MBA.Modulo2.App.Controllers;
 [Authorize]
 public class ProdutoController(INotifier notifier,
                                AppState appState,
-                               UserManager<ApplicationUser> userManager,
+                               SignInManager<ApplicationUser> signInManager,
                                IVendedorService vendedorService,
                                IProdutoService productService,
                                ICategoriaService categoriaService,
                                IImageService imageService,
-                               IMapper mapper) : MainController(notifier, appState, userManager, vendedorService)
+                               IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly AppState _appState = appState;
     private readonly IProdutoService _productService = productService;
     private readonly ICategoriaService _categoriaService = categoriaService;
@@ -157,7 +156,7 @@ public class ProdutoController(INotifier notifier,
         }
 
         ViewBag.Categorias = new SelectList(await _categoriaService.PegarTodosAsync(), "Id", "Nome");
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(product);
     }
 
@@ -222,7 +221,7 @@ public class ProdutoController(INotifier notifier,
 
         var categories = await _categoriaService.PegarTodosAsync();
         ViewData["CategoryId"] = new SelectList(categories, "Id", "Id", product.CategoriaId);
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(_product);
     }
 

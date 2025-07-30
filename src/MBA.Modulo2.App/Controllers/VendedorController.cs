@@ -14,10 +14,10 @@ namespace MBA.Modulo2.App.Controllers;
 [Authorize]
 public class VendedorController(INotifier notifier,
                                 AppState appState,
-                                UserManager<ApplicationUser> userManager,
+                                SignInManager<ApplicationUser> signInManager,
                                 IVendedorService vendedorService,
                                 IProdutoRepository produtoRepository,
-                                IMapper mapper) : MainController(notifier, appState, userManager, vendedorService)
+                                IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
     private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IProdutoRepository _produtoRepository = produtoRepository;
@@ -47,6 +47,6 @@ public class VendedorController(INotifier notifier,
             await _produtoRepository.AlteraAsync(produto);
         }
 
-        return RedirectToAction("Index"); 
+        return RedirectToAction("Index");
     }
 }

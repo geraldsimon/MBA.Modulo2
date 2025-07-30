@@ -12,20 +12,20 @@ namespace MBA.Modulo2.App.Controllers;
 
 public class HomeController(INotifier notifier,
                             AppState appState,
-                            UserManager<ApplicationUser> userManager,
-                            IVendedorService vendedorService, 
-                            IProdutoService productService, 
-                            IMapper mapper) : MainController(notifier, appState, userManager, vendedorService)
+                            SignInManager<ApplicationUser> signInManager,
+                            IVendedorService vendedorService,
+                            IProdutoService productService,
+                            IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
     private readonly IProdutoService _productService = productService;
     private readonly IMapper _mapper = mapper;
 
-     public IActionResult Index()
+    public IActionResult Index()
     {
         return View();
     }
-    
-    
+
+
     [Authorize]
     public async Task<IActionResult> Vitrine()
     {
@@ -36,7 +36,7 @@ public class HomeController(INotifier notifier,
     {
         return View();
     }
- 
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

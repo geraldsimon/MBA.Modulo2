@@ -16,10 +16,10 @@ namespace MBA.Modulo2.App.Controllers;
 [Authorize]
 public class CategoriaController(INotifier notifier,
                                  AppState appState,
-                                 UserManager<ApplicationUser> userManager,
-                                 IVendedorService vendedorService, 
-                                 ICategoriaService categoriaService, 
-                                 IMapper mapper) : MainController(notifier, appState, userManager, vendedorService)
+                                 SignInManager<ApplicationUser> signInManager,
+                                 IVendedorService vendedorService,
+                                 ICategoriaService categoriaService,
+                                 IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
     private readonly ICategoriaService _categoriaService = categoriaService;
     private readonly IMapper _mapper = mapper;
@@ -54,7 +54,7 @@ public class CategoriaController(INotifier notifier,
         return View();
     }
 
-    [ClaimsAuthorize("Categorias","AD")]
+    [ClaimsAuthorize("Categorias", "AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Nome,Descricao")] CategoriaViewModel categoria)

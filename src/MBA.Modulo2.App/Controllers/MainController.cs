@@ -1,4 +1,5 @@
 ﻿using MBA.Modulo2.App.Configuration;
+using MBA.Modulo2.App.Extensions;
 using MBA.Modulo2.Business.Notifications;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
@@ -13,30 +14,28 @@ namespace MBA.Modulo2.App.Controllers
         private readonly AppState _appState;
         private readonly INotifier _notifier;
         private readonly IVendedorService _vendedorService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        protected MainController(INotifier notifier, AppState appState, UserManager<ApplicationUser> userManager, IVendedorService vendedorService)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        protected MainController(INotifier notifier, AppState appState, SignInManager<ApplicationUser> signInManager, IVendedorService vendedorService)
         {
+
             _appState = appState;
-            _userManager = userManager;
+            _signInManager = signInManager;
             _vendedorService = vendedorService;
             _notifier = notifier;
+
 
             InitializeAppState().Wait();
         }
 
         private async Task InitializeAppState()
         {
-            if (User.Identity.IsAuthenticated)
+            if (_signInManager.Context.User != null)
             {
-                if (_appState.UserStateId == null)
+                _appState.UserStateId = Guid.Parse(_signInManager.Context.User.GetUserId());
+                if (_appState.VendedorStateId == null)
                 {
-                    _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
-
-                    if (_appState.VendedorStateId == null)
-                    {
-                        var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
-                        _appState.VendedorStateId = (Guid?)vendedor.Id;
-                    }
+                    var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
+                    _appState.VendedorStateId = (Guid?)vendedor.Id;
                 }
             }
         }

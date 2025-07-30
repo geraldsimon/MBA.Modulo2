@@ -55,7 +55,9 @@ public class AuthController(INotifier notifier,
 
             await _signInManager.SignInAsync(identityUser, false);
 
-            return CustomResponse(await GenerateJwt(identityUser.Email));
+            var vendedor = await Pegarendedor(Guid.Parse(_userManager.GetUserId(User)));
+
+            return CustomResponse(await GenerateJwt(identityUser.Email, vendedor.Id));
         }
         foreach (var error in result.Errors)
         {
@@ -74,9 +76,8 @@ public class AuthController(INotifier notifier,
 
         if (result.Succeeded)
         {
-            //TODO: Verificar se o usuário é vendedor ou cliente e carregar os dados necessários
-            //_clienteService
-            return CustomResponse(await GenerateJwt(loginUser.Email));
+            var vendedor = await Pegarendedor(Guid.Parse(_userManager.GetUserId(User)));
+            return CustomResponse(await GenerateJwt(loginUser.Email, vendedor.Id));
         }
         if (result.IsLockedOut)
         {
@@ -88,7 +89,7 @@ public class AuthController(INotifier notifier,
         return CustomResponse(loginUser);
     }
 
-    private async Task<LoginResponseViewModel> GenerateJwt(string email)
+    private async Task<LoginResponseViewModel> GenerateJwt(string email, Guid clienteId)
     {
         var userJwt = await _userManager.FindByEmailAsync(email);
         var claims = await _userManager.GetClaimsAsync(userJwt);
@@ -123,6 +124,7 @@ public class AuthController(INotifier notifier,
 
         var response = new LoginResponseViewModel
         {
+            ClienteId = clienteId,
             AccessToken = encodedToken,
             ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
             UserToken = new UserTokenViewModel
@@ -133,6 +135,12 @@ public class AuthController(INotifier notifier,
             }
         };
         return response;
+    }
+
+
+    private async Task<Cliente> Pegarendedor(Guid id)
+    {
+        return await _clienteService.PegarClintePorAspNetUserIdAsync(id);
     }
 
     private static long ToUnixEpochDate(DateTime date)

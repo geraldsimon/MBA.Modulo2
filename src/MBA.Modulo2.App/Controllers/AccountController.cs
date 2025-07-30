@@ -13,7 +13,7 @@ public class AccountController(INotifier notifier,
                                UserManager<ApplicationUser> userManager,
                                IVendedorService vendedorService,
                                IClienteService clienteService,
-                               SignInManager<ApplicationUser> signInManager) : MainController(notifier, appState, userManager, vendedorService)
+                               SignInManager<ApplicationUser> signInManager) : MainController(notifier, appState, signInManager, vendedorService)
 {
     private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IClienteService _clienteService = clienteService;
@@ -32,8 +32,10 @@ public class AccountController(INotifier notifier,
         if (ModelState.IsValid)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+
             if (result.Succeeded)
             {
+                _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -91,7 +93,7 @@ public class AccountController(INotifier notifier,
                     ApplicationUserId = user.Id,
                     CriadoEm = DateTime.UtcNow
                 };
-                
+
                 _appState.UserStateId = (Guid)userId;
                 _appState.VendedorStateId = vendedorId;
 
