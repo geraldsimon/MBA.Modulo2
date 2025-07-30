@@ -53,6 +53,19 @@ public class AuthController(INotifier notifier,
 
             await _clienteService.AdicionaAsync(cliente);
 
+            var claimsToAdd = new[]
+            {
+                new Claim("Produtos", "VI"),//vizualizar
+                new Claim("Favoritos", "AD"),// add em favoritos
+                new Claim("Favoritos", "RM"),// remover de favoritos
+                new Claim("Perfil", "ED") //editar perfil
+            };
+
+            foreach (var claim in claimsToAdd)
+            {
+                await _userManager.AddClaimAsync(identityUser, claim);
+            }
+
             await _signInManager.SignInAsync(identityUser, false);
 
             var vendedor = await Pegarendedor(Guid.Parse(_userManager.GetUserId(User)));

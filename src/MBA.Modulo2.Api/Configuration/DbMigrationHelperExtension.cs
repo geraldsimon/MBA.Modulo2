@@ -48,6 +48,35 @@ namespace MBA.Modulo2.Api.Configuration
             using var scope = serviceProvider.CreateScope();
             var _user = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
+            var _nomeCliente = "Antonio";
+            var _emailCliente = "antonio@gmail.com";
+            var _passwordCliente = "Teste@123";
+
+            var idUserCliente = await CreateUserAsync(serviceProvider.CreateScope().ServiceProvider, _emailCliente, _passwordCliente);
+
+            var claimsToAddCliente = new[]
+            {
+                new Claim("Produtos", "VI"),//vizualizar
+                new Claim("Favoritos", "AD"),// add em favoritos
+                new Claim("Favoritos", "RM"),// remover de favoritos
+                new Claim("Perfil", "ED") //editar perfil
+            };
+
+            var userCliente = await _user.FindByEmailAsync(_emailCliente);
+
+            var existingClaimsCliente = await _user.GetClaimsAsync(userCliente);
+
+
+            var newClaimsCLiente = claimsToAddCliente.Where(claim => !existingClaimsCliente.Any(c => c.Type == claim.Type && c.Value == claim.Value));
+
+            foreach (var claim in claimsToAddCliente)
+            {
+                await _user.AddClaimAsync(userCliente, claim);
+            }
+
+
+
+
             var _email = "joaomelo@gmail.com";
             var _password = "Teste@123";
 
@@ -59,7 +88,7 @@ namespace MBA.Modulo2.Api.Configuration
             new Claim("Produtos", "AD"),
             new Claim("Produtos", "ED"),
             new Claim("Produtos", "EX")
-        };
+            };
 
             var user = await _user.FindByEmailAsync(_email);
 
@@ -72,6 +101,18 @@ namespace MBA.Modulo2.Api.Configuration
             {
                 await _user.AddClaimAsync(user, claim);
             }
+
+            var clienteId = Guid.NewGuid();
+            await context.Clientes.AddAsync(new Cliente()
+            {
+                Id = clienteId,
+                Nome = _nomeCliente,
+                ApplicationUserId = idUserCliente,
+                CriadoEm = DateTime.UtcNow
+            });
+
+
+
             var idVendedor = Guid.NewGuid();
             await context.Vendedores.AddAsync(new Vendedor()
             {
