@@ -5,6 +5,8 @@ using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Security.Claims;
 
 namespace MBA.Modulo2.App.Controllers;
 
@@ -93,6 +95,20 @@ public class AccountController(INotifier notifier,
                     ApplicationUserId = user.Id,
                     CriadoEm = DateTime.UtcNow
                 };
+
+                var claimsToAdd = new[]
+                {
+                    new Claim("Produtos", "VI"),
+                    new Claim("Produtos", "AD"),
+                    new Claim("Produtos", "ED"),
+                    new Claim("Produtos", "EX")
+                };
+
+
+                foreach (var claim in claimsToAdd)
+                {
+                    await _userManager.AddClaimAsync(user, claim);
+                }
 
                 _appState.UserStateId = (Guid)userId;
                 _appState.VendedorStateId = vendedorId;
