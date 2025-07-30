@@ -18,6 +18,11 @@ namespace MBA.Modulo2.Business.Services.Implementacao
             return await _clienteRepository.PegarPorIdAsync(id);
         }
 
+        public async Task<Cliente> PegarClintePorAspNetUserIdAsync(Guid id)
+        {
+            return await _clienteRepository.PegarPorAspNetUserIdAsync(id);
+        }
+
         public async Task<bool> ExcluiAsync(Guid id)
         {
             await _clienteRepository.ExcluiAsync(id);

@@ -1,8 +1,8 @@
 ﻿using AppSemTemplate.Extensions;
 using AutoMapper;
+using MBA.Modulo2.App.Configuration;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Functions;
-using MBA.Modulo2.Business.Services.Implamentation;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
@@ -16,34 +16,25 @@ using System.ComponentModel.DataAnnotations;
 namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
-public class ProdutoController(UserManager<ApplicationUser> userManager,
+public class ProdutoController(INotifier notifier,
+                               AppState appState,
+                               SignInManager<ApplicationUser> signInManager,
+                               IVendedorService vendedorService,
                                IProdutoService productService,
                                ICategoriaService categoriaService,
                                IImageService imageService,
-                               IMapper mapper) : Controller
+                               IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly AppState _appState = appState;
     private readonly IProdutoService _productService = productService;
     private readonly ICategoriaService _categoriaService = categoriaService;
     private readonly IImageService _imageService = imageService;
     private readonly IMapper _mapper = mapper;
 
     //[ClaimsAuthorize("Produtos", "VI,MVI")]
-    public async Task<IActionResult> Index(string Id)
+    public async Task<IActionResult> Index()
     {
-        if (String.IsNullOrEmpty(Id))
-        {
-            Id = TempData["_UserID"] as string ?? TempData["_UserID"]?.ToString().ToUpper();
-
-            if (String.IsNullOrEmpty(Id))
-                Id = Guid.Parse(_userManager.GetUserId(User)).ToString().ToUpper();
-            else
-                TempData["_UserID"] = Id;
-        }
-        else
-            TempData["_UserID"] = Id;
-
-        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.PegaTodosComCategoriasPorVendedorAsync(Guid.Parse(Id)));
+        var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.PegaTodosComCategoriasPorVendedorAsync((Guid)_appState.VendedorStateId));
 
         foreach (var prodct in products)
         {
@@ -73,14 +64,14 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
 
     //[ClaimsAuthorize("Produtos", "VI")]
     [Authorize]
-    public async Task<IActionResult> Details([Required] Guid id)
+    public async Task<IActionResult> Details([Required] Guid? id)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var product = _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id));
+        ProdutoViewModel product = _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id));
 
         if (product == null)
         {
@@ -102,7 +93,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         }
 
         ViewBag.Categorias = new SelectList(categoria, "Id", "Nome");
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
 
         return View();
     }
@@ -118,33 +109,46 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         {
             if (ImageFile != null && ImageFile.Length > 0)
             {
-                var imgPrefixo = Guid.NewGuid() + "_";
-                var fileName = $"{imgPrefixo}{ImageFile.FileName}".Trim();
-                await _imageService.SaveImageAsync(ImageFile, fileName);
-                _product.Imagem = fileName;
-                _product.VendedorId = Guid.Parse(_userManager.GetUserId(User));
+                if (_product.VendedorId == _appState.VendedorStateId)
+                {
+                    var imgPrefixo = Guid.NewGuid() + "_";
+                    var fileName = $"{imgPrefixo}{ImageFile.FileName}".Trim();
+                    await _imageService.SaveImageAsync(ImageFile, fileName);
+                    _product.Imagem = fileName;
+                    _product.VendedorId = (Guid)_appState.VendedorStateId;
+                    product.Id = Guid.NewGuid();
+                    await _productService.AdicionaAsync(_product);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ReportError("O Id do vendedor não é o mesmo do logado");
+                    return CustomResponse();
+                }
             }
-            product.Id = Guid.NewGuid();
-            await _productService.AdicionaAsync(_product);
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                ReportError("Selecione uma imagem para o produto");
+                return CustomResponse();
+            }
         }
         var categories = await _categoriaService.PegarTodosAsync();
 
         ViewData["CategoryId"] = new SelectList(categories, "Id", "Id", product.CategoriaId);
         ViewData["Nome"] = new SelectList(categories, "Nome", "Nome", product.Categoria);
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(_product);
     }
 
     [ClaimsAuthorize("Produtos", "ED")]
-    public async Task<IActionResult> Edit([Required] Guid id)
+    public async Task<IActionResult> Edit([Required] Guid? id)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var product = _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id));
+        ProdutoViewModel product = _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id));
 
         if (product == null)
         {
@@ -152,19 +156,27 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         }
 
         ViewBag.Categorias = new SelectList(await _categoriaService.PegarTodosAsync(), "Id", "Nome");
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(product);
     }
 
     [ClaimsAuthorize("Produtos", "ED")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit([Required] Guid id, [Bind("Id,Nome,Descricao,Preco,Estoque,CategoriaId,VendedorId")] ProdutoViewModel product, IFormFile ImageFile, string CurrentImage)
+    public async Task<IActionResult> Edit([Required] Guid? id, [Bind("Id,Nome,Descricao,Preco,Estoque,CategoriaId,VendedorId")] ProdutoViewModel product, IFormFile ImageFile, string CurrentImage)
     {
         if (id != product.Id)
         {
             return NotFound();
         }
+
+        var productUpdate = await _productService.PegaPorIdAsync((Guid)id, (Guid)_appState.VendedorStateId);
+        if (productUpdate == null)
+        {
+            ReportError("Somente o usuário que o criou pode fazer alterações.");
+            return CustomResponse();
+        }
+
 
         if (ImageFile != null && ImageFile.Length > 0)
         {
@@ -178,7 +190,14 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
             product.Imagem = CurrentImage;
         }
 
-        var _product = _mapper.Map<Produto>(product);
+        productUpdate.Estoque = product.Estoque;
+        productUpdate.Preco = product.Preco;
+        productUpdate.Nome = product.Nome;
+        productUpdate.Descricao = product.Descricao;
+        productUpdate.Imagem = product.Imagem;
+
+
+        var _product = _mapper.Map<Produto>(productUpdate);
 
         if (ModelState.IsValid)
         {
@@ -202,19 +221,19 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
 
         var categories = await _categoriaService.PegarTodosAsync();
         ViewData["CategoryId"] = new SelectList(categories, "Id", "Id", product.CategoriaId);
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(_product);
     }
 
     [ClaimsAuthorize("Produtos", "EX")]
-    public async Task<IActionResult> Delete([Required] Guid id)
+    public async Task<IActionResult> Delete([Required] Guid? id)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var product = _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id));
+        ProdutoViewModel product = _mapper.Map<ProdutoViewModel>(await _productService.PegaPorIdAsync(id));
 
         if (product == null)
         {

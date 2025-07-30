@@ -23,6 +23,10 @@ public class Repository<T> : IRepository<T> where T : class
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
     }
+    public async Task<T> PegarPorAspNetUserIdAsync(Guid applicationUserID)
+    {
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "ApplicationUserId") == applicationUserID);
+    }
 
     public async Task<T> PegarPorNomeAsync(string name)
     {

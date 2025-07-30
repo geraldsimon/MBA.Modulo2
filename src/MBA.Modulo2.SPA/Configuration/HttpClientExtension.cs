@@ -20,7 +20,12 @@ namespace MBA.Modulo2.Spa.Configuration
                 client.BaseAddress = new Uri(urlHttpClient);
                 client.Timeout = TimeSpan.FromSeconds(180);
             });
-            
+
+            services.AddHttpClient<FavoritoHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri(urlHttpClient);
+                client.Timeout = TimeSpan.FromSeconds(180);
+            });
 
             services.AddHttpClient<CategoriaHttpClient>(client =>
             {

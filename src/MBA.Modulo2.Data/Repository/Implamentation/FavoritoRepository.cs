@@ -25,7 +25,7 @@ namespace MBA.Modulo2.Data.Repository.Implamentation
 
         public async Task<IEnumerable<Favorito>> PegarPorIdFavoritosClienteAsync(Guid idCliente)
         {
-            return await _context.Favoritos.Where(f => f.ClienteId == idCliente).ToListAsync();
+            return await _context.Favoritos.Include(f => f.Produto).Where(f => f.ClienteId == idCliente).ToListAsync();
         }
 
         public async Task<Favorito> PegarPorIdProdutoFavoritoAsync(Guid idCliente, Guid idProduto)

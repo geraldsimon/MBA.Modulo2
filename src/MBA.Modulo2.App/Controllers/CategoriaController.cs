@@ -1,9 +1,12 @@
 ﻿using AppSemTemplate.Extensions;
 using AutoMapper;
+using MBA.Modulo2.App.Configuration;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
+using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +14,12 @@ using System.ComponentModel.DataAnnotations;
 namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
-public class CategoriaController(ICategoriaService categoriaService, IMapper mapper) : Controller
+public class CategoriaController(INotifier notifier,
+                                 AppState appState,
+                                 SignInManager<ApplicationUser> signInManager,
+                                 IVendedorService vendedorService,
+                                 ICategoriaService categoriaService,
+                                 IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
     private readonly ICategoriaService _categoriaService = categoriaService;
     private readonly IMapper _mapper = mapper;
@@ -46,7 +54,7 @@ public class CategoriaController(ICategoriaService categoriaService, IMapper map
         return View();
     }
 
-    [ClaimsAuthorize("Categorias","AD")]
+    [ClaimsAuthorize("Categorias", "AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Nome,Descricao")] CategoriaViewModel categoria)

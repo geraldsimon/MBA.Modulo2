@@ -21,6 +21,11 @@
             <ValidationSummary />
 
             <div class="form-group mt-2">
+                <label for="email">Nome</label>
+                <InputText id="nome" class="form-control" @bind-Value="cadUserModel.Nome" />
+                <ValidationMessage For="@(() => cadUserModel.Nome)" />
+            </div>
+            <div class="form-group mt-2">
                 <label for="email">Email</label>
                 <InputText id="email" class="form-control" @bind-Value="cadUserModel.Email" />
                 <ValidationMessage For="@(() => cadUserModel.Email)" />

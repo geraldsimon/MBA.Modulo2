@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Data.Models;
 using MBA.Modulo2.Data.Domain;
@@ -11,8 +10,17 @@ public class AutomapperConfig : Profile
 	public AutomapperConfig()
 	{
 		CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
-		CreateMap<Produto, ProdutoViewModel>().ReverseMap();
-		CreateMap<Vendedor, VendedorViewModel>().ReverseMap();
+		
+		CreateMap<Produto, ProdutoViewModel>().ReverseMap()
+            .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome))
+            .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
+            .ForMember(dest => dest.Preco, opt => opt.MapFrom(src => src.Preco))
+            .ForMember(dest => dest.Estoque, opt => opt.MapFrom(src => src.Estoque))
+            .ForMember(dest => dest.Imagem, opt => opt.MapFrom(src => src.Imagem))
+            .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
+            .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => src.Ativo));
+
+        CreateMap<Vendedor, VendedorViewModel>().ReverseMap();
 
 		CreateMap<Denuncia, DenunciaViewModel>()
 			.ForMember(dest => dest.ProdutoNome, opt => opt.MapFrom(src => src.Produto.Nome))
