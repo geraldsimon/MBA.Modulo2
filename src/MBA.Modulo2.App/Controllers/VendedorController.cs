@@ -1,17 +1,23 @@
 ﻿using AppSemTemplate.Extensions;
 using AutoMapper;
+using MBA.Modulo2.App.Configuration;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
+using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
-public class VendedorController(IVendedorService vendedorService,
+public class VendedorController(INotifier notifier,
+                                AppState appState,
+                                UserManager<ApplicationUser> userManager,
+                                IVendedorService vendedorService,
                                 IProdutoRepository produtoRepository,
-                               IMapper mapper) : Controller
+                                IMapper mapper) : MainController(notifier, appState, userManager, vendedorService)
 {
     private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IProdutoRepository _produtoRepository = produtoRepository;

@@ -1,6 +1,5 @@
 ﻿using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
-using MBA.Modulo2.Business.Services.Implementacao;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -75,6 +74,8 @@ public class AuthController(INotifier notifier,
 
         if (result.Succeeded)
         {
+            //TODO: Verificar se o usuário é vendedor ou cliente e carregar os dados necessários
+            //_clienteService
             return CustomResponse(await GenerateJwt(loginUser.Email));
         }
         if (result.IsLockedOut)

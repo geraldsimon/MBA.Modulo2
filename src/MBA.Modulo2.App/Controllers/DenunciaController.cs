@@ -1,5 +1,6 @@
 using AppSemTemplate.Extensions;
 using AutoMapper;
+using MBA.Modulo2.App.Configuration;
 using MBA.Modulo2.App.Extensions;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
@@ -7,31 +8,27 @@ using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Domain.Enums;
 using MBA.Modulo2.Data.Domain.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
-public class DenunciaController : Controller
+public class DenunciaController(INotifier notifier,
+								AppState appState,
+								UserManager<ApplicationUser> userManager,
+								IVendedorService vendedorService, 
+								IDenunciaService denunciaService,
+                                IProdutoService produtoService,
+                                IMapper mapper) : MainController(notifier, appState, userManager, vendedorService)
 {
-	private readonly IDenunciaService _denunciaService;
-	private readonly IProdutoService _produtoService;
-	private readonly INotifier _notifier;
-	private readonly IMapper _mapper;
+	private readonly IDenunciaService _denunciaService = denunciaService;
+	private readonly IProdutoService _produtoService = produtoService;
+	private readonly INotifier _notifier = notifier;
+	private readonly IMapper _mapper = mapper;
 
-	public DenunciaController(IDenunciaService denunciaService,
-		IProdutoService produtoService,
-		INotifier notifier,
-		IMapper mapper)
-	{
-		_denunciaService = denunciaService;
-		_produtoService = produtoService;
-		_notifier = notifier;
-		_mapper = mapper;
-	}
-
-	[ClaimsAuthorize("Admin", "Admin")]
+    [ClaimsAuthorize("Admin", "Admin")]
 	public async Task<IActionResult> Index()
 	{
 		var denuncias = await _denunciaService.ObterDenunciasPendentesAsync();
