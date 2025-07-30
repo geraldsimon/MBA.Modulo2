@@ -31,12 +31,22 @@ a aplicação MVC e a API RESTful compartilham a mesma camada de negócio, camada d
 
 ## **2. Proposta do Projeto**
 
-O projeto consiste em:
+O projeto DeveloperStore tem como proposta principal a construção de uma plataforma completa, com foco em modularidade, segurança e boa experiência do usuário. 
+com o objetivo de continuar evoluindo sistema de gestão de produtos desenvolvido no Módulo 01, agora expandido para incluir funcionalidades voltadas ao cliente final e à gestão multiusuário.
 
-- **Aplicação MVC:** Interface web para interação com a Loja Virtual.
-- **API RESTful:** Exposição dos recursos da Loja Virtual para integração com outras aplicações ou desenvolvimento de front-ends alternativos.
-- **Autenticação e Autorização:** Implementação de controle de acesso, diferenciando usuários logados e usuários comuns.
-- **Acesso a Dados:** Implementação de acesso ao banco de dados através de ORM.
+Escopo Funcional:
+- **Área Administrativa: Para vendedores e administradores realizarem o cadastro e gerenciamento de produtos e categorias.
+- **Loja Virtual: Para navegação pública de produtos, com recursos como login de cliente e lista de favoritos.
+- **API RESTful: Centraliza as regras de negócio e permite a comunicação entre as aplicações.
+
+Benefícios Técnicos:
+- **Separação clara de camadas e responsabilidades.
+- **Aplicação de conceitos modernos de autenticação e autorização.
+- **Adoção de padrões REST e documentação via Swagger.
+- **Utilização de ferramentas e frameworks atualizados (.NET 8, Blazor, EF Core).
+- **Banco de dados inicializado automaticamente para facilitar o setup em ambientes de desenvolvimento.
+
+
 
 ## **3. Tecnologias Utilizadas**
 
