@@ -10,11 +10,12 @@ using System.Security.Claims;
 
 namespace MBA.Modulo2.App.Controllers;
 
-public class AccountController(IVendedorService vendedorService,
-                               IClienteService clienteService,
+public class AccountController(INotifier notifier,
                                AppState appState,
-                               SignInManager<ApplicationUser> signInManager,
-                               UserManager<ApplicationUser> userManager) : Controller
+                               UserManager<ApplicationUser> userManager,
+                               IVendedorService vendedorService,
+                               IClienteService clienteService,
+                               SignInManager<ApplicationUser> signInManager) : MainController(notifier, appState, signInManager, vendedorService)
 {
     private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IClienteService _clienteService = clienteService;
@@ -33,18 +34,10 @@ public class AccountController(IVendedorService vendedorService,
         if (ModelState.IsValid)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+
             if (result.Succeeded)
             {
-                if (_appState.UserStateId == null)
-                {
-                    _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
-                    var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
-                    _appState.VendedorStateId = vendedor.Id;
-
-                    var cliente = await _clienteService.PegarClintePorAspNetUserIdAsync((Guid)_appState.UserStateId);
-                    _appState.ClienteStateId = cliente.Id;
-                }
-
+                _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -119,7 +112,6 @@ public class AccountController(IVendedorService vendedorService,
 
                 _appState.UserStateId = (Guid)userId;
                 _appState.VendedorStateId = vendedorId;
-                _appState.ClienteStateId = clienteId;
 
                 await _clienteService.AdicionaAsync(cliente);
                 await _signInManager.SignOutAsync();

@@ -4,6 +4,5 @@
     {
         public Guid? UserStateId { get; set; }
         public Guid? VendedorStateId { get; set; }
-        public Guid? ClienteStateId { get; set; }
     }
 }

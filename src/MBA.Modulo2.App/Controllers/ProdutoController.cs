@@ -3,8 +3,6 @@ using AutoMapper;
 using MBA.Modulo2.App.Configuration;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Functions;
-using MBA.Modulo2.Business.Services.Implamentation;
-using MBA.Modulo2.Business.Services.Implementacao;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
@@ -13,46 +11,29 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
-public class ProdutoController(UserManager<ApplicationUser> userManager,
+public class ProdutoController(INotifier notifier,
                                AppState appState,
+                               SignInManager<ApplicationUser> signInManager,
                                IVendedorService vendedorService,
-                               IClienteService clienteService,
                                IProdutoService productService,
                                ICategoriaService categoriaService,
                                IImageService imageService,
-                               IMapper mapper,
-                               INotifier notifier) : MainController(notifier)
+                               IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
 {
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly AppState _appState = appState;
-    private readonly IVendedorService _vendedorService = vendedorService;
-    private readonly IClienteService _clienteService = clienteService;
     private readonly IProdutoService _productService = productService;
     private readonly ICategoriaService _categoriaService = categoriaService;
-
     private readonly IImageService _imageService = imageService;
     private readonly IMapper _mapper = mapper;
 
     //[ClaimsAuthorize("Produtos", "VI,MVI")]
     public async Task<IActionResult> Index()
     {
-        if (_appState.UserStateId == null)
-        {
-            _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
-            var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
-            _appState.VendedorStateId = vendedor.Id;
-
-            var cliente = await _clienteService.PegarClintePorAspNetUserIdAsync((Guid)_appState.UserStateId);
-            _appState.ClienteStateId = cliente.Id;
-        }
-
-
         var products = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _productService.PegaTodosComCategoriasPorVendedorAsync((Guid)_appState.VendedorStateId));
 
         foreach (var prodct in products)
@@ -175,7 +156,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
         }
 
         ViewBag.Categorias = new SelectList(await _categoriaService.PegarTodosAsync(), "Id", "Nome");
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(product);
     }
 
@@ -240,7 +221,7 @@ public class ProdutoController(UserManager<ApplicationUser> userManager,
 
         var categories = await _categoriaService.PegarTodosAsync();
         ViewData["CategoryId"] = new SelectList(categories, "Id", "Id", product.CategoriaId);
-        ViewData["VendedorId"] = _userManager.GetUserId(User);
+        ViewData["VendedorId"] = _appState.VendedorStateId;
         return View(_product);
     }
 
