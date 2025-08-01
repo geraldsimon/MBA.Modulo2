@@ -1,6 +1,9 @@
 ﻿@page "/favoritos"
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@using MBA.Modulo2.Spa.Components
+@attribute [Authorize]
 @inject FavoritoHttpClient FavoritoApi
 
 <PageTitle>Lista de Produtos Favoritos</PageTitle>
@@ -11,21 +14,32 @@
 }
 else if (favoritos.Count == 0)
 {
-    <p>Nenhum Favorito ate o momento.</p>
+    <CardComponent>
+        <Titulo>
+            PRODUTOS FAVORITOS
+        </Titulo>
+
+        <Corpo>
+            <div style="text-align: center; padding: 20px;">
+                <strong style="font-size: 18px; color: #888;">Você ainda não adicionou nenhum produto aos seus favoritos.</strong><br />
+                <span style="font-size: 16px; color: #aaa;">Explore os produtos e toque no coração para marcar seus favoritos!</span>
+                <br><br>
+                <a href="/Produto" class="btn btn-primary btn-sm">
+                    Ver Produtos
+                </a>
+            </div>
+        </Corpo>
+    </CardComponent>
 }
 else
 {
     var imagePath = $"https://localhost:7009/images/";
 
-    <div class="container mt-4" style="padding-bottom:8%">
-        <div class="bg-primary text-white p-2 rounded-top">
-            <h5 class="mb-0" style="margin-left:3%">PRODUTOS FAVORITOS</h5>
-        </div>
-
-        <div class="card border rounded-bottom shadow">
-
-
-
+    <CardComponent>
+        <Titulo>
+            PRODUTOS FAVORITOS
+        </Titulo>
+        <Corpo>
             <div class="card mb-3 w-100">
                 <div class="card-body">
                     <div class="row">
@@ -47,10 +61,8 @@ else
                     </div>
                 </div>
             </div>
-        </div>
-
-    </div>
-
+        </Corpo>
+    </CardComponent>
 
 
 }
@@ -62,8 +74,7 @@ else
     {
         try
         {
-            Guid idCliente = Guid.Parse("D0598681-C633-41A2-91A4-39053F7F0057");
-            favoritos = await FavoritoApi.PegarosFavoritos(idCliente);
+            favoritos = await FavoritoApi.PegarosFavoritos();
         }
         catch (Exception ex)
         {

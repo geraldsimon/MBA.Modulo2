@@ -24,7 +24,7 @@ namespace MBA.Modulo2.App.Controllers
             _notifier = notifier;
 
 
-            InitializeAppState().Wait();
+            //InitializeAppState().Wait();
         }
 
         private async Task InitializeAppState()

@@ -16,6 +16,14 @@ namespace MBA.Modulo2.Data.Repository.Implamentation
             await _context.SaveChangesAsync();
         }
 
+
+        public async Task<bool> ProdutoJaFavoritadoAsync(Guid idCliente, Guid idProduto)
+        {
+            return await _context.Favoritos
+                .AnyAsync(f => f.ProdutoId == idProduto && f.ClienteId == idCliente);
+        }
+
+
         public async Task ExcluirTodosProdutosFavoritoAsync(Guid idCliente)
         {
             var favoritos = await _context.Favoritos.Where(f => f.ClienteId == idCliente).ToListAsync();
