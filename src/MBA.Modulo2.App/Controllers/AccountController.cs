@@ -5,7 +5,6 @@ using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Security.Claims;
 
 namespace MBA.Modulo2.App.Controllers;
@@ -15,7 +14,8 @@ public class AccountController(INotifier notifier,
                                UserManager<ApplicationUser> userManager,
                                IVendedorService vendedorService,
                                IClienteService clienteService,
-                               SignInManager<ApplicationUser> signInManager) : MainController(notifier, appState, signInManager, vendedorService)
+                               SignInManager<ApplicationUser> signInManager,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
     private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IClienteService _clienteService = clienteService;

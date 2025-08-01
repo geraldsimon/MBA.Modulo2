@@ -21,7 +21,8 @@ public class DenunciaController(INotifier notifier,
                                 IVendedorService vendedorService,
                                 IDenunciaService denunciaService,
                                 IProdutoService produtoService,
-                                IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
+                                IMapper mapper,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
     private readonly IDenunciaService _denunciaService = denunciaService;
     private readonly IProdutoService _produtoService = produtoService;

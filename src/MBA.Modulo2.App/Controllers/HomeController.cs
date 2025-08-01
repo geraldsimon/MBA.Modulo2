@@ -15,7 +15,8 @@ public class HomeController(INotifier notifier,
                             SignInManager<ApplicationUser> signInManager,
                             IVendedorService vendedorService,
                             IProdutoService productService,
-                            IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
+                            IMapper mapper,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
     private readonly IProdutoService _productService = productService;
     private readonly IMapper _mapper = mapper;

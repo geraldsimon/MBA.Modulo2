@@ -19,7 +19,8 @@ public class CategoriaController(INotifier notifier,
                                  SignInManager<ApplicationUser> signInManager,
                                  IVendedorService vendedorService,
                                  ICategoriaService categoriaService,
-                                 IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
+                                 IMapper mapper,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
     private readonly ICategoriaService _categoriaService = categoriaService;
     private readonly IMapper _mapper = mapper;
