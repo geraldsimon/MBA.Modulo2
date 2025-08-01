@@ -17,7 +17,8 @@ public class VendedorController(INotifier notifier,
                                 SignInManager<ApplicationUser> signInManager,
                                 IVendedorService vendedorService,
                                 IProdutoRepository produtoRepository,
-                                IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
+                                IMapper mapper,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
     private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IProdutoRepository _produtoRepository = produtoRepository;
