@@ -29,7 +29,7 @@ namespace MBA.Modulo2.App.Controllers
 
         private async Task InitializeAppState()
         {
-            if (_signInManager.Context.User != null)
+            if (User?.Identity?.IsAuthenticated== true)
             {
                 _appState.UserStateId = Guid.Parse(_signInManager.Context.User.GetUserId());
                 if (_appState.VendedorStateId == null)
