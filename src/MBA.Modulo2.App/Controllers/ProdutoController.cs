@@ -23,7 +23,8 @@ public class ProdutoController(INotifier notifier,
                                IProdutoService productService,
                                ICategoriaService categoriaService,
                                IImageService imageService,
-                               IMapper mapper) : MainController(notifier, appState, signInManager, vendedorService)
+                               IMapper mapper,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
     private readonly AppState _appState = appState;
     private readonly IProdutoService _productService = productService;

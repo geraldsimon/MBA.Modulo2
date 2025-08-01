@@ -15,13 +15,20 @@ namespace MBA.Modulo2.App.Controllers
         private readonly INotifier _notifier;
         private readonly IVendedorService _vendedorService;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        protected MainController(INotifier notifier, AppState appState, SignInManager<ApplicationUser> signInManager, IVendedorService vendedorService)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        protected MainController(INotifier notifier, 
+                                AppState appState, 
+                                SignInManager<ApplicationUser> signInManager, 
+                                IVendedorService vendedorService,
+                                IHttpContextAccessor httpContextAccessor)
         {
 
             _appState = appState;
             _signInManager = signInManager;
             _vendedorService = vendedorService;
             _notifier = notifier;
+            _httpContextAccessor = httpContextAccessor;
 
 
             InitializeAppState().Wait();
@@ -29,7 +36,8 @@ namespace MBA.Modulo2.App.Controllers
 
         private async Task InitializeAppState()
         {
-            if (User?.Identity?.IsAuthenticated== true)
+            var user = _httpContextAccessor.HttpContext?.User;
+            if (user?.Identity?.IsAuthenticated== true)
             {
                 _appState.UserStateId = Guid.Parse(_signInManager.Context.User.GetUserId());
                 if (_appState.VendedorStateId == null)
