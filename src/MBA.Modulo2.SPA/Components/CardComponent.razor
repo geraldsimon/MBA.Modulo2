@@ -1,0 +1,16 @@
+﻿<div class="container mt-4">
+    <div class="bg-primary text-white p-2 rounded-top">
+        <h5 class="mb-0" style="margin-left:3%">@Titulo</h5>
+    </div> 
+
+    <div class="card border rounded-bottom shadow">
+        @Corpo
+    </div>
+</div>
+@code {
+    [Parameter]
+    public RenderFragment Titulo { get; set; }
+
+    [Parameter]
+    public RenderFragment Corpo { get; set; }
+}

@@ -13,6 +13,8 @@ namespace MBA.Modulo2.Api.ViewModels
         [ForeignKey(nameof(Produto))]
         public Guid ProdutoId { get; set; }
 
+
+        [SwaggerIgnore]
         [ForeignKey(nameof(Cliente))]
         public Guid ClienteId { get; set; }
     }

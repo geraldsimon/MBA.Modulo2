@@ -98,16 +98,9 @@ namespace MBA.Modulo2.Spa.ExternalApi
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
-
-            Console.WriteLine($"IsAuthenticated: {user.Identity?.IsAuthenticated}");
-
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
-                // Busca o claim do tipo "sub", que contém o ID do usuário
                 var idClaim = user.FindFirst("sub");
-
-                Console.WriteLine($"Claim 'sub': {idClaim?.Value}");
-
                 if (idClaim is not null && Guid.TryParse(idClaim.Value, out Guid userId))
                 {
                     return userId;
@@ -115,6 +108,29 @@ namespace MBA.Modulo2.Spa.ExternalApi
             }
 
             return null;
+        }
+
+        public async Task<Guid?> PegarIdCliente()
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                var idClaim = user.FindFirst("clienteId");
+                if (idClaim is not null && Guid.TryParse(idClaim.Value, out Guid userId))
+                {
+                    return userId;
+                }
+            }
+            return null;
+        }
+
+        public async Task<bool> UsuarioEstaLogadoAsync()
+        {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            return user.Identity is not null && user.Identity.IsAuthenticated;
         }
 
 

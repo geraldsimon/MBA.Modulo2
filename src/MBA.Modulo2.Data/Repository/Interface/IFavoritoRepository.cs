@@ -12,5 +12,8 @@ namespace MBA.Modulo2.Data.Repository.Interface
         Task<IEnumerable<Favorito>> PegarPorIdFavoritosClienteAsync(Guid idCliente);
 
         Task ExcluirTodosProdutosFavoritoAsync(Guid idCliente);
+
+        Task<bool> ProdutoJaFavoritadoAsync(Guid idCliente, Guid idProduto);
+
     }
 }
