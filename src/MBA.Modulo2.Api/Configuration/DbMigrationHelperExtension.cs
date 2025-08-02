@@ -57,6 +57,7 @@ namespace MBA.Modulo2.Api.Configuration
             var claimsToAddCliente = new[]
             {
                 new Claim("Produtos", "VI"),//vizualizar
+                new Claim("Favoritos", "VI"),// favoritos visualizar
                 new Claim("Favoritos", "AD"),// add em favoritos
                 new Claim("Favoritos", "RM"),// remover de favoritos
                 new Claim("Perfil", "ED") //editar perfil
