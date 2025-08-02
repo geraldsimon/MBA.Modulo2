@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
@@ -19,6 +20,7 @@ namespace MBA.Modulo2.Api.Controllers
         private readonly IFavoritoService _favoritoService = favoritoService;
         private readonly IMapper _mapper = mapper;
 
+        [ClaimsAuthorize("Favoritos", "AD")]
         [HttpPost]
         public async Task<ActionResult<FavoritoViewModel>> Add(FavoritoViewModel favoritoViewModel)
         {
@@ -34,6 +36,7 @@ namespace MBA.Modulo2.Api.Controllers
             return CreatedAtAction(nameof(Add), new { id = favoritoViewModel.ProdutoId }, favoritoViewModel);
         }
 
+        [ClaimsAuthorize("Favoritos", "RM")]
         [HttpDelete("{idProduto:guid}")]
         public async Task<ActionResult<FavoritoViewModel>> Delete(Guid idProduto)
         {
@@ -46,13 +49,14 @@ namespace MBA.Modulo2.Api.Controllers
             if (favorito == null)
             {
                 return BadRequest();
-            }                
+            }
 
             await _favoritoService.ExcluirProdutoFavorito(ClienteId, idProduto);
 
             return NoContent();
         }
 
+        [ClaimsAuthorize("Favoritos", "VI")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FavoritoDoClienteViewModel>>> GetFavoritosCliente()
         {
@@ -70,6 +74,6 @@ namespace MBA.Modulo2.Api.Controllers
             return _mapper.Map<FavoritoViewModel>(await _favoritoService.PegarPorIdProdutoFavoritoAsync(idCliente, idProduto));
         }
 
-        
+
     }
 }
