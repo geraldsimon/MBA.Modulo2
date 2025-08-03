@@ -149,6 +149,24 @@ namespace MBA.Modulo2.Api.Configuration
             await CreateProdutos(context, idVendedor, guidCategoria);
             await CreateProdutos(context, idVendedor, guidCategoria);
             await CreateProdutos(context, idVendedor, guidCategoria);
+
+
+            await context.Categorias.AddAsync(new Categoria()
+            {
+                Id = Guid.NewGuid(),
+                Nome = "Nootebook",
+                Descricao = "Nootebook",
+            });
+
+            await context.SaveChangesAsync();
+
+            guidCategoria = await context.Categorias.Where(c => c.Nome == "Nootebook").Select(c => c.Id).FirstOrDefaultAsync();
+
+            await CreateProdutos(context, idVendedor, guidCategoria);
+            await CreateProdutos(context, idVendedor, guidCategoria);
+            await CreateProdutos(context, idVendedor, guidCategoria);
+            await CreateProdutos(context, idVendedor, guidCategoria);
+            await CreateProdutos(context, idVendedor, guidCategoria);
         }
 
         private static async Task EnsureSeedAdminUserAsync(IServiceProvider serviceProvider)
