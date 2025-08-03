@@ -6,5 +6,6 @@ namespace MBA.Modulo2.Spa.ViewModels
     {
         public ProdutoLoggedOutViewModel Produto { get; set; }
         public Guid ClienteId { get; set; }
+        public bool success { get; set; }
     }
 }

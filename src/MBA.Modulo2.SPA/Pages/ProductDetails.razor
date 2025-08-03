@@ -1,9 +1,11 @@
 ﻿@page "/produtoDetail/{Id:guid}"
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
+@using MBA.Modulo2.Spa.Components
 
 @inject ProdutoHttpClient ProdutoApi
 @inject AuthHttpClient AuthHttpApi
+@inject FavoritoHttpClient FavoritoApi
 
 @if (products == null)
 {
@@ -15,25 +17,27 @@ else
     var imagePath = $"https://localhost:7009/images/";
 
 
-    <div class="container mt-4">
-        <div class="bg-primary text-white p-2 rounded-top">
-            <h5 class="mb-0" style="margin-left:3%">PRODUTO</h5>
-        </div>
 
-        <div class="card border rounded-bottom shadow">
+
+
+
+    <CardComponent>
+        <Titulo>
+            PRODUTO
+        </Titulo>
+        <Corpo>
             <div class="text-center" style="margin:2% 20%">
                 <img src="@($"{imagePath}{products.Imagem}")" class="card-img-top img-fluid" alt="@products.Nome" style="max-width: 100%; height: auto;">
             </div>
-
             <div class="card-body" style="margin:1% 15%">
 
 
                 <div class="container">
                     <div class="row">
+
                         <div class="col-9"><h4 class="text-primary fw-bold">@products.Preco</h4></div>
                         <div class="col-3">
                             <div>
-
                                 <button class="btn btn-outline-secondary me-2" title="Denunciar" @onclick="Denunciar">
                                     <img src="icons/icon_atencao.png" alt="Denunciar" style="width: 20px; height: 20px;" />
                                 </button>
@@ -80,23 +84,16 @@ else
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-
             </div>
-        </div>
-    </div>
+        </Corpo>
+    </CardComponent>
 
-    <div class="container mt-4" style="padding-bottom:8%">
-        <div class="bg-primary text-white p-2 rounded-top">
-            <h5 class="mb-0" style="margin-left:3%">VENDEDOR</h5>
-        </div>
 
-        <div class="card border rounded-bottom shadow">
-
+    <CardComponent>
+        <Titulo>
+            VENDEDOR
+        </Titulo>
+        <Corpo>
             <div class="card-body" style="margin:1% 15%">
 
                 <div class="card mb-3 w-100">
@@ -133,7 +130,7 @@ else
                                         <div class="card-body d-flex flex-column">
                                             <h6 class="card-title">@produ.Nome</h6>
                                             <p class="card-text mt-auto"><strong>Preço:</strong> @produ.Preco.ToString("C")</p>
-                                            <a href="/produtoDetail/@produ.Id">Ver Detalhes</a>
+                                            <a class="btn btn-primary mt-auto" href="/produtoDetail/@produ.Id">Ver Detalhes</a>
                                         </div>
                                     </div>
                                 </div>
@@ -143,56 +140,32 @@ else
                 </div>
 
             </div>
-        </div>
-
-    </div>
-
+        </Corpo>
+    </CardComponent>
 
 
     @if (mostrarModalLogin)
     {
-        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.6);">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow-lg rounded-4">
-                    <div class="modal-header bg-primary text-white rounded-top">
-                        <h5 class="modal-title fw-bold">Acesso Necessário</h5>
-                        <button type="button" class="btn-close" @onclick="FecharModal" aria-label="Fechar"></button>
-                    </div>
-
-                    <div class="modal-body text-center">
-                        <img src="img/logo.png" alt="Logo" class="mb-3" style="width: 100px; height: auto;" />
-
-                        <h4 class="fw-semibold text-dark">Caro Cliente</h4>
-                        <p class="text-secondary">
-                            Para realizar esta ação é necessário estar logado em nossa plataforma.
-                        </p>
-
-
-                        <a href="/login" class="btn btn-outline-primary mt-3 px-4">
-                            Ir para Login &rarr;
-                        </a>
-                    </div>
-
-                    <div class="modal-footer justify-content-center">
-                        <button class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ModalLogin OnClose="FecharModal" />
     }
+    <Toast Show="mostrarToast" ColorClass="@toastColorClass" Message="@toastMessage" OnClose="FecharToast" />
+
+
 
 }
 
 @code {
     private ProdutoDetalhesViewModel products;
+    private FavoritoDoClienteViewModel favoritando;
 
     [Parameter]
     public Guid Id { get; set; }
 
     private bool logado = false;
-
-
-    private string guidTeste = "51DFA591-8724-448A-848E-70B9B32B212B";
+    private bool mostrarModalLogin = false;
+    private bool mostrarToast;
+    private string toastMessage;
+    private string toastColorClass;
 
 
 
@@ -200,6 +173,7 @@ else
     {
         try
         {
+            logado = await AuthHttpApi.UsuarioEstaLogadoAsync();
             products = await ProdutoApi.GetProdutoDetalheAsync(Id);
         }
         catch (Exception ex)
@@ -211,26 +185,30 @@ else
 
     private async Task Favoritar()
     {
-        var usuarioId = await AuthHttpApi.PegarIdUsuario();
-
-        if (usuarioId == null)
+        if (logado.Equals(false))
         {
             mostrarModalLogin = true;
             StateHasChanged();
         }
         else
         {
-
-
-
-
-
-
-
-
-
+            byte retorno = await FavoritoApi.RegistrarFavorito(Id);
+            switch (retorno)
+            {
+                case 1:
+                    await MostrarToast("Produto adicionado aos favoritos!", "text-bg-success");
+                    break;
+                case 2:
+                    await MostrarToast("Produto Deletado dos favoritos", "text-bg-warning");
+                    break;
+                case 3:
+                    await MostrarToast("Ocorreu algum erro!", "text-bg-danger");
+                    break;
+            }
         }
     }
+
+    
 
     private async Task Denunciar()
     {
@@ -248,13 +226,7 @@ else
     }
 
 
-
-
-
-
-
-
-    private bool mostrarModalLogin = false;
+    
     private void AbrirModal()
     {
         mostrarModalLogin = true;
@@ -263,12 +235,27 @@ else
     {
         mostrarModalLogin = false;
     }
+    
 
 
 
 
+
+
+    private async Task MostrarToast(string mensagem, string corClasse)
+    {
+        toastMessage = mensagem;
+        toastColorClass = corClasse;
+        mostrarToast = true;
+        StateHasChanged();
+        await Task.Delay(3000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+
+    private Task FecharToast()
+    {
+        mostrarToast = false;
+        return Task.CompletedTask;
+    }
 }
-
-
-
-

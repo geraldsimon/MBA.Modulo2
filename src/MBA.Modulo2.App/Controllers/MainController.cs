@@ -31,7 +31,7 @@ namespace MBA.Modulo2.App.Controllers
             _httpContextAccessor = httpContextAccessor;
 
 
-            InitializeAppState().Wait();
+            //InitializeAppState().Wait();
         }
 
         private async Task InitializeAppState()
