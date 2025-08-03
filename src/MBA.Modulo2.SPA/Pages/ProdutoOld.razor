@@ -1,5 +1,6 @@
-﻿@page "/produto"
+﻿@page "/produtoold"
 @using MBA.Modulo2.Spa.ExternalApi
+@* @using MBA.Modulo2.Spa.Functions *@
 @using MBA.Modulo2.Spa.ViewModels
 @inject ProdutoHttpClient ProdutoApi
 
@@ -9,32 +10,27 @@
 {
     <p>Carregando produtos...</p>
 }
+else if (products.Count == 0)
+{
+    <p>Nenhum produto disponível.</p>
+}
 else
 {
     var imagePath = $"https://localhost:7009/images/";
 
     <div class="container mt-4" style="padding-bottom:8%">
         <div class="bg-primary text-white p-2 rounded-top">
-            <h5 class="mb-0" style="margin-left:3%">PRODUTOS DISPONÍVEIS</h5>
-        </div>
-
-        <!-- Filtro por categoria -->
-        <div class="mt-3 mb-3">
-            <label for="filtroCategoria"><strong>Filtrar por categoria:</strong></label>
-            <select id="filtroCategoria" class="form-select" @bind="categoriaSelecionada" @bind:after="FiltrarPorCategoria">
-                <option value="">Todas as categorias</option>
-                @foreach (var categoria in categorias)
-                {
-                    <option value="@categoria">@categoria</option>
-                }
-            </select>
+            <h5 class="mb-0" style="margin-left:3%">PRODUTOS DISPONIVEIS</h5>
         </div>
 
         <div class="card border rounded-bottom shadow">
+
+
+
             <div class="card mb-3 w-100">
                 <div class="card-body">
                     <div class="row">
-                        @foreach (var product in produtosFiltrados)
+                        @foreach (var product in products)
                         {
                             <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                                 <div class="card h-100">
@@ -44,7 +40,6 @@ else
                                         <p class="card-text">@product.Descricao</p>
                                         <p><strong>Preço:</strong> @product.Preco.ToString("C")</p>
                                         <p><strong>Estoque:</strong> @product.Estoque</p>
-                                        <p><strong>Categoria:</strong> @product.Categoria</p>
                                         <a class="btn btn-primary mt-auto" href="/produtoDetail/@product.Id">Ver Detalhes</a>
                                     </div>
                                 </div>
@@ -54,46 +49,26 @@ else
                 </div>
             </div>
         </div>
+
     </div>
+
+
+
 }
 
 @code {
     private List<ProdutoLoggedOutViewModel> products;
-    private List<ProdutoLoggedOutViewModel> produtosFiltrados;
-    private List<string> categorias = new();
-    private string categoriaSelecionada = "";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             products = await ProdutoApi.GetProdutosAsync();
-
-            // Gerar lista única de categorias
-            categorias = products.Select(p => p.Categoria).Distinct().OrderBy(c => c).ToList();
-
-            // Inicialmente mostra todos
-            produtosFiltrados = new List<ProdutoLoggedOutViewModel>(products);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
             products = new List<ProdutoLoggedOutViewModel>();
-            produtosFiltrados = new List<ProdutoLoggedOutViewModel>();
-        }
-    }
-
-    private void FiltrarPorCategoria()
-    {
-        if (string.IsNullOrEmpty(categoriaSelecionada))
-        {
-            produtosFiltrados = new List<ProdutoLoggedOutViewModel>(products);
-        }
-        else
-        {
-            produtosFiltrados = products
-                .Where(p => p.Categoria == categoriaSelecionada)
-                .ToList();
         }
     }
 }
