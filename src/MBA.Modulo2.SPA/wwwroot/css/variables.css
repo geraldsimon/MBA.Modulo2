@@ -1,0 +1,107 @@
+
+:root {
+    /* Cores principais do Zenix */
+    --primary-color: #6c53eb;
+    --secondary-color: #6418C3;
+    --primary-hover: #3f25e6;
+    --primary-light: #fbe5dc;
+    --primary-dark: #0f2e7d;
+    /* Cores do sistema Bootstrap */
+    --success-color: #68CF29;
+    --danger-color: #FF4C41;
+    --warning-color: #FFAB2D;
+    --info-color: #51A6F5;
+    /* Cores de background */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-body: #f7f7f7;
+    --bg-dark: #343a40;
+    --bg-light: #f7f7f7;
+    /* Cores de texto */
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #6c757d;
+    --text-light: #ffffff;
+    --text-dark: #343a40;
+    /* Cores de cinza */
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    /* Transparências primárias */
+    --rgba-primary-1: rgba(235, 129, 83, 0.1);
+    --rgba-primary-2: rgba(235, 129, 83, 0.2);
+    --rgba-primary-3: rgba(235, 129, 83, 0.3);
+    --rgba-primary-4: rgba(235, 129, 83, 0.4);
+    --rgba-primary-5: rgba(235, 129, 83, 0.5);
+    --rgba-primary-6: rgba(235, 129, 83, 0.6);
+    --rgba-primary-7: rgba(235, 129, 83, 0.7);
+    --rgba-primary-8: rgba(235, 129, 83, 0.8);
+    --rgba-primary-9: rgba(235, 129, 83, 0.9);
+    /* Espaçamentos */
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem; /* 8px */
+    --spacing-md: 1rem; /* 16px */
+    --spacing-lg: 1.5rem; /* 24px */
+    --spacing-xl: 2rem; /* 32px */
+    --spacing-xxl: 3rem; /* 48px */
+    /* Bordas e sombras */
+    --border-radius: 0.375rem;
+    --border-radius-sm: 0.25rem;
+    --border-radius-lg: 0.5rem;
+    --border-radius-xl: 1rem;
+    --border-width: 1px;
+    --border-color: #dee2e6;
+    /* Sombras */
+    --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    --box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+    /* Fontes */
+    --font-family-base: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-title: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    /* Tamanhos de fonte */
+    --font-size-xs: 0.75rem; /* 12px */
+    --font-size-sm: 0.875rem; /* 14px */
+    --font-size-base: 1rem; /* 16px */
+    --font-size-lg: 1.125rem; /* 18px */
+    --font-size-xl: 1.25rem; /* 20px */
+    --font-size-xxl: 1.5rem; /* 24px */
+    /* Alturas de linha */
+    --line-height-sm: 1.25;
+    --line-height-base: 1.5;
+    --line-height-lg: 2;
+    /* Transições */
+    --transition-base: all 0.2s ease-in-out;
+    --transition-fade: opacity 0.15s linear;
+    --transition-collapse: height 0.35s ease;
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+    /* Sidebar específico */
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 80px;
+    --sidebar-bg: linear-gradient(180deg, #2c2c2c 0%, #1a1a1a 100%);
+    --sidebar-color: #ffffff;
+    --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+    --sidebar-active-bg: rgba(255, 255, 255, 0.1);
+    /* Header */
+    --header-height: 70px;
+    --header-bg: #ffffff;
+    --header-border: 1px solid #e9ecef;
+    /* Container */
+    --container-padding-x: 1.5rem;
+    --container-padding-y: 1rem;
+}
