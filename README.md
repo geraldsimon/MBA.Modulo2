@@ -13,11 +13,11 @@ Lista de favoritos para clientes autenticados;
 Painel de moderação para administradores.
 
 Com isso, é possível realizar o controle completo (CRUD) de vendedores, clientes, produtos e categorias, utilizando três aplicações distintas:
-   1º MVC (Model-View-Controller): Responsável pelo cadastro/login de vendedores, gerenciamento de produtos e categorias, além do painel administrativo.
-   2º API RESTful: Responsável pela centralização das regras de negócio e comunicação entre as aplicações.
-   3º SPA (Single Page Application): Desenvolvida com Blazor, essa aplicação é voltada ao cliente final, permitindo navegação pública e funcionalidades autenticadas (como favoritar produtos).
+-  1º MVC (Model-View-Controller): Responsável pelo cadastro/login de vendedores, gerenciamento de produtos e categorias, além do painel administrativo.
+-  2º API RESTful: Responsável pela centralização das regras de negócio e comunicação entre as aplicações.
+-  3º SPA (Single Page Application): Desenvolvida com Blazor, essa aplicação é voltada ao cliente final, permitindo navegação pública e funcionalidades autenticadas (como favoritar produtos).
 
-a aplicação MVC e a API RESTful compartilham a mesma camada de negócio, camada de dados e base de dados, já a aplicação SPA se comunica exclusivamente com a API via requisições HTTP, utilizando autenticação JWT para operações seguras.
+A aplicação MVC e a API RESTful compartilham a mesma camada de negócio, camada de dados e base de dados, já a aplicação SPA se comunica exclusivamente com a API via requisições HTTP, utilizando autenticação JWT para operações seguras.
 
 
 ### **Autor(es)**
