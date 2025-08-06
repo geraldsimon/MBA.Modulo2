@@ -2,20 +2,20 @@
 
 ## **1. Apresentação**
 
-Bem-vindo ao repositório do projeto DeveloperStore,esse projeto faz parte da entrega do MBA DevXpert Full Stack .NET, referente ao Módulo 2 – Desenvolvimento Full-Stack Avançado com ASP.NET Core.
-O objetivo é dar continuidade ao sistema desenvolvido no Módulo 01, evoluindo de uma simples plataforma de gestão de produtos para uma loja virtual completa.
-Nesta nova versão, foram implementadas funcionalidades que não estavam presentes anteriormente, tais como:
-Cadastro e login de vendedores;
-Cadastro e login de clientes;
-CRUD de categorias e produtos com vínculo entre eles;
-Visualização pública de produtos;
-Lista de favoritos para clientes autenticados;
-Painel de moderação para administradores.
+Bem-vindo ao repositório do projeto DeveloperStore,esse projeto faz parte da entrega do MBA DevXpert Full Stack .NET, referente ao Módulo 2 – Desenvolvimento Full-Stack Avançado com ASP.NET Core.  
+O objetivo é dar continuidade ao sistema desenvolvido no Módulo 01, evoluindo de uma simples plataforma de gestão de produtos para uma loja virtual completa.  
+Nesta nova versão, foram implementadas funcionalidades que não estavam presentes anteriormente, tais como:  
+Cadastro e login de vendedores;  
+Cadastro e login de clientes;  
+CRUD de categorias e produtos com vínculo entre eles;  
+Visualização pública de produtos;  
+Lista de favoritos para clientes autenticados;  
+Painel de moderação para administradores.  
 
-Com isso, é possível realizar o controle completo (CRUD) de vendedores, clientes, produtos e categorias, utilizando três aplicações distintas:
--  1º MVC (Model-View-Controller): Responsável pelo cadastro/login de vendedores, gerenciamento de produtos e categorias, além do painel administrativo.
--  2º API RESTful: Responsável pela centralização das regras de negócio e comunicação entre as aplicações.
--  3º SPA (Single Page Application): Desenvolvida com Blazor, essa aplicação é voltada ao cliente final, permitindo navegação pública e funcionalidades autenticadas (como favoritar produtos).
+Com isso, é possível realizar o controle completo (CRUD) de vendedores, clientes, produtos e categorias, utilizando três aplicações distintas:  
+&nbsp;&nbsp;&nbsp;1º MVC (Model-View-Controller): Responsável pelo cadastro/login de vendedores, gerenciamento de produtos e categorias, além do painel administrativo.  
+&nbsp;&nbsp;&nbsp;2º API RESTful: Responsável pela centralização das regras de negócio e comunicação entre as aplicações.  
+&nbsp;&nbsp;&nbsp;3º SPA (Single Page Application): Desenvolvida com Blazor, essa aplicação é voltada ao cliente final, permitindo navegação pública e funcionalidades autenticadas (como favoritar produtos).  
 
 A aplicação MVC e a API RESTful compartilham a mesma camada de negócio, camada de dados e base de dados, já a aplicação SPA se comunica exclusivamente com a API via requisições HTTP, utilizando autenticação JWT para operações seguras.
 
@@ -34,17 +34,17 @@ A aplicação MVC e a API RESTful compartilham a mesma camada de negócio, camada d
 O projeto DeveloperStore tem como proposta principal a construção de uma plataforma completa, com foco em modularidade, segurança e boa experiência do usuário. 
 com o objetivo de continuar evoluindo sistema de gestão de produtos desenvolvido no Módulo 01, agora expandido para incluir funcionalidades voltadas ao cliente final e à gestão multiusuário.
 
-Escopo Funcional:
-- **Área Administrativa: Para vendedores e administradores realizarem o cadastro e gerenciamento de produtos e categorias.
-- **Loja Virtual: Para navegação pública de produtos, com recursos como login de cliente e lista de favoritos.
-- **API RESTful: Centraliza as regras de negócio e permite a comunicação entre as aplicações.
+Escopo Funcional:  
+&nbsp;&nbsp;&nbsp;Área Administrativa: Para vendedores e administradores realizarem o cadastro e gerenciamento de produtos e categorias.  
+&nbsp;&nbsp;&nbsp;Loja Virtual: Para navegação pública de produtos, com recursos como login de cliente e lista de favoritos.  
+&nbsp;&nbsp;&nbsp;PI RESTful: Centraliza as regras de negócio e permite a comunicação entre as aplicações.  
 
-Benefícios Técnicos:
-- **Separação clara de camadas e responsabilidades.
-- **Aplicação de conceitos modernos de autenticação e autorização.
-- **Adoção de padrões REST e documentação via Swagger.
-- **Utilização de ferramentas e frameworks atualizados (.NET 8, Blazor, EF Core).
-- **Banco de dados inicializado automaticamente para facilitar o setup em ambientes de desenvolvimento.
+Benefícios Técnicos:  
+&nbsp;&nbsp;&nbsp;Separação clara de camadas e responsabilidades.  
+&nbsp;&nbsp;&nbsp;Aplicação de conceitos modernos de autenticação e autorização.  
+&nbsp;&nbsp;&nbsp;Adoção de padrões REST e documentação via Swagger.  
+&nbsp;&nbsp;&nbsp;Utilização de ferramentas e frameworks atualizados (.NET 8, Blazor, EF Core).  
+&nbsp;&nbsp;&nbsp;Banco de dados inicializado automaticamente para facilitar o setup em ambientes de desenvolvimento.  
 
 
 
