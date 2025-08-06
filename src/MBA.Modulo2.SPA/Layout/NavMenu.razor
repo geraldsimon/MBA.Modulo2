@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">MBA.Modulo2.SPA</a>
+        <a class="navbar-brand" href="">Developer Store</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -13,32 +13,17 @@
     </NavLink>
 </div>
 <div class="nav-item px-3">
-    <NavLink class="nav-link" href="counter">
-        <span class="bi bi-plus-square-fill nav-icon" aria-hidden="true"></span> Counter
-    </NavLink>
-</div>
-<div class="nav-item px-3">
     <NavLink class="nav-link" href="produto">
         <span class="bi bi-box-seam-fill nav-icon" aria-hidden="true"></span> Produto
     </NavLink>
 </div>
 <AuthorizeView>
     <Authorized>
-@*         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="vendedor">
-                <span class="bi bi-person-walking nav-icon" aria-hidden="true"></span> Vendedor
-            </NavLink>
-        </div>
- *@        <div class="nav-item px-3">
+        <div class="nav-item px-3">
             <NavLink class="nav-link" href="favoritos">
                 <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
             </NavLink>
         </div>
-@*         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Categorias">
-                <span class="bi bi-file-ruled-fill nav-icon" aria-hidden="true"></span> Categorias
-            </NavLink>
-        </div> *@
     </Authorized>
 </AuthorizeView>
 
