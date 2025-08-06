@@ -85,24 +85,24 @@ A estrutura do projeto é organizada da seguinte forma:
 
 ## **5. Funcionalidades Implementadas**
 
- - **CRUD Área Administrativa (MVC):**
-  -- CRUD de Produtos e Categorias: Permite criação, edição, visualização e inativação de produtos (pelo vendedor) e categorias (apenas pelo administrador).
-  -- Gerenciamento de Vendedores: Cadastro e autenticação de vendedores com ASP.NET Identity.
-  -- Painel de Moderação: Acesso exclusivo para administradores, com gerenciamento de vendedores e produtos.
-  -- Autenticação via Cookies: Controle de acesso ao backoffice garantindo navegação restrita apenas a usuários autenticados.
+ - **CRUD Área Administrativa (MVC):**  
+&nbsp;&nbsp;&nbsp;CRUD de Produtos e Categorias: Permite criação, edição, visualização e inativação de produtos (pelo vendedor) e categorias (apenas pelo administrador).  
+&nbsp;&nbsp;&nbsp;Gerenciamento de Vendedores: Cadastro e autenticação de vendedores com ASP.NET Identity.  
+&nbsp;&nbsp;&nbsp;Painel de Moderação: Acesso exclusivo para administradores, com gerenciamento de vendedores e produtos.  
+&nbsp;&nbsp;&nbsp;Autenticação via Cookies: Controle de acesso ao backoffice garantindo navegação restrita apenas a usuários autenticados.  
   
- - ** API RESTful (Web API)
-  -- Exposição de Endpoints: Operações CRUD para produtos, categorias, clientes, vendedores e lista de favoritos.
-  -- Autenticação via JWT: Proteção de rotas com tokens JWT, garantindo segurança nas interações com a SPA.
-  -- Documentação com Swagger: Documentação automática da API com suporte a autenticação JWT.
-  -- Regras de Validação: Implementação de validações como nome obrigatório, preço positivo, estoque não negativo, imagem obrigatória e associação a categorias.
+ - ** API RESTful (Web API)  
+&nbsp;&nbsp;&nbsp;Exposição de Endpoints: Operações CRUD para produtos, categorias, clientes, vendedores e lista de favoritos.  
+&nbsp;&nbsp;&nbsp;Autenticação via JWT: Proteção de rotas com tokens JWT, garantindo segurança nas interações com a SPA.  
+&nbsp;&nbsp;&nbsp;Documentação com Swagger: Documentação automática da API com suporte a autenticação JWT.  
+&nbsp;&nbsp;&nbsp;Regras de Validação: Implementação de validações como nome obrigatório, preço positivo, estoque não negativo, imagem obrigatória e associação a categorias.  
 
-- ** Loja Virtual (SPA - Blazor)
-  -- Navegação Pública: Exibição de produtos ativos disponível para qualquer visitante, sem necessidade de login.
-  -- Cadastro e Login de Cliente: Registro e autenticação de clientes diretamente na SPA, utilizando JWT.
-  -- Visualização de Detalhes: Acesso aos detalhes do produto, informações do vendedor e lista de produtos ativos do mesmo vendedor.
-  -- Lista de Favoritos: Clientes autenticados podem adicionar e remover produtos dos favoritos, com persistência no banco de dados.
-  -- Integração com API RESTful: Toda a comunicação com o back-end é feita por meio de requisições HTTP via API, utilizando Blazor WebAssembly.
+- ** Loja Virtual (SPA - Blazor)  
+&nbsp;&nbsp;&nbsp;Navegação Pública: Exibição de produtos ativos disponível para qualquer visitante, sem necessidade de login.  
+&nbsp;&nbsp;&nbsp;Cadastro e Login de Cliente: Registro e autenticação de clientes diretamente na SPA, utilizando JWT.  
+&nbsp;&nbsp;&nbsp;Visualização de Detalhes: Acesso aos detalhes do produto, informações do vendedor e lista de produtos ativos do mesmo vendedor.  
+&nbsp;&nbsp;&nbsp;Lista de Favoritos: Clientes autenticados podem adicionar e remover produtos dos favoritos, com persistência no banco de dados.  
+&nbsp;&nbsp;&nbsp;Integração com API RESTful: Toda a comunicação com o back-end é feita por meio de requisições HTTP via API, utilizando Blazor WebAssembly.  
 
 ## **6. Como Executar o Projeto**
 
