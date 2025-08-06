@@ -1,6 +1,9 @@
 @import url('variables.css');
 @import url('themes.css');
 @import url('components.css');
+@import url('layouts.css');
+@import url('header.css');
+@import url('auth.css');
 
 html, body {
     font-family: var(--font-family-base);
