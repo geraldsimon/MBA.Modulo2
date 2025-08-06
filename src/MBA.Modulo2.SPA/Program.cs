@@ -13,7 +13,8 @@ builder.Services.AddHttpClients();
 builder.Services.AddServices();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
- 
+
+
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAuthorizationCore();
