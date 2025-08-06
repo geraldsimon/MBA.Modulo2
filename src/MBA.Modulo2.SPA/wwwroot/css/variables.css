@@ -98,7 +98,7 @@
     --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
     --sidebar-active-bg: rgba(255, 255, 255, 0.1);
     /* Header */
-    --header-height: 70px;
+    --header-height: 3.5rem;
     --header-bg: #ffffff;
     --header-border: 1px solid #e9ecef;
     /* Container */

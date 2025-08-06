@@ -1,26 +1,39 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
+<div id="main-wrapper">
     <div class="sidebar">
         <NavMenu />
     </div>
 
-    <main>
-        <header class="top-row px-4">  
-            <div class="d-flex align-items-center w-100">
-                <div class="ms-auto d-flex align-items-center gap-3">
-                    <LoginDisplay />
-                    <ThemeToggle />
+    <div class="header">
+        <div class="header-content">
+            <nav class="navbar navbar-expand">
+                <div class="collapse navbar-collapse justify-content-between">
+                    <div class="header-left">
+                        <div class="header-brand">
+                            <h5 class="mb-0 fw-bold"></h5>
+                        </div>
+                    </div>
+                    
+                    <ul class="navbar-nav header-right">
+                        <li class="nav-item">
+                            <ThemeToggle />
+                        </li>
+                        <li class="nav-item">
+                            <LoginDisplay />
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </header>
+            </nav>
+        </div>
+    </div>
 
-        <article class="content px-4">
+    <div class="content-body">
+        <div class="container-fluid">
             @Body
-        </article>
+        </div>
+    </div>
 
-        <Footer />
-
-    </main>
+    <Footer />
 </div>
 
 <div id="blazor-error-ui">
