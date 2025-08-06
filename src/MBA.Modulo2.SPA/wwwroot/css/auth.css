@@ -1,13 +1,11 @@
 
 .auth-container {
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--bg-body) 0%, var(--bg-secondary) 100%);
     padding: var(--spacing-xl) var(--spacing-md);
     width: 100%;
-    position: relative;
+    min-height: 50vh;
 }
 
 .auth-card {
@@ -21,6 +19,11 @@
     position: relative;
     overflow: hidden;
     transition: var(--transition-base);
+}
+
+.auth-container .auth-card.auth-card-wide {
+    max-width: 800px !important;
+    width: 100% !important;
 }
 
 .auth-card::before {
@@ -80,6 +83,41 @@
 
 .auth-form .form-group:last-of-type {
     margin-bottom: var(--spacing-xl);
+}
+
+.auth-container .auth-form.auth-form-wide {
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.auth-container .auth-form-wide .form-row {
+    display: flex !important;
+    gap: var(--spacing-lg) !important;
+    margin-bottom: var(--spacing-lg) !important;
+    width: 100% !important;
+}
+
+.auth-container .auth-form-wide .form-row:last-of-type {
+    margin-bottom: var(--spacing-xl) !important;
+}
+
+.auth-container .auth-form-wide .form-group-full {
+    flex: 1 !important;
+    width: 100% !important;
+}
+
+.auth-container .auth-form-wide .form-group-half {
+    flex: 1 !important;
+    width: 48% !important;
+}
+
+.auth-container .auth-form-wide .form-row-split {
+    display: flex !important;
+    gap: var(--spacing-lg) !important;
+    justify-content: space-between !important;
+}
+
+.auth-container .auth-form-wide .form-row .form-group {
+    margin-bottom: 0 !important;
 }
 
 .auth-form .form-label {
@@ -287,14 +325,6 @@
     transition: var(--transition-base);
 }
 
-[data-theme="dark"] .auth-container {
-    background: linear-gradient(135deg, var(--bg-body) 0%, #0d1117 100%);
-}
-
-[data-theme="dark"] .auth-card:hover {
-    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.4);
-}
-
 [data-theme="dark"] .auth-input {
     background-color: var(--input-bg);
     color: var(--input-color);
@@ -306,37 +336,53 @@
     color: var(--input-color);
 }
 
-.auth-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-}
-
 .auth-container,
 .auth-container * {
     box-sizing: border-box;
 }
 
-.auth-container .auth-card {
-    all: unset;
-    background: var(--card-bg);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--box-shadow-lg);
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 400px;
-    border: var(--card-border);
-    position: relative;
-    overflow: hidden;
-    transition: var(--transition-base);
-    display: block;
+@media (max-width: 768px) {
+    .auth-container .auth-card.auth-card-wide {
+        max-width: 600px !important;
+    }
+    
+    .auth-container .auth-form-wide .form-row {
+        gap: var(--spacing-md) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-container {
+        padding: var(--spacing-md) var(--spacing-sm);
+        min-height: 40vh;
+    }
+    
+    .auth-container .auth-card.auth-card-wide {
+        max-width: 100% !important;
+        padding: var(--spacing-xl) var(--spacing-md) !important;
+    }
+    
+    .auth-container .auth-form-wide .form-row,
+    .auth-container .auth-form-wide .form-row-split {
+        flex-direction: column !important;
+        gap: 0 !important;
+    }
+    
+    .auth-container .auth-form-wide .form-group-half {
+        width: 100% !important;
+        margin-bottom: var(--spacing-lg) !important;
+    }
+    
+    .auth-container .auth-form-wide .form-row .form-group {
+        margin-bottom: var(--spacing-lg) !important;
+    }
+    
+    .auth-container .auth-form-wide .form-row:last-of-type .form-group:last-child {
+        margin-bottom: 0 !important;
+    }
 }
 
 .auth-container .auth-btn {
-    all: unset;
     width: 100% !important;
     padding: var(--spacing-sm) var(--spacing-lg) !important;
     border: 2px solid var(--primary-color) !important;
@@ -356,4 +402,11 @@
     letter-spacing: normal !important;
     min-height: 3rem !important;
     box-sizing: border-box !important;
+    text-decoration: none !important;
+}
+
+.auth-container .auth-btn:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
 }
