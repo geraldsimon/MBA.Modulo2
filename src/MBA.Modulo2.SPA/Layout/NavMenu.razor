@@ -1,50 +1,61 @@
-﻿<div class="sidebar-header">
-    <div class="sidebar-brand">
-        <h5 class="mb-0 fw-bold">Boa Compra</h5>
+﻿<div class="deznav">
+    <div class="deznav-scroll">
+        <!-- Header do Sidebar -->
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <h5 class="mb-0 fw-bold">Boa Compra</h5>
+            </div>
+            <button title="Navigation menu" class="navbar-toggler d-lg-none" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <!-- Menu Principal -->
+        <ul class="metismenu @NavMenuCssClass" id="menu">
+            <li class="nav-label first">Menu Principal</li>
+            
+            <li class="nav-item">
+                <NavLink class="nav-link ai-icon" href="" Match="NavLinkMatch.All">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Home</span>
+                </NavLink>
+            </li>
+            
+            <li class="nav-item">
+                <NavLink class="nav-link ai-icon" href="counter">
+                    <i class="fas fa-calculator"></i>
+                    <span class="nav-text">Counter</span>
+                </NavLink>
+            </li>
+            
+            <li class="nav-item">
+                <NavLink class="nav-link ai-icon" href="produto">
+                    <i class="fas fa-box"></i>
+                    <span class="nav-text">Produtos</span>
+                </NavLink>
+            </li>
+
+            <AuthorizeView>
+                <Authorized>
+                    <li class="nav-label">Minha Conta</li>
+                    
+                    <li class="nav-item">
+                        <NavLink class="nav-link ai-icon" href="favoritos">
+                            <i class="fas fa-heart"></i>
+                            <span class="nav-text">Favoritos</span>
+                        </NavLink>
+                    </li>
+                    
+                    @* <li class="nav-item">
+                        <NavLink class="nav-link ai-icon" href="categorias">
+                            <i class="fas fa-tags"></i>
+                            <span class="nav-text">Categorias</span>
+                        </NavLink>
+                    </li> *@
+                </Authorized>
+            </AuthorizeView>
+        </ul>
     </div>
-    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="nav-scrollable @NavMenuCssClass"
-     @onclick="ToggleNavMenu">
-
-<div class="nav-item px-3 mt-1">
-    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-        <span class="bi bi-house-door-fill nav-icon" aria-hidden="true"></span> Home
-    </NavLink>
-</div>
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="counter">
-        <span class="bi bi-plus-square-fill nav-icon" aria-hidden="true"></span> Counter
-    </NavLink>
-</div>
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="produto">
-        <span class="bi bi-box-seam-fill nav-icon" aria-hidden="true"></span> Produto
-    </NavLink>
-</div>
-<AuthorizeView>
-    <Authorized>
-@*         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="vendedor">
-                <span class="bi bi-person-walking nav-icon" aria-hidden="true"></span> Vendedor
-            </NavLink>
-        </div>
- *@        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="favoritos">
-                <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
-            </NavLink>
-        </div>
-@*         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Categorias">
-                <span class="bi bi-file-ruled-fill nav-icon" aria-hidden="true"></span> Categorias
-            </NavLink>
-        </div> *@
-    </Authorized>
-</AuthorizeView>
-
 </div>
 
 @code {
