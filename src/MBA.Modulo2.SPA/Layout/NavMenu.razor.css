@@ -1,4 +1,3 @@
-/* ===== ZENIX SIDEBAR STYLE ===== */
 
 .deznav {
     height: 100%;
@@ -13,7 +12,6 @@
     padding: 0;
 }
 
-/* Header do Sidebar */
 .sidebar-header {
     height: var(--header-height);
     background-color: var(--sidebar-hover-bg);
@@ -42,7 +40,6 @@
     right: 1rem;
 }
 
-/* Menu MetisMenu */
 .metismenu {
     list-style: none;
     margin: 0;
@@ -54,7 +51,6 @@
     width: 100%;
 }
 
-/* Labels do Menu */
 .nav-label {
     font-size: 0.75rem;
     font-weight: 600;
@@ -69,7 +65,6 @@
     padding-top: 0.5rem;
 }
 
-/* Links do Menu */
 .metismenu .nav-link {
     display: flex;
     align-items: center;
@@ -108,7 +103,6 @@
     border-radius: 2px;
 }
 
-/* Ícones */
 .metismenu .nav-link i {
     width: 1.25rem;
     height: 1.25rem;
@@ -132,7 +126,6 @@
     color: var(--primary-color);
 }
 
-/* Collapse/Expand */
 .metismenu.collapse {
     display: none;
 }

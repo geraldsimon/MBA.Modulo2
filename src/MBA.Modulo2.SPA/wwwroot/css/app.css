@@ -1,5 +1,6 @@
 @import url('variables.css');
 @import url('themes.css');
+@import url('components.css');
 
 html, body {
     font-family: var(--font-family-base);
