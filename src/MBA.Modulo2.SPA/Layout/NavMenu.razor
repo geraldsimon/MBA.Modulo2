@@ -1,13 +1,16 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">MBA.Modulo2.SPA</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<div class="sidebar-header">
+    <div class="sidebar-brand">
+        <h5 class="mb-0 fw-bold">Boa Compra</h5>
     </div>
+    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </div>
 
-<div class="nav-item px-3">
+<div class="nav-scrollable @NavMenuCssClass"
+     @onclick="ToggleNavMenu">
+
+<div class="nav-item px-3 mt-1">
     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
         <span class="bi bi-house-door-fill nav-icon" aria-hidden="true"></span> Home
     </NavLink>
@@ -41,6 +44,8 @@
         </div> *@
     </Authorized>
 </AuthorizeView>
+
+</div>
 
 @code {
     private bool collapseNavMenu = true;

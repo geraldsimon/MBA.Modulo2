@@ -1,14 +1,32 @@
 .navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--sidebar-hover-bg);
+    border: none;
 }
 
-.top-row {
-    min-height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+.sidebar-header {
+    height: var(--header-height);
+    background-color: var(--sidebar-hover-bg);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--sidebar-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    margin: 0;
 }
 
-.navbar-brand {
+.sidebar-brand {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-brand h5 {
+    color: var(--sidebar-color);
     font-size: 1.1rem;
+    margin: 0;
+    text-align: center;
 }
 
 .bi {
@@ -47,22 +65,25 @@
     }
 
     .nav-item ::deep a {
-        color: #d7d7d7;
-        border-radius: 4px;
+        color: var(--sidebar-color);
+        border-radius: var(--border-radius);
         height: 3rem;
         display: flex;
         align-items: center;
         line-height: 3rem;
+        transition: var(--transition-base);
+        text-decoration: none;
     }
 
 .nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.37);
-    color: white;
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-color);
+    font-weight: 600;
 }
 
 .nav-item ::deep a:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: white;
+    background-color: var(--sidebar-hover-bg);
+    color: var(--sidebar-color);
 }
 
 @media (min-width: 641px) {
