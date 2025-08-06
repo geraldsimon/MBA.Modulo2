@@ -6,6 +6,7 @@
 @inject ProdutoHttpClient ProdutoApi
 @inject AuthHttpClient AuthHttpApi
 @inject FavoritoHttpClient FavoritoApi
+@inject NavigationManager Navigation
 
 @if (products == null)
 {
@@ -15,11 +16,6 @@ else
 {
 
     var imagePath = $"https://localhost:7009/images/";
-
-
-
-
-
 
     <CardComponent>
         <Titulo>
@@ -150,8 +146,6 @@ else
     }
     <Toast Show="mostrarToast" ColorClass="@toastColorClass" Message="@toastMessage" OnClose="FecharToast" />
 
-
-
 }
 
 @code {
@@ -178,8 +172,7 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
-            products = new ProdutoDetalhesViewModel();
+            Navigation.NavigateTo($"/error/500");
         }
     }
 
@@ -219,10 +212,6 @@ else
             mostrarModalLogin = true;
             StateHasChanged();
         }
-        else
-        {
-            Console.WriteLine($"Usuário está logado com ID: {usuarioId}");
-        }
     }
 
 
@@ -235,12 +224,6 @@ else
     {
         mostrarModalLogin = false;
     }
-    
-
-
-
-
-
 
     private async Task MostrarToast(string mensagem, string corClasse)
     {
