@@ -42,16 +42,12 @@ else
                                     <img src="icons/icon_atencao.png" alt="Denunciar" style="width: 20px; height: 20px;" />
                                 </button>
 
-
-                                <button class="btn btn-outline-secondary me-2" title="Favoritar" @onclick="Favoritar">
-                                    <img src="icons/icon_favorito.png" alt="Favoritar" style="width: 20px; height: 20px;" />
-                                </button>
+                                <Favoritar idProduto=@products.Id/>
 
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <h5 class="card-title text-primary mt-3">@products.Nome</h5>
 
@@ -148,7 +144,7 @@ else
     {
         <ModalLogin OnClose="FecharModal" />
     }
-    <Toast Show="mostrarToast" ColorClass="@toastColorClass" Message="@toastMessage" OnClose="FecharToast" />
+   
 
 
 
@@ -168,7 +164,6 @@ else
     private string toastColorClass;
 
 
-
     protected override async Task OnParametersSetAsync()
     {
         try
@@ -182,33 +177,6 @@ else
             products = new ProdutoDetalhesViewModel();
         }
     }
-
-    private async Task Favoritar()
-    {
-        if (logado.Equals(false))
-        {
-            mostrarModalLogin = true;
-            StateHasChanged();
-        }
-        else
-        {
-            byte retorno = await FavoritoApi.RegistrarFavorito(Id);
-            switch (retorno)
-            {
-                case 1:
-                    await MostrarToast("Produto adicionado aos favoritos!", "text-bg-success");
-                    break;
-                case 2:
-                    await MostrarToast("Produto Deletado dos favoritos", "text-bg-warning");
-                    break;
-                case 3:
-                    await MostrarToast("Ocorreu algum erro!", "text-bg-danger");
-                    break;
-            }
-        }
-    }
-
-    
 
     private async Task Denunciar()
     {
@@ -225,8 +193,6 @@ else
         }
     }
 
-
-    
     private void AbrirModal()
     {
         mostrarModalLogin = true;
@@ -234,28 +200,5 @@ else
     private void FecharModal()
     {
         mostrarModalLogin = false;
-    }
-    
-
-
-
-
-
-
-    private async Task MostrarToast(string mensagem, string corClasse)
-    {
-        toastMessage = mensagem;
-        toastColorClass = corClasse;
-        mostrarToast = true;
-        StateHasChanged();
-        await Task.Delay(3000);
-        mostrarToast = false;
-        StateHasChanged();
-    }
-
-    private Task FecharToast()
-    {
-        mostrarToast = false;
-        return Task.CompletedTask;
     }
 }
