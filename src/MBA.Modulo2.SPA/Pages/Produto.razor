@@ -103,23 +103,47 @@ else
                         </div>
                     }
                     
-                    <div class="results-info mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">
-                                <i class="fas fa-cube me-2"></i>
-                                <strong>@produtosFiltrados.Count</strong> produto(s) encontrado(s)
-                                @if (products?.Count > 0 && produtosFiltrados.Count != products.Count)
-                                {
-                                    <span>de @products.Count no total</span>
-                                }
-                            </span>
+                    <!-- Informações e controles -->
+                    <div class="results-controls mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="results-info">
+                                    <span class="text-muted">
+                                        <i class="fas fa-cube me-2"></i>
+                                        <strong>@produtosFiltrados.Count</strong> produto(s) encontrado(s)
+                                        @if (products?.Count > 0 && produtosFiltrados.Count != products.Count)
+                                        {
+                                            <span>de @products.Count no total</span>
+                                        }
+                                        
+                                        @if (totalPaginas > 1)
+                                        {
+                                            <span class="ms-2 text-muted">
+                                                • Página @paginaAtual de @totalPaginas
+                                            </span>
+                                        }
+                                    </span>
+                                    
+                                    @if (!string.IsNullOrEmpty(textoBusca) || !string.IsNullOrEmpty(categoriaSelecionada) || precoMinimo > 0 || (precoMaximo > 0 && precoMaximo < (products?.Max(p => p.Preco) ?? 0)))
+                                    {
+                                        <span class="filter-indicator ms-2">
+                                            <i class="fas fa-filter me-1"></i>Filtros ativos
+                                        </span>
+                                    }
+                                </div>
+                            </div>
                             
-                            @if (!string.IsNullOrEmpty(textoBusca) || !string.IsNullOrEmpty(categoriaSelecionada) || precoMinimo > 0 || (precoMaximo > 0 && precoMaximo < (products?.Max(p => p.Preco) ?? 0)))
-                            {
-                                <span class="filter-indicator">
-                                    <i class="fas fa-filter me-1"></i>Filtros ativos
-                                </span>
-                            }
+                            <div class="col-md-6">
+                                <div class="page-controls d-flex justify-content-end align-items-center">
+                                    <label class="form-label me-2 mb-0">Itens por página:</label>
+                                    <select class="form-control form-control-sm page-size-select" @bind="itensPorPagina" @bind:after="() => AlterarItensPorPagina(itensPorPagina)">
+                                        <option value="3">3</option>
+                                        <option value="6">6</option>
+                                        <option value="9">9</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,11 +151,10 @@ else
                 @if (produtosFiltrados.Any())
                 {
                     <div class="row">
-                        @foreach (var product in produtosFiltrados)
+                        @foreach (var product in produtosPaginados)
                         {
-                            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="modern-product-card">
-                                    <!-- Image Container -->
                                     <div class="card-image-container">
                                         <img src="@($"{imagePath}{product.Imagem}")" class="card-image" alt="@product.Nome" />
                                         <div class="image-overlay">
@@ -203,21 +226,204 @@ else
                             </div>
                         }
                     </div>
+                    
+                    @if (totalPaginas > 1)
+                    {
+                        <div class="pagination-container mt-4">
+                            <nav class="pagination-nav">
+                                <div class="pagination-info">
+                                    Mostrando @((paginaAtual - 1) * itensPorPagina + 1) até @(Math.Min(paginaAtual * itensPorPagina, produtosFiltrados.Count)) de @produtosFiltrados.Count produtos
+                                </div>
+                                
+                                <ul class="pagination">
+                                    <li class="page-item @(paginaAtual == 1 ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(1)" disabled="@(paginaAtual == 1)">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </button>
+                                    </li>
+                                    
+                                    <li class="page-item @(paginaAtual == 1 ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(paginaAtual - 1)" disabled="@(paginaAtual == 1)">
+                                            <i class="fas fa-angle-left"></i>
+                                        </button>
+                                    </li>
+                                    
+                                    @{
+                                        var inicioRange = Math.Max(1, paginaAtual - 2);
+                                        var fimRange = Math.Min(totalPaginas, paginaAtual + 2);
+                                    }
+                                    
+                                    @if (inicioRange > 1)
+                                    {
+                                        <li class="page-item">
+                                            <button class="page-link" @onclick="() => IrParaPagina(1)">1</button>
+                                        </li>
+                                        @if (inicioRange > 2)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                    }
+                                    
+                                    @for (var i = inicioRange; i <= fimRange; i++)
+                                    {
+                                        var pagina = i;
+                                        <li class="page-item @(paginaAtual == pagina ? "active" : "")">
+                                            <button class="page-link" @onclick="() => IrParaPagina(pagina)">
+                                                @pagina
+                                            </button>
+                                        </li>
+                                    }
+                                    
+                                    @if (fimRange < totalPaginas)
+                                    {
+                                        @if (fimRange < totalPaginas - 1)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                        <li class="page-item">
+                                            <button class="page-link" @onclick="() => IrParaPagina(totalPaginas)">@totalPaginas</button>
+                                        </li>
+                                    }
+                                    
+                                    <li class="page-item @(paginaAtual == totalPaginas ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(paginaAtual + 1)" disabled="@(paginaAtual == totalPaginas)">
+                                            <i class="fas fa-angle-right"></i>
+                                        </button>
+                                    </li>
+                                    
+                                    <li class="page-item @(paginaAtual == totalPaginas ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(totalPaginas)" disabled="@(paginaAtual == totalPaginas)">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
                 }
                 else
                 {
-                    <div class="empty-state text-center py-5">
-                        <div class="empty-state-icon mb-3">
-                            <i class="fas fa-search" style="font-size: 4rem; color: var(--text-muted);"></i>
+                    @if (!string.IsNullOrEmpty(textoBusca))
+                    {
+                       <div class="empty-state search-empty">
+                            <div class="empty-state-animation">
+                                <div class="search-icon-container">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <div class="search-waves"></div>
+                                </div>
+                            </div>
+                            <h5 class="empty-state-title">Nenhum resultado para "<strong>@textoBusca</strong>"</h5>
+                            <p class="empty-state-text">
+                                Não encontramos produtos que correspondam à sua pesquisa.<br>
+                                Tente usar termos diferentes ou mais gerais.
+                            </p>
+                            <div class="empty-state-actions">
+                                <button class="modern-btn secondary-btn me-3" @onclick="LimparBusca">
+                                    <span>Limpar busca</span>
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="modern-btn primary-btn" @onclick="LimparFiltros">
+                                    <span>Ver todos os produtos</span>
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="empty-suggestions mt-4">
+                                <p class="suggestions-title">Sugestões de busca:</p>
+                                <div class="suggestion-tags">
+                                    @foreach (var categoria in categorias.Take(4))
+                                    {
+                                        <button class="suggestion-tag" @onclick="() => SelecionarCategoria(categoria)">
+                                            @categoria
+                                        </button>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        <h5 class="empty-state-title mb-2">Nenhum produto encontrado</h5>
-                        <p class="empty-state-text text-muted mb-3">
-                            Não encontramos produtos que correspondam aos seus critérios de busca.
-                        </p>
-                        <button class="btn-compra btn-compra-primary" @onclick="LimparFiltros">
-                            <i class="fas fa-refresh me-2"></i>Limpar filtros
-                        </button>
-                    </div>
+                    }
+                    else if (!string.IsNullOrEmpty(categoriaSelecionada))
+                    {
+                        <div class="empty-state category-empty">
+                            <div class="empty-state-animation">
+                                <div class="category-icon-container">
+                                    <i class="fas fa-tags category-icon"></i>
+                                    <div class="category-particles"></div>
+                                </div>
+                            </div>
+                            <h5 class="empty-state-title">Nenhum produto na categoria "<strong>@categoriaSelecionada</strong>"</h5>
+                            <p class="empty-state-text">
+                                Esta categoria não possui produtos disponíveis no momento.<br>
+                                Explore outras categorias ou veja todos os produtos.
+                            </p>
+                            <div class="empty-state-actions">
+                                <button class="modern-btn secondary-btn me-3" @onclick="RemoverFiltroCategoria">
+                                    <span>Remover filtro</span>
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                                <button class="modern-btn primary-btn" @onclick="LimparFiltros">
+                                    <span>Ver todas as categorias</span>
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else if (precoMinimo > 0 || (precoMaximo > 0 && precoMaximo < (products?.Max(p => p.Preco) ?? 0)))
+                    {
+                        <div class="empty-state price-empty">
+                            <div class="empty-state-animation">
+                                <div class="price-icon-container">
+                                    <i class="fas fa-dollar-sign price-icon"></i>
+                                    <div class="price-chart"></div>
+                                </div>
+                            </div>
+                            <h5 class="empty-state-title">Nenhum produto nesta faixa de preço</h5>
+                            <p class="empty-state-text">
+                                Não temos produtos disponíveis entre 
+                                <strong>@(precoMinimo > 0 ? precoMinimo.ToString("C") : "R$ 0,00")</strong> e 
+                                <strong>@(precoMaximo > 0 ? precoMaximo.ToString("C") : "∞")</strong>.
+                                <br>Experimente ajustar os valores.
+                            </p>
+                            <div class="empty-state-actions">
+                                <button class="modern-btn secondary-btn me-3" @onclick="AjustarPrecos">
+                                    <span>Ajustar preços</span>
+                                    <i class="fas fa-sliders-h"></i>
+                                </button>
+                                <button class="modern-btn primary-btn" @onclick="LimparFiltros">
+                                    <span>Ver todos os preços</span>
+                                    <i class="fas fa-tags"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state general-empty">
+                            <div class="empty-state-animation">
+                                <div class="general-icon-container">
+                                    <i class="fas fa-box-open general-icon"></i>
+                                    <div class="floating-items">
+                                        <i class="fas fa-cube"></i>
+                                        <i class="fas fa-gift"></i>
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="empty-state-title">Nenhum produto disponível</h5>
+                            <p class="empty-state-text">
+                                Não temos produtos para mostrar no momento.<br>
+                                Tente recarregar a página ou volte mais tarde.
+                            </p>
+                            <div class="empty-state-actions">
+                                <button class="modern-btn primary-btn" @onclick="RecarregarProdutos">
+                                    <span>Recarregar produtos</span>
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -236,6 +442,11 @@ else
     private string ordenacaoSelecionada = "nome";
     
     private bool mostrarFiltrosAvancados = false;
+    
+    private int paginaAtual = 1;
+    private int itensPorPagina = 6;
+    private int totalPaginas = 1;
+    private List<ProdutoLoggedOutViewModel> produtosPaginados = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -297,6 +508,8 @@ else
         };
 
         produtosFiltrados = produtosFiltradosTemp.ToList();
+        
+        CalcularPaginacao();
         StateHasChanged();
     }
 
@@ -319,5 +532,75 @@ else
     {
         textoBusca = e.Value?.ToString() ?? "";
         AplicarFiltros();
+    }
+
+    private void CalcularPaginacao()
+    {
+        if (!produtosFiltrados.Any())
+        {
+            totalPaginas = 1;
+            paginaAtual = 1;
+            produtosPaginados = new List<ProdutoLoggedOutViewModel>();
+            return;
+        }
+
+        totalPaginas = (int)Math.Ceiling((double)produtosFiltrados.Count / itensPorPagina);
+        
+        if (paginaAtual > totalPaginas)
+            paginaAtual = totalPaginas;
+        if (paginaAtual < 1)
+            paginaAtual = 1;
+
+        var skip = (paginaAtual - 1) * itensPorPagina;
+        produtosPaginados = produtosFiltrados.Skip(skip).Take(itensPorPagina).ToList();
+    }
+
+    private void IrParaPagina(int pagina)
+    {
+        if (pagina >= 1 && pagina <= totalPaginas)
+        {
+            paginaAtual = pagina;
+            CalcularPaginacao();
+            StateHasChanged();
+        }
+    }
+
+    private void AlterarItensPorPagina(int novoTamanho)
+    {
+        itensPorPagina = novoTamanho;
+        paginaAtual = 1;
+        CalcularPaginacao();
+        StateHasChanged();
+    }
+
+    private void LimparBusca()
+    {
+        textoBusca = "";
+        AplicarFiltros();
+    }
+
+    private void SelecionarCategoria(string categoria)
+    {
+        textoBusca = "";
+        categoriaSelecionada = categoria;
+        AplicarFiltros();
+    }
+
+    private void RemoverFiltroCategoria()
+    {
+        categoriaSelecionada = "";
+        AplicarFiltros();
+    }
+
+    private void AjustarPrecos()
+    {
+        precoMinimo = 0;
+        precoMaximo = products?.Max(p => p.Preco) ?? 0;
+        AplicarFiltros();
+    }
+
+    private async Task RecarregarProdutos()
+    {
+        await OnInitializedAsync();
     }
 }
