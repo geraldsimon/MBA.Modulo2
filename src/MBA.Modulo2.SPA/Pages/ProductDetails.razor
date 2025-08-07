@@ -112,13 +112,28 @@ else
                         <div class="product-grid">
                             @foreach (var produ in products.Vendedor.produtoReduzidos)
                             {
-                                <div class="mini-product-card">
-                                    <img src="@($"{imagePath}{produ.Imagem}")" class="mini-product-image" alt="@produ.Nome" />
-                                    <div class="mini-product-content">
+                                <div class="modern-mini-card">
+                                    <div class="mini-card-image-container">
+                                        <img src="@($"{imagePath}{produ.Imagem}")" class="mini-card-image" alt="@produ.Nome" />
+                                        <div class="mini-card-overlay">
+                                            <div class="mini-quick-actions">
+                                                <button class="mini-action-btn" title="Ver detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="mini-action-btn" title="Favoritar">
+                                                    <i class="fas fa-heart"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-card-content">
                                         <h6 class="mini-product-title">@produ.Nome</h6>
-                                        <div class="mini-product-price">@produ.Preco.ToString("C")</div>
-                                        <a class="mini-product-btn" href="/produtoDetail/@produ.Id">
-                                            <i class="fas fa-eye me-1"></i>Ver Detalhes
+                                        <div class="mini-price-section">
+                                            <span class="mini-price-value">@produ.Preco.ToString("C")</span>
+                                        </div>
+                                        <a class="modern-mini-btn" href="/produtoDetail/@produ.Id">
+                                            <span>Ver Detalhes</span>
+                                            <i class="fas fa-arrow-right"></i>
                                         </a>
                                     </div>
                                 </div>

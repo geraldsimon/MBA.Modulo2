@@ -130,29 +130,74 @@ else
                         @foreach (var product in produtosFiltrados)
                         {
                             <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                                <div class="card-compra h-100 product-card">
-                                    <img src="@($"{imagePath}{product.Imagem}")" class="card-img-top" alt="@product.Nome" style="object-fit: cover; height: 200px; border-radius: var(--border-radius) var(--border-radius) 0 0;" />
-                                    <div class="card-compra-body d-flex flex-column">
-                                        <h5 class="card-title text-truncate">@product.Nome</h5>
-                                        <p class="card-text flex-grow-1">@product.Descricao</p>
-                                        <div class="product-info mb-3">
-                                            <p class="mb-1"><strong>Preço:</strong> <span class="text-success">@product.Preco.ToString("C")</span></p>
-                                            <p class="mb-1">
-                                                <strong>Estoque:</strong>
+                                <div class="modern-product-card">
+                                    <!-- Image Container -->
+                                    <div class="card-image-container">
+                                        <img src="@($"{imagePath}{product.Imagem}")" class="card-image" alt="@product.Nome" />
+                                        <div class="image-overlay">
+                                            <div class="quick-actions">
+                                                <button class="quick-action-btn" title="Adicionar aos favoritos">
+                                                    <i class="fas fa-heart"></i>
+                                                </button>
+                                                <button class="quick-action-btn" title="Visualização rápida">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="quick-action-btn" title="Compartilhar">
+                                                    <i class="fas fa-share-alt"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-badges">
+                                            @if (product.Estoque <= 0)
+                                            {
+                                                <span class="status-badge out-of-stock">Esgotado</span>
+                                            }
+                                            else if (product.Estoque <= 5)
+                                            {
+                                                <span class="status-badge low-stock">Últimas unidades</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-content">
+                                        <div class="category-tag">
+                                            <i class="fas fa-tag"></i>
+                                            @product.Categoria
+                                        </div>
+                                        
+                                        <h5 class="product-name">@product.Nome</h5>
+                                        
+                                        <p class="product-description">@product.Descricao</p>
+                                        
+                                        <div class="card-footer-content">
+                                            <div class="price-section">
+                                                <span class="price-label">Preço</span>
+                                                <span class="price-value">@product.Preco.ToString("C")</span>
+                                            </div>
+                                            
+                                            <div class="stock-section">
                                                 @if (product.Estoque > 0)
                                                 {
-                                                    <span class="badge-compra badge-compra-success">@product.Estoque</span>
+                                                    <span class="stock-available">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        @product.Estoque em estoque
+                                                    </span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge-compra badge-compra-danger">Esgotado</span>
+                                                    <span class="stock-unavailable">
+                                                        <i class="fas fa-times-circle"></i>
+                                                        Indisponível
+                                                    </span>
                                                 }
-                                            </p>
-                                            <p class="mb-0"><strong>Categoria:</strong> <span class="badge-compra badge-compra-primary">@product.Categoria</span></p>
+                                            </div>
+                                            
+                                            <a class="modern-btn primary-btn" href="/produtoDetail/@product.Id">
+                                                <span>Ver Detalhes</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                            </a>
                                         </div>
-                                        <a class="btn-compra btn-compra-primary mt-auto" href="/produtoDetail/@product.Id">
-                                            <i class="fas fa-eye me-2"></i>Ver Detalhes
-                                        </a>
                                     </div>
                                 </div>
                             </div>
