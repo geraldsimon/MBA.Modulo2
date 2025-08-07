@@ -408,3 +408,196 @@
         grid-template-columns: 1fr;
     }
 }
+
+.skeleton-loader {
+    background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--card-bg) 50%, var(--bg-secondary) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: var(--border-radius);
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.product-skeleton-container {
+    padding: var(--spacing-xl) 0;
+}
+
+.skeleton-card-title {
+    height: 32px;
+    width: 40%;
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-product-image {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(90deg, var(--bg-light) 25%, var(--bg-secondary) 50%, var(--bg-light) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: var(--border-radius-lg);
+}
+
+.skeleton-price {
+    height: 36px;
+    width: 30%;
+}
+
+.skeleton-action-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.skeleton-action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+}
+
+.skeleton-title {
+    height: 28px;
+    width: 60%;
+    margin: var(--spacing-lg) 0;
+}
+
+.skeleton-info-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.skeleton-info-title {
+    height: 24px;
+    width: 50%;
+}
+
+.skeleton-info-content {
+    height: 60px;
+    width: 100%;
+}
+
+.vendor-profile-skeleton {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-bottom: var(--spacing-xl);
+}
+
+.skeleton-vendor-avatar {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(90deg, var(--bg-light) 25%, var(--bg-secondary) 50%, var(--bg-light) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+}
+
+.skeleton-vendor-title {
+    height: 20px;
+    width: 60%;
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-vendor-name {
+    height: 28px;
+    width: 80%;
+    margin: var(--spacing-lg) 0;
+}
+
+.skeleton-vendor-info {
+    height: 16px;
+    width: 50%;
+    margin-top: auto;
+}
+
+.other-products-skeleton {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--card-shadow);
+    padding: var(--spacing-xl);
+}
+
+.skeleton-products-title {
+    height: 24px;
+    width: 70%;
+    margin-bottom: var(--spacing-lg);
+}
+
+.skeleton-mini-card {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.skeleton-mini-image {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(90deg, var(--bg-light) 25%, var(--bg-secondary) 50%, var(--bg-light) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+}
+
+.skeleton-mini-content {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+.skeleton-mini-title {
+    height: 18px;
+    width: 85%;
+}
+
+.skeleton-mini-price {
+    height: 20px;
+    width: 40%;
+    margin-top: auto;
+}
+
+.skeleton-mini-button {
+    height: 32px;
+    width: 100%;
+    border-radius: var(--border-radius);
+}
+
+.skeleton-info-card:nth-child(1) .skeleton-loader { animation-delay: 0.1s; }
+.skeleton-info-card:nth-child(2) .skeleton-loader { animation-delay: 0.2s; }
+.skeleton-info-card:nth-child(3) .skeleton-loader { animation-delay: 0.3s; }
+
+.skeleton-mini-card:nth-child(1) .skeleton-loader { animation-delay: 0.1s; }
+.skeleton-mini-card:nth-child(2) .skeleton-loader { animation-delay: 0.2s; }
+.skeleton-mini-card:nth-child(3) .skeleton-loader { animation-delay: 0.3s; }
+.skeleton-mini-card:nth-child(4) .skeleton-loader { animation-delay: 0.4s; }
+
+@media (max-width: 768px) {
+    .skeleton-product-image {
+        height: 250px;
+    }
+    
+    .skeleton-mini-image {
+        height: 120px;
+    }
+    
+    .skeleton-vendor-avatar {
+        height: 150px;
+    }
+}

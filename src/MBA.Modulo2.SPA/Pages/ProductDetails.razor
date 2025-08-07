@@ -9,7 +9,90 @@
 
 @if (products == null)
 {
-    <p>Carregando produtos...</p>
+    <div class="product-skeleton-container">
+        <div class="product-card-container">
+            <div class="card-compra">
+                <div class="card-compra-header">
+                    <div class="skeleton-loader skeleton-card-title"></div>
+                </div>
+                <div class="card-compra-body">
+                    <div class="product-image-container">
+                        <div class="skeleton-product-image"></div>
+                    </div>
+                    
+                    <div class="product-content">
+                        <div class="product-header">
+                            <div class="skeleton-loader skeleton-price"></div>
+                            <div class="skeleton-action-buttons">
+                                <div class="skeleton-loader skeleton-action-btn"></div>
+                                <div class="skeleton-loader skeleton-action-btn"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skeleton-loader skeleton-title"></div>
+                        
+                        <div class="product-info-grid">
+                            <div class="skeleton-info-card">
+                                <div class="skeleton-loader skeleton-info-title"></div>
+                                <div class="skeleton-loader skeleton-info-content"></div>
+                            </div>
+                            <div class="skeleton-info-card">
+                                <div class="skeleton-loader skeleton-info-title"></div>
+                                <div class="skeleton-loader skeleton-info-content"></div>
+                            </div>
+                            <div class="skeleton-info-card">
+                                <div class="skeleton-loader skeleton-info-title"></div>
+                                <div class="skeleton-loader skeleton-info-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="vendor-card-container">
+            <div class="card-compra">
+                <div class="card-compra-header">
+                    <div class="skeleton-loader skeleton-card-title"></div>
+                </div>
+                <div class="card-compra-body">
+                    <div class="vendor-content">
+                        <div class="vendor-profile-skeleton">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <div class="skeleton-vendor-avatar"></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="vendor-info">
+                                        <div class="skeleton-loader skeleton-vendor-title"></div>
+                                        <div class="skeleton-loader skeleton-vendor-name"></div>
+                                        <div class="skeleton-loader skeleton-vendor-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="other-products-skeleton">
+                            <div class="skeleton-loader skeleton-products-title"></div>
+                            <div class="product-grid">
+                                @for (int i = 0; i < 4; i++)
+                                {
+                                    <div class="skeleton-mini-card">
+                                        <div class="skeleton-mini-image"></div>
+                                        <div class="skeleton-mini-content">
+                                            <div class="skeleton-loader skeleton-mini-title"></div>
+                                            <div class="skeleton-loader skeleton-mini-price"></div>
+                                            <div class="skeleton-loader skeleton-mini-button"></div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {

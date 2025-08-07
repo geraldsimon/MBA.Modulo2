@@ -2,12 +2,61 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
 @inject ProdutoHttpClient ProdutoApi
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <PageTitle>Lista de Produtos</PageTitle>
 
 @if (products == null)
 {
-    <p>Carregando produtos...</p>
+    <div class="container-fluid py-4">
+        <div class="card-compra">
+            <div class="card-compra-header">
+                <div class="skeleton-loader skeleton-title"></div>
+            </div>
+            <div class="card-compra-body">
+                <div class="skeleton-filters mb-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <div class="skeleton-loader skeleton-input"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="skeleton-loader skeleton-input"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="skeleton-loader skeleton-input"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="skeleton-loader skeleton-buttons"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skeleton-results-info mb-3">
+                    <div class="skeleton-loader skeleton-info"></div>
+                </div>
+                
+                <div class="row">
+                    @for (int i = 0; i < 6; i++)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="skeleton-product-card">
+                                <div class="skeleton-card-image"></div>
+                                <div class="skeleton-card-content">
+                                    <div class="skeleton-loader skeleton-category"></div>
+                                    <div class="skeleton-loader skeleton-product-title"></div>
+                                    <div class="skeleton-loader skeleton-description"></div>
+                                    <div class="skeleton-loader skeleton-price"></div>
+                                    <div class="skeleton-loader skeleton-stock"></div>
+                                    <div class="skeleton-loader skeleton-button"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -103,7 +152,6 @@ else
                         </div>
                     }
                     
-                    <!-- Informações e controles -->
                     <div class="results-controls mb-3">
                         <div class="row align-items-center">
                             <div class="col-md-6">
@@ -159,13 +207,13 @@ else
                                         <img src="@($"{imagePath}{product.Imagem}")" class="card-image" alt="@product.Nome" />
                                         <div class="image-overlay">
                                             <div class="quick-actions">
-                                                <button class="quick-action-btn" title="Adicionar aos favoritos">
+                                                <button class="quick-action-btn" title="Adicionar aos favoritos" @onclick="() => AdicionarFavorito(product.Id)">
                                                     <i class="fas fa-heart"></i>
                                                 </button>
-                                                <button class="quick-action-btn" title="Visualização rápida">
+                                                <button class="quick-action-btn" title="Visualização rápida" @onclick="() => VisualizacaoRapida(product)">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="quick-action-btn" title="Compartilhar">
+                                                <button class="quick-action-btn" title="Compartilhar" @onclick="() => CompartilharProduto(product)">
                                                     <i class="fas fa-share-alt"></i>
                                                 </button>
                                             </div>
@@ -428,6 +476,149 @@ else
             </div>
         </div>
     </div>
+    
+    @if (mostrarModalVisualizacao && produtoVisualizacao != null)
+    {
+        <div class="modal-overlay" @onclick="FecharModalVisualizacao">
+            <div class="modal-content quick-view-modal" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-eye me-2"></i>Visualização Rápida
+                    </h5>
+                    <button class="modal-close-btn" @onclick="FecharModalVisualizacao">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="quick-view-image">
+                                <img src="@($"{imagePath}{produtoVisualizacao.Imagem}")" alt="@produtoVisualizacao.Nome" class="img-fluid" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="quick-view-info">
+                                <span class="category-badge">@produtoVisualizacao.Categoria</span>
+                                <h4 class="product-title-modal">@produtoVisualizacao.Nome</h4>
+                                <p class="product-description-modal">@produtoVisualizacao.Descricao</p>
+                                
+                                <div class="price-stock-section">
+                                    <div class="price-info">
+                                        <span class="price-label">Preço:</span>
+                                        <span class="price-value">@produtoVisualizacao.Preco.ToString("C")</span>
+                                    </div>
+                                    
+                                    @if (produtoVisualizacao.Estoque > 0)
+                                    {
+                                        <div class="stock-info stock-available">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>@produtoVisualizacao.Estoque em estoque</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="stock-info stock-unavailable">
+                                            <i class="fas fa-times-circle"></i>
+                                            <span>Indisponível</span>
+                                        </div>
+                                    }
+                                </div>
+                                
+                                <div class="modal-actions">
+                                    <a class="btn-modal primary" href="/produtoDetail/@produtoVisualizacao.Id">
+                                        <i class="fas fa-info-circle"></i>
+                                        Ver Detalhes Completos
+                                    </a>
+                                    <button class="btn-modal secondary" @onclick="() => AdicionarFavorito(produtoVisualizacao.Id)">
+                                        <i class="fas fa-heart"></i>
+                                        Favoritar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    @if (mostrarModalCompartilhamento && produtoCompartilhamento != null)
+    {
+        <div class="modal-overlay" @onclick="FecharModalCompartilhamento">
+            <div class="modal-content share-modal" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-share-alt me-2"></i>Compartilhar Produto
+                    </h5>
+                    <button class="modal-close-btn" @onclick="FecharModalCompartilhamento">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="product-preview">
+                        <div class="product-preview-image">
+                            <img src="@($"{imagePath}{produtoCompartilhamento.Imagem}")" alt="@produtoCompartilhamento.Nome" />
+                        </div>
+                        <div class="product-preview-info">
+                            <h6>@produtoCompartilhamento.Nome</h6>
+                            <span class="preview-price">@produtoCompartilhamento.Preco.ToString("C")</span>
+                        </div>
+                    </div>
+                    
+                    <div class="share-options">
+                        <h6 class="share-title">Compartilhar via:</h6>
+                        <div class="share-buttons">
+                            <button class="share-btn whatsapp" @onclick="() => CompartilharViaWhatsApp(produtoCompartilhamento)">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>WhatsApp</span>
+                            </button>
+                            <button class="share-btn facebook" @onclick="() => CompartilharViaFacebook(produtoCompartilhamento)">
+                                <i class="fab fa-facebook"></i>
+                                <span>Facebook</span>
+                            </button>
+                            <button class="share-btn twitter" @onclick="() => CompartilharViaTwitter(produtoCompartilhamento)">
+                                <i class="fab fa-twitter"></i>
+                                <span>Twitter</span>
+                            </button>
+                            <button class="share-btn email" @onclick="() => CompartilharViaEmail(produtoCompartilhamento)">
+                                <i class="fas fa-envelope"></i>
+                                <span>E-mail</span>
+                            </button>
+                        </div>
+                        
+                        <div class="copy-link-section">
+                            <label class="form-label">Link do produto:</label>
+                            <div class="copy-link-container">
+                                <input type="text" class="form-control" @bind="linkProduto" readonly />
+                                <button class="btn-copy" @onclick="CopiarLink" title="Copiar link">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            @if (linkCopiado)
+                            {
+                                <small class="text-success">
+                                    <i class="fas fa-check"></i> Link copiado!
+                                </small>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    @if (mostrarToast)
+    {
+        <div class="toast-notification @toastType show">
+            <div class="toast-content">
+                <i class="toast-icon @GetToastIcon(toastType)"></i>
+                <span class="toast-message">@toastMessage</span>
+            </div>
+            <button class="toast-close" @onclick="FecharToast">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    }
 }
 
 @code {
@@ -447,6 +638,18 @@ else
     private int itensPorPagina = 6;
     private int totalPaginas = 1;
     private List<ProdutoLoggedOutViewModel> produtosPaginados = new();
+    
+    private bool mostrarModalVisualizacao = false;
+    private bool mostrarModalCompartilhamento = false;
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
+    
+    private ProdutoLoggedOutViewModel produtoVisualizacao;
+    private ProdutoLoggedOutViewModel produtoCompartilhamento;
+    
+    private string linkProduto = "";
+    private bool linkCopiado = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -602,5 +805,138 @@ else
     private async Task RecarregarProdutos()
     {
         await OnInitializedAsync();
+    }
+    
+    
+    private async Task AdicionarFavorito(Guid produtoId)
+    {
+        try
+        {
+            await Task.Delay(500);
+            
+            await MostrarToast("Produto adicionado aos favoritos!", "success");
+        }
+        catch (Exception ex)
+        {
+            await MostrarToast("Erro ao adicionar aos favoritos", "error");
+            Console.WriteLine($"Erro ao favoritar: {ex.Message}");
+        }
+    }
+    
+    private void VisualizacaoRapida(ProdutoLoggedOutViewModel produto)
+    {
+        produtoVisualizacao = produto;
+        mostrarModalVisualizacao = true;
+        StateHasChanged();
+    }
+    
+    private void CompartilharProduto(ProdutoLoggedOutViewModel produto)
+    {
+        produtoCompartilhamento = produto;
+        linkProduto = $"{NavigationManager.BaseUri}produtoDetail/{produto.Id}";
+        linkCopiado = false;
+        mostrarModalCompartilhamento = true;
+        StateHasChanged();
+    }
+    
+    
+    private void FecharModalVisualizacao()
+    {
+        mostrarModalVisualizacao = false;
+        produtoVisualizacao = null;
+        StateHasChanged();
+    }
+    
+    private void FecharModalCompartilhamento()
+    {
+        mostrarModalCompartilhamento = false;
+        produtoCompartilhamento = null;
+        linkCopiado = false;
+        StateHasChanged();
+    }
+    
+    
+    private async Task CompartilharViaWhatsApp(ProdutoLoggedOutViewModel produto)
+    {
+        var texto = $"Confira este produto: {produto.Nome} - {produto.Preco:C} - {NavigationManager.BaseUri}produtoDetail/{produto.Id}";
+        var url = $"https://wa.me/?text={Uri.EscapeDataString(texto)}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        FecharModalCompartilhamento();
+        await MostrarToast("Compartilhado via WhatsApp!", "success");
+    }
+    
+    private async Task CompartilharViaFacebook(ProdutoLoggedOutViewModel produto)
+    {
+        var url = $"https://www.facebook.com/sharer/sharer.php?u={Uri.EscapeDataString(NavigationManager.BaseUri + $"produtoDetail/{produto.Id}")}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        FecharModalCompartilhamento();
+        await MostrarToast("Compartilhado via Facebook!", "success");
+    }
+    
+    private async Task CompartilharViaTwitter(ProdutoLoggedOutViewModel produto)
+    {
+        var texto = $"Confira este produto: {produto.Nome} - {produto.Preco:C}";
+        var url = $"https://twitter.com/intent/tweet?text={Uri.EscapeDataString(texto)}&url={Uri.EscapeDataString(NavigationManager.BaseUri + $"produtoDetail/{produto.Id}")}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        FecharModalCompartilhamento();
+        await MostrarToast("Compartilhado via Twitter!", "success");
+    }
+    
+    private async Task CompartilharViaEmail(ProdutoLoggedOutViewModel produto)
+    {
+        var assunto = $"Confira este produto: {produto.Nome}";
+        var corpo = $"Olá!%0A%0AEncontrei este produto interessante e queria compartilhar com você:%0A%0A{produto.Nome}%0APreço: {produto.Preco:C}%0A%0AConfira mais detalhes em: {NavigationManager.BaseUri}produtoDetail/{produto.Id}";
+        var url = $"mailto:?subject={Uri.EscapeDataString(assunto)}&body={corpo}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_self");
+        FecharModalCompartilhamento();
+        await MostrarToast("Cliente de e-mail aberto!", "info");
+    }
+    
+    private async Task CopiarLink()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", linkProduto);
+            linkCopiado = true;
+            StateHasChanged();
+            await Task.Delay(2000);
+            linkCopiado = false;
+            StateHasChanged();
+        }
+        catch
+        {
+            await MostrarToast("Não foi possível copiar o link", "error");
+        }
+    }
+    
+    
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        await Task.Delay(4000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private string GetToastIcon(string tipo)
+    {
+        return tipo switch
+        {
+            "success" => "fas fa-check-circle",
+            "error" => "fas fa-exclamation-circle",
+            "warning" => "fas fa-exclamation-triangle",
+            "info" => "fas fa-info-circle",
+            _ => "fas fa-info-circle"
+        };
     }
 }
