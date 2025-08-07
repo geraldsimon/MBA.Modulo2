@@ -1,0 +1,98 @@
+﻿@using MBA.Modulo2.Spa.ExternalApi
+@inject FavoritoHttpClient FavoritoApi
+
+@if (_carregando)
+{
+    <span>Carregando...</span>
+}
+else
+{
+    <button class="btn btn-outline-secondary me-2" title="@_toolTip" @onclick="FavoritarAsync">
+        <img src="@iconeFavorito" alt="@_toolTip" style="width: 20px; height: 20px;" />
+    </button>
+}
+
+<Toast Show="mostrarToast" ColorClass="@toastColorClass" Message="@toastMessage" OnClose="FecharToast" />
+
+@code {
+    [Parameter]
+    public Guid idProduto { get; set; }
+
+    private bool _carregando = true;
+    private bool _favoritado = false;
+    private string _toolTip = "Favoritar";
+
+    private bool mostrarToast;
+    private string toastMessage;
+    private string toastColorClass;
+
+    private string iconeFavorito => _favoritado ? "icons/icon_favoritado.png" : "icons/icon_favorito.png";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _favoritado = await FavoritoApi.JaFavoritado(idProduto);
+
+            if (_favoritado)
+                _toolTip = "Desfavoritar";
+            else
+                _toolTip = "Favoritar";
+        }
+        catch
+        {
+            _favoritado = false;
+        }
+        finally
+        {
+            _carregando = false;
+        }
+    }
+
+    private async Task FavoritarAsync()
+    {
+        byte retorno = await FavoritoApi.RegistrarFavorito(idProduto);
+
+        switch (retorno)
+        {
+            case 1:
+                _favoritado = true;
+                await MostrarToast("Produto adicionado aos favoritos!", "text-bg-success");
+                break;
+            case 2:
+                _favoritado = false;
+                await MostrarToast("Produto removido dos favoritos!", "text-bg-warning");
+                break;
+            default:
+                await MostrarToast("Erro ao favoritar produto.", "text-bg-danger");
+                break;
+        }
+
+        if (_favoritado)
+            _toolTip = "Desfavoritar";
+        else
+            _toolTip = "Favoritar";
+
+    }
+
+    private async Task MostrarToast(string mensagem, string corClasse)
+    {
+        toastMessage = mensagem;
+        toastColorClass = corClasse;
+        mostrarToast = true;
+        StateHasChanged();
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(3000);
+            mostrarToast = false;
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private Task FecharToast()
+    {
+        mostrarToast = false;
+        return Task.CompletedTask;
+    }
+}

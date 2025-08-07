@@ -69,6 +69,19 @@ namespace MBA.Modulo2.Api.Controllers
             return Ok(favoritosViewModel);
         }
 
+        [ClaimsAuthorize("Favoritos", "VI")]
+        [HttpGet("{idProduto:guid}")]
+        public async Task<ActionResult<FavoritoViewModel>> GetProdutoJaFavoritado(Guid idProduto)
+        {
+            var ClienteId = FuncoesGerais.PegarOIdDoClientePeloToken(Request.Headers.Authorization.ToString());
+
+            var produtoFavoritado = await GetByIdAsync(ClienteId, idProduto);
+
+            var favoritosViewModel = _mapper.Map<FavoritoViewModel>(produtoFavoritado);
+
+            return Ok(favoritosViewModel);
+        }
+
         private async Task<FavoritoViewModel> GetByIdAsync(Guid idCliente, Guid idProduto)
         {
             return _mapper.Map<FavoritoViewModel>(await _favoritoService.PegarPorIdProdutoFavoritoAsync(idCliente, idProduto));
