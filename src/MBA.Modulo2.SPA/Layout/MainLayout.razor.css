@@ -69,6 +69,7 @@
     margin-left: var(--sidebar-width);
     min-height: calc(100vh - var(--header-height));
     padding: 1.5rem;
+    padding-bottom: 60px;
     background-color: var(--bg-body);
     transition: var(--transition-base);
     width: calc(100% - var(--sidebar-width));
@@ -79,16 +80,7 @@
     padding: 0;
 }
 
-::deep footer {
-    margin-left: var(--sidebar-width);
-    margin-top: auto;
-    background-color: var(--header-bg);
-    border-top: var(--header-border);
-    padding: 1rem 1.5rem;
-    transition: var(--transition-base);
-}
 
-/* Desktop */
 @media (min-width: 992px) {
     #main-wrapper {
         display: flex;
@@ -96,7 +88,6 @@
     }
 }
 
-/* Responsive */
 @media (max-width: 991.98px) {
     .sidebar {
         left: calc(-1 * var(--sidebar-width));
@@ -113,10 +104,7 @@
     .content-body {
         margin-left: 0;
         width: 100%;
-    }
-    
-    ::deep footer {
-        margin-left: 0;
+        padding-bottom: 60px;
     }
 }
 

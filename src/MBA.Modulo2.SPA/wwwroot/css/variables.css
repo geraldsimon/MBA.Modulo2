@@ -95,7 +95,7 @@
     --sidebar-collapsed-width: 80px;
     --sidebar-bg: linear-gradient(180deg, #2c2c2c 0%, #1a1a1a 100%);
     --sidebar-color: #ffffff;
-    --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+    --sidebar-hover-bg: rgba(108, 83, 235, 0.12);
     --sidebar-active-bg: rgba(255, 255, 255, 0.1);
     /* Header */
     --header-height: 3.5rem;
@@ -104,4 +104,9 @@
     /* Container */
     --container-padding-x: 1.5rem;
     --container-padding-y: 1rem;
+    /* Footer específico */
+    --footer-bg: #d3cafa;
+    --footer-border: #dad4fc;
+    --footer-text: #4a4a4a;
+    --footer-text-hover: #2d2d2d;
 }
