@@ -1,11 +1,44 @@
 ﻿@page "/NotAuthorizedMessage"
 @inject NavigationManager NavigationManager
 
-<h3 class="erroMessage">@ErrorMessage</h3>
+<CardComponent>
+    <Titulo>
+        <span style="font-size: 20px; font-weight: bold; color: #dc3545;">
+            🚫 ACESSO NEGADO
+        </span>
+    </Titulo>
+
+    <Corpo>
+        <div style="text-align: center; padding: 20px;">
+            <p style="font-size: 18px; margin-bottom: 10px;">
+                @ErrorMessage
+            </p>
+            <p style="font-size: 15px; color: #6c757d; margin-bottom: 20px;">
+                Caso acredite que isso seja um erro, entre em contato com o administrador.
+            </p>
+
+            <a href="/" 
+               style="
+                    display: inline-block;
+                    padding: 8px 16px;
+                    background-color: #6c53eb;
+                    color: #fff;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    text-decoration: none;
+                    transition: background-color 0.2s;
+               "
+               onmouseover="this.style.backgroundColor='#0056b3'"
+               onmouseout="this.style.backgroundColor='#007bff'">
+                Voltar para Home
+            </a>
+        </div>
+    </Corpo>
+</CardComponent>
 
 @code {
     private bool carregado = false;
-    public string ErrorMessage { get; set; } = "Acesso negado.";
+    public string ErrorMessage { get; set; } = "Você não tem permissão para acessar esta página.";
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -17,7 +50,7 @@
             if (query.TryGetValue("msg", out var msg))
             {
                 ErrorMessage = msg;
-                StateHasChanged(); 
+                StateHasChanged();
             }
 
             carregado = true;
