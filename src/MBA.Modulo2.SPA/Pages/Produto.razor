@@ -607,18 +607,7 @@ else
         </div>
     }
     
-    @if (mostrarToast)
-    {
-        <div class="toast-notification @toastType show">
-            <div class="toast-content">
-                <i class="toast-icon @GetToastIcon(toastType)"></i>
-                <span class="toast-message">@toastMessage</span>
-            </div>
-            <button class="toast-close" @onclick="FecharToast">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    }
+    <Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
 }
 
 @code {
@@ -926,17 +915,5 @@ else
     {
         mostrarToast = false;
         StateHasChanged();
-    }
-    
-    private string GetToastIcon(string tipo)
-    {
-        return tipo switch
-        {
-            "success" => "fas fa-check-circle",
-            "error" => "fas fa-exclamation-circle",
-            "warning" => "fas fa-exclamation-triangle",
-            "info" => "fas fa-info-circle",
-            _ => "fas fa-info-circle"
-        };
     }
 }

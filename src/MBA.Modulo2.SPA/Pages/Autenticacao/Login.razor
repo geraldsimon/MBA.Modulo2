@@ -2,8 +2,10 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.Shared
 @using MBA.Modulo2.Spa.ViewModels
+@using MBA.Modulo2.Spa.Components
 @inject NavigationManager NavigationManager
 @inject AuthHttpClient AuthHttpApi
+@inject IJSRuntime JSRuntime
 
 <div class="auth-container">
     <div class="auth-card">
@@ -13,17 +15,10 @@
             <p class="auth-subtitle">Acesse sua conta para continuar comprando</p>
         </div>
 
-        @if (ShowErrors)
-        {
-            <div class="auth-alert auth-alert-danger">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                @Error
-            </div>
-        }
 
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin" class="auth-form">
             <DataAnnotationsValidator />
-            <ValidationSummary />
+            @* ValidationSummary ocultado para usar apenas toasts *@
 
             <div class="form-group">
                 <label for="email" class="form-label">
@@ -57,11 +52,17 @@
     </div>
 </div>
 
+<Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
+
 @code {
 
     readonly LoginViewModel loginModel = new LoginViewModel();
     private bool ShowErrors;
     private string Error = string.Empty;
+    
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
 
     private async Task HandleLogin()
     {
@@ -72,18 +73,36 @@
 
             if (result.Data.AccessToken is not null)
             {
+                await MostrarToast("Login realizado com sucesso!", "success");
                 NavigationManager.NavigateTo("/");
             }
             else
             {
-                Error = "Login inválido";
-                ShowErrors = true;
+                await MostrarToast("Email ou senha inválidos", "error");
             }
         }
         catch (Exception ex)
         {
-            Error = "Não foi possível fazer o Login : " + ex.Message;
-            ShowErrors = true;
+            await MostrarToast("Erro no servidor. Tente novamente.", "error");
+            Console.WriteLine($"Erro no login: {ex.Message}");
         }
+    }
+    
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        await Task.Delay(4000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
     }
 }

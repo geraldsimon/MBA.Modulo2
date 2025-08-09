@@ -1,7 +1,9 @@
 ﻿@page "/cadastro"
 @using MBA.Modulo2.Spa.ExternalApi
+@using MBA.Modulo2.Spa.Components
 @inject NavigationManager NavigationManager
 @inject AuthHttpClient AuthHttpApi
+@inject IJSRuntime JSRuntime
 
 <div class="auth-container">
     <div class="auth-card auth-card-wide">
@@ -11,17 +13,10 @@
             <p class="auth-subtitle">Cadastre-se para começar a comprar</p>
         </div>
 
-        @if (ShowErrors)
-        {
-            <div class="auth-alert auth-alert-danger">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                @Error
-            </div>
-        }
 
         <EditForm Model="cadUserModel" OnValidSubmit="HandleCadastro" class="auth-form auth-form-wide">
             <DataAnnotationsValidator />
-            <ValidationSummary />
+            @* ValidationSummary ocultado para usar apenas toasts *@
 
             <div class="form-row">
                 <div class="form-group form-group-full">
@@ -78,10 +73,17 @@
     </div>
 </div>
 
+<Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
+
 @code {
     private CadastroUserModel cadUserModel = new CadastroUserModel();
     private bool ShowErrors;
     private string Error = string.Empty;
+    
+    // Toast
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
 
     private async Task HandleCadastro()
     {
@@ -92,18 +94,36 @@
 
             if (result.Success)
             {
+                await MostrarToast("Cadastro realizado com sucesso!", "success");
                 NavigationManager.NavigateTo("/");
             }
             else
             {
-                Error = result?.Data?.ToString() ?? "Erro ao cadastrar";
-                ShowErrors = true;
+                await MostrarToast(result?.Data?.ToString() ?? "Erro ao cadastrar. Verifique os dados.", "error");
             }
         }
         catch (Exception ex)
         {
-            Error = "Não foi possível realizar o cadastro: " + ex.Message;
-            ShowErrors = true;
+            await MostrarToast("Erro no servidor. Tente novamente.", "error");
+            Console.WriteLine($"Erro no cadastro: {ex.Message}");
         }
+    }
+    
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        await Task.Delay(4000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
     }
 }
