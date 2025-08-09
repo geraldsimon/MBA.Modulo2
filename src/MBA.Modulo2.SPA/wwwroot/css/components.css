@@ -318,3 +318,43 @@
 .rounded-compra-lg {
     border-radius: var(--border-radius-lg) !important;
 }
+
+.placeholder-product-image {
+    border-radius: var(--border-radius);
+    transition: var(--transition-base);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.placeholder-product-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.placeholder-initials {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    font-family: var(--font-family-base);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.card-image.placeholder-product-image {
+    height: 200px;
+    width: 100%;
+}
+
+.product-image.placeholder-product-image {
+    height: 300px;
+    width: 100%;
+}
+
+.mini-card-image.placeholder-product-image {
+    height: 140px;
+    width: 100%;
+}
+
+.img-fluid.placeholder-product-image {
+    height: 250px;
+    width: 100%;
+}

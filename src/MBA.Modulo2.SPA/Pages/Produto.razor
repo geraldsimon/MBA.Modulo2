@@ -206,7 +206,11 @@ else
                             <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="modern-product-card">
                                     <div class="card-image-container">
-                                        <img src="@($"{imagePath}{product.Imagem}")" class="card-image" alt="@product.Nome" />
+                                        <ProductImage ImageName="@product.Imagem" 
+                                                      ProductName="@product.Nome" 
+                                                      CategoryName="@product.Categoria"
+                                                      CssClass="card-image" 
+                                                      Alt="@product.Nome" />
                                         <div class="image-overlay">
                                             <div class="quick-actions">
                                                 <button class="quick-action-btn @(ObterEstadoFavorito(product.Id) ? "favorited" : "")" 
@@ -504,7 +508,11 @@ else
                     <div class="row">
                         <div class="col-md-6">
                             <div class="quick-view-image">
-                                <img src="@($"{imagePath}{produtoVisualizacao.Imagem}")" alt="@produtoVisualizacao.Nome" class="img-fluid" />
+                                <ProductImage ImageName="@produtoVisualizacao.Imagem" 
+                                              ProductName="@produtoVisualizacao.Nome" 
+                                              CategoryName="@produtoVisualizacao.Categoria"
+                                              CssClass="img-fluid" 
+                                              Alt="@produtoVisualizacao.Nome" />
                             </div>
                         </div>
                         <div class="col-md-6">

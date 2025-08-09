@@ -112,7 +112,11 @@ else
             </Titulo>
             <Corpo>
                 <div class="product-image-container">
-                    <img src="@($"{imagePath}{products.Imagem}")" class="product-image" alt="@products.Nome">
+                    <ProductImage ImageName="@products.Imagem" 
+                                  ProductName="@products.Nome" 
+                                  CategoryName="@products.Categoria.Nome"
+                                  CssClass="product-image" 
+                                  Alt="@products.Nome" />
                 </div>
                 
                 <div class="product-content">
@@ -207,7 +211,11 @@ else
                             {
                                 <div class="modern-mini-card">
                                     <div class="mini-card-image-container">
-                                        <img src="@($"{imagePath}{produ.Imagem}")" class="mini-card-image" alt="@produ.Nome" />
+                                        <ProductImage ImageName="@produ.Imagem" 
+                                                      ProductName="@produ.Nome" 
+                                                      CategoryName="@produ.Categoria"
+                                                      CssClass="mini-card-image" 
+                                                      Alt="@produ.Nome" />
                                         <div class="mini-card-overlay">
                                             <div class="mini-quick-actions">
                                                 <button class="mini-action-btn" title="Ver detalhes" @onclick="() => VisualizacaoRapida(produ)">
@@ -269,7 +277,11 @@ else
                     <div class="row">
                         <div class="col-md-6">
                             <div class="quick-view-image">
-                                <img src="@($"https://localhost:7009/images/{produtoVisualizacao.Imagem}")" alt="@produtoVisualizacao.Nome" class="img-fluid" />
+                                <ProductImage ImageName="@produtoVisualizacao.Imagem" 
+                                              ProductName="@produtoVisualizacao.Nome" 
+                                              CategoryName="@produtoVisualizacao.Categoria"
+                                              CssClass="img-fluid" 
+                                              Alt="@produtoVisualizacao.Nome" />
                             </div>
                         </div>
                         <div class="col-md-6">
