@@ -410,3 +410,71 @@
     color: white !important;
     transform: translateY(-1px) !important;
 }
+
+.auth-container .auth-btn.primary-action {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    width: auto !important;
+    min-width: 150px !important;
+}
+
+.auth-container .auth-btn.primary-action:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    transform: translateY(-1px) !important;
+}
+
+.auth-container .auth-btn.secondary-action {
+    background-color: transparent !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+    width: auto !important;
+    min-width: 150px !important;
+}
+
+.auth-container .auth-btn.secondary-action:hover {
+    background-color: var(--card-bg-hover) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    transform: translateY(-1px) !important;
+}
+
+.auth-container .not-authorized-wide {
+    max-width: 600px !important;
+}
+
+.auth-container .auth-btn-wide {
+    width: auto !important;
+    min-width: 200px !important;
+    flex: 1 !important;
+    max-width: 250px !important;
+}
+
+@media (max-width: 768px) {
+    .auth-container .not-authorized-wide {
+        max-width: 500px !important;
+    }
+    
+    .auth-container .auth-btn-wide {
+        min-width: 180px !important;
+        max-width: 220px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-container .not-authorized-wide {
+        max-width: 100% !important;
+    }
+    
+    .auth-container .auth-btn-wide {
+        width: 100% !important;
+        min-width: auto !important;
+        max-width: none !important;
+        flex: none !important;
+    }
+    
+    .auth-container .error-actions .d-flex {
+        flex-direction: column !important;
+        gap: var(--spacing-md) !important;
+    }
+}
