@@ -2,6 +2,8 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
 @inject ProdutoHttpClient ProdutoApi
+@inject FavoritoHttpClient FavoritoApi
+@inject AuthHttpClient AuthHttpApi
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
@@ -608,6 +610,11 @@ else
     }
     
     <Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
+    
+    @if (mostrarModalLogin)
+    {
+        <ModalLogin OnClose="FecharModalLogin" />
+    }
 }
 
 @code {
@@ -630,9 +637,12 @@ else
     
     private bool mostrarModalVisualizacao = false;
     private bool mostrarModalCompartilhamento = false;
+    private bool mostrarModalLogin = false;
     private bool mostrarToast = false;
     private string toastMessage = "";
     private string toastType = "success";
+    
+    private bool logado = false;
     
     private ProdutoLoggedOutViewModel produtoVisualizacao;
     private ProdutoLoggedOutViewModel produtoCompartilhamento;
@@ -644,6 +654,7 @@ else
     {
         try
         {
+            logado = await AuthHttpApi.UsuarioEstaLogadoAsync();
             products = await ProdutoApi.GetProdutosAsync();
 
             categorias = products.Select(p => p.Categoria).Distinct().OrderBy(c => c).ToList();
@@ -799,11 +810,28 @@ else
     
     private async Task AdicionarFavorito(Guid produtoId)
     {
+        if (!logado)
+        {
+            mostrarModalLogin = true;
+            StateHasChanged();
+            return;
+        }
+        
         try
         {
-            await Task.Delay(500);
-            
-            await MostrarToast("Produto adicionado aos favoritos!", "success");
+            byte retorno = await FavoritoApi.RegistrarFavorito(produtoId);
+            switch (retorno)
+            {
+                case 1:
+                    await MostrarToast("Produto adicionado aos favoritos!", "success");
+                    break;
+                case 2:
+                    await MostrarToast("Produto removido dos favoritos", "warning");
+                    break;
+                case 3:
+                    await MostrarToast("Erro ao adicionar aos favoritos", "error");
+                    break;
+            }
         }
         catch (Exception ex)
         {
@@ -914,6 +942,12 @@ else
     private void FecharToast()
     {
         mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharModalLogin()
+    {
+        mostrarModalLogin = false;
         StateHasChanged();
     }
 }
