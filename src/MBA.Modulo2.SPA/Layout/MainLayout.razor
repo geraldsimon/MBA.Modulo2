@@ -1,16 +1,46 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
+<div id="main-wrapper">
     <div class="sidebar">
         <NavMenu />
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <div class="header">
+        <div class="header-content">
+            <nav class="navbar navbar-expand">
+                <div class="collapse navbar-collapse justify-content-between">
+                    <div class="header-left">
+                        <div class="header-brand">
+                            <h5 class="mb-0 fw-bold"></h5>
+                        </div>
+                    </div>
+                    
+                    <ul class="navbar-nav header-right">
+                        <li class="nav-item">
+                            <LoginDisplay />
+                        </li>
+                        <li class="nav-item">
+                            <ThemeToggle />
+                        </li>
+                        <li class="nav-item">
+                            <LogoutButton />
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
+    </div>
 
-        <article class="content px-4">
+    <div class="content-body">
+        <div class="container-fluid">
             @Body
-        </article>
-    </main>
+        </div>
+    </div>
+
+    <Footer />
+</div>
+
+<div id="blazor-error-ui">
+    Ocorreu um erro inesperado
+    <a href="" class="reload">Recarregar</a>
+    <a class="dismiss">X</a>
 </div>

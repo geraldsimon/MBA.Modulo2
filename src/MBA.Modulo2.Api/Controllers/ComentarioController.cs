@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Functions;
 using MBA.Modulo2.Business.Services.Interface;
@@ -10,21 +9,21 @@ namespace MBA.Modulo2.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ComentarioController(IComentarioService commentService,
+public class ComentarioController(IComentarioService comentatiotService,
                                IPostService postService,
                                IMapper mapper, 
                                INotifier notifier) : MainController(notifier)
 {
-    private readonly IComentarioService _commentService = commentService;
+    private readonly IComentarioService _commentService = comentatiotService;
     private readonly IPostService _postService = postService;
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]    
     public async Task<IActionResult> GetAll()
     {
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        var comments = await _commentService.GetAllAsync(vendedorId);
+        var comments = await _commentService.PegarTodosAsync(vendedorId);
 
         var viewModel = _mapper.Map<IEnumerable<ComentarioViewModel>>(comments);
         return Ok(viewModel);
@@ -33,10 +32,10 @@ public class ComentarioController(IComentarioService commentService,
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var comment = await _commentService.GetByIdAsync(id);
+        var comment = await _commentService.PegarPorIdAsync(id);
         if (comment == null)
         {
-            ReportError("This comment does not exist.");
+            ReportError("Este comentário não existe.");
             return CustomResponse();
         }
 
@@ -49,15 +48,15 @@ public class ComentarioController(IComentarioService commentService,
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var post = await _postService.GetByIdAsync(commentViewModel.PostId);
+        var post = await _postService.PegarPorIdAsync(commentViewModel.PostId);
         if (post == null)
         {
-            ReportError("The comment post ID does not exist, please insert an existing post");
+            ReportError("O ID do comentário não existe, insira um post existente");
             return CustomResponse();
         }
 
         var comment = _mapper.Map<Comentario>(commentViewModel);
-        await _commentService.AddAsync(comment);
+        await _commentService.AdicionaAsync(comment);
         return CreatedAtAction(nameof(GetById), new { id = comment.Id }, commentViewModel);
     }
 
@@ -65,27 +64,27 @@ public class ComentarioController(IComentarioService commentService,
     public async Task<IActionResult> Update(Guid id, ComentarioViewModel commentViewModel)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        if (id != commentViewModel.Id) return BadRequest("Mismatched comment ID");
+        if (id != commentViewModel.Id) return BadRequest("ID de comentário incompatível");
 
-        var post = await _postService.GetByIdAsync(commentViewModel.PostId);
+        var post = await _postService.PegarPorIdAsync(commentViewModel.PostId);
         if (post == null)
         {
-            ReportError("This post does not exist");
+            ReportError("Esta postagem não existe");
             return CustomResponse();
         }
 
-        var commentValidate = await _commentService.GetByIdAsync(id);
+        var commentValidate = await _commentService.PegarPorIdAsync(id);
         if (commentValidate == null)
         {
-            ReportError("This comment does not exist.");
+            ReportError("Este comentário não existe.");
             return CustomResponse();
         }
 
         var comment = _mapper.Map<Comentario>(commentViewModel);
 
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        await _commentService.UpdateAsync(comment, vendedorId);
+        await _commentService.AlteraAsync(comment, vendedorId);
         
         return NoContent();
     }
@@ -93,16 +92,16 @@ public class ComentarioController(IComentarioService commentService,
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var commentValidate = await _commentService.GetByIdAsync(id);
+        var commentValidate = await _commentService.PegarPorIdAsync(id);
         if (commentValidate == null)
         {
-            ReportError("This comment does not exist.");
+            ReportError("Este comentário não existe.");
             return CustomResponse();
         }
 
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        await _commentService.DeleteAsync(id, vendedorId);
+        await _commentService.ExcluiAsync(id, vendedorId);
         return NoContent();
     }
 }

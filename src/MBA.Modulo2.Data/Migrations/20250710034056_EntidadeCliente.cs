@@ -29,9 +29,10 @@ namespace MBA.Modulo2.Data.Migrations
                 name: "Clientes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", nullable: true),
+                    CriadoEm = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

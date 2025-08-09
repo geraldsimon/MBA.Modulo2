@@ -15,5 +15,5 @@ public class ProdutoHomeViewModel
 
     public string Image { get; set; }
 
-    public string Category { get; set; } = null!;
+    public string Categoria { get; set; } = null!;
 }

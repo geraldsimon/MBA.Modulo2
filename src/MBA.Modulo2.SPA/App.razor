@@ -1,12 +1,66 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿@using MBA.Modulo2.Spa.Components
+@using MBA.Modulo2.Spa.Pages.NotFound
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <div class="auth-container">
+                        <div class="auth-card not-authorized-card not-authorized-wide">
+                            <div class="auth-header">
+                                <div class="error-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <h4 class="auth-title">Acesso Negado</h4>
+                                <p class="auth-subtitle">Você precisa fazer login para acessar esta página</p>
+                            </div>
+                            
+                            <div class="error-content">
+                                <div class="error-help">
+                                    <p class="help-text">
+                                        <i class="fas fa-lightbulb me-2"></i>
+                                        Faça login ou crie uma conta para continuar navegando.
+                                    </p>
+                                </div>
+                                
+                                <div class="error-actions">
+                                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                                        <a href="/login" class="auth-btn primary-action auth-btn-wide">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                            <span>Fazer Login</span>
+                                        </a>
+                                        <a href="/cadastro" class="auth-btn secondary-action auth-btn-wide">
+                                            <i class="fas fa-user-plus"></i>
+                                            <span>Criar Conta</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </NotAuthorized>
+                <Authorizing>
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <div class="auth-header">
+                                <div class="d-flex justify-content-center mb-3">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Verificando...</span>
+                                    </div>
+                                </div>
+                                <h4 class="auth-title">Verificando permissões...</h4>
+                                <p class="auth-subtitle">Aguarde enquanto validamos seu acesso</p>
+                            </div>
+                        </div>
+                    </div>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <NotFound />
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

@@ -4,10 +4,10 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface IComentarioService
     {
-        Task<IEnumerable<Comentario>> GetAllAsync(Guid sellerId);
-        Task<Comentario> GetByIdAsync(Guid id);
-        Task AddAsync(Comentario comment);
-        Task UpdateAsync(Comentario comment, Guid sellerId);
-        Task DeleteAsync(Guid id, Guid sellerId);
+        Task<IEnumerable<Comentario>> PegarTodosAsync(Guid sellerId);
+        Task<Comentario> PegarPorIdAsync(Guid id);
+        Task AdicionaAsync(Comentario comment);
+        Task AlteraAsync(Comentario comment, Guid sellerId);
+        Task ExcluiAsync(Guid id, Guid sellerId);
     }
 }

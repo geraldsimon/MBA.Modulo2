@@ -55,9 +55,9 @@ namespace MBA.Modulo2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: true)
+                    Nome = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Ativo = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,11 +69,11 @@ namespace MBA.Modulo2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Titulo = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Conteudo = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AtualizadoEm = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,9 +85,10 @@ namespace MBA.Modulo2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: true)
+                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -186,12 +187,12 @@ namespace MBA.Modulo2.Data.Migrations
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(1000)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Nome });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -205,9 +206,9 @@ namespace MBA.Modulo2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Conteudo = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CriadoEm = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -226,28 +227,28 @@ namespace MBA.Modulo2.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Estoque = table.Column<int>(type: "int", nullable: false),
+                    Imagem = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    CategoriaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VendedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false)
+                    Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Produtos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Produtos_Categorias_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Produtos_Categorias_CategoriaId",
+                        column: x => x.CategoriaId,
                         principalTable: "Categorias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Produtos_Vendedores_VendedorId",
                         column: x => x.VendedorId,
-                        principalTable: "Vendedors",
+                        principalTable: "Vendedores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -297,9 +298,9 @@ namespace MBA.Modulo2.Data.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Produtos_CategoryId",
+                name: "IX_Produtos_CategoriaId",
                 table: "Produtos",
-                column: "CategoryId");
+                column: "CategoriaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Produtos_VendedorId",

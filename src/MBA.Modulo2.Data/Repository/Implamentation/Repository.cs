@@ -14,36 +14,40 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> PegarTodosAsync()
     {
         return await _dbSet.AsNoTracking().ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(Guid id)
+    public async Task<T> PegarPorIdAsync(Guid id)
     {
         return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
     }
-
-    public async Task<T> GetByNameAsync(string name)
+    public async Task<T> PegarPorAspNetUserIdAsync(Guid applicationUserID)
     {
-        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<string>(e, "Name") == name);
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "ApplicationUserId") == applicationUserID);
     }
 
-    public async Task AddAsync(T entity)
+    public async Task<T> PegarPorNomeAsync(string name)
+    {
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<string>(e, "Nome") == name);
+    }
+
+    public async Task AdicionaAsync(T entity)
     {
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(T entity)
+    public async Task AlteraAsync(T entity)
     {
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task ExcluiAsync(Guid id)
     {
-        var entity = await GetByIdAsync(id);
+        var entity = await PegarPorIdAsync(id);
         if (entity != null)
         {
             _dbSet.Remove(entity);

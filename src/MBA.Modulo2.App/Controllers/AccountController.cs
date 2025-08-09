@@ -1,20 +1,25 @@
-﻿using MBA.Modulo2.App.ViewModels;
-using MBA.Modulo2.Business.Services.Implementacao;
+﻿using MBA.Modulo2.App.Configuration;
+using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MBA.Modulo2.App.Controllers;
 
-public class AccountController(IVendedorService VendedorService,
+public class AccountController(INotifier notifier,
+                               AppState appState,
+                               UserManager<ApplicationUser> userManager,
+                               IVendedorService vendedorService,
                                IClienteService clienteService,
                                SignInManager<ApplicationUser> signInManager,
-                               UserManager<ApplicationUser> userManager) : Controller
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
-    private readonly IVendedorService _VendedorService = VendedorService;
+    private readonly IVendedorService _vendedorService = vendedorService;
     private readonly IClienteService _clienteService = clienteService;
+    private readonly AppState _appState = appState;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
@@ -32,6 +37,7 @@ public class AccountController(IVendedorService VendedorService,
 
             if (result.Succeeded)
             {
+                _appState.UserStateId = Guid.Parse(_userManager.GetUserId(User));
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -62,7 +68,7 @@ public class AccountController(IVendedorService VendedorService,
                 EmailConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Senha);
 
 
             if (result.Succeeded)
@@ -71,24 +77,46 @@ public class AccountController(IVendedorService VendedorService,
                 var logedUser = await _userManager.GetUserAsync(User);
                 var userId = logedUser?.Id;
 
+                var vendedorId = Guid.NewGuid();
                 Vendedor vendedor = new()
                 {
-                    Id = (Guid)userId,
-                    Name = model.Name,
+                    Id = vendedorId,
+                    Nome = model.Nome,
+                    ApplicationUserId = user.Id,
+                    CriadoEm = DateTime.UtcNow,
                 };
-                await _VendedorService.AddAsync(vendedor);
+                await _vendedorService.AdicionaAsync(vendedor);
 
+                var clienteId = Guid.NewGuid();
                 Cliente cliente = new()
                 {
-                    Id = (Guid)userId,
-                    Name = model.Name,
-                    CreatedAt = DateTime.UtcNow
+                    Id = clienteId,
+                    Nome = model.Nome,
+                    ApplicationUserId = user.Id,
+                    CriadoEm = DateTime.UtcNow
                 };
-                await _clienteService.AddAsync(cliente);
 
+                var claimsToAdd = new[]
+                {
+                    new Claim("Produtos", "VI"),
+                    new Claim("Produtos", "AD"),
+                    new Claim("Produtos", "ED"),
+                    new Claim("Produtos", "EX")
+                };
+
+
+                foreach (var claim in claimsToAdd)
+                {
+                    await _userManager.AddClaimAsync(user, claim);
+                }
+
+                _appState.UserStateId = (Guid)userId;
+                _appState.VendedorStateId = vendedorId;
+
+                await _clienteService.AdicionaAsync(cliente);
                 await _signInManager.SignOutAsync();
             }
-            
+
 
             if (result.Succeeded)
             {
@@ -105,7 +133,7 @@ public class AccountController(IVendedorService VendedorService,
             }
         }
         return View(model);
-   }
+    }
 
     public async Task<IActionResult> Logout()
     {

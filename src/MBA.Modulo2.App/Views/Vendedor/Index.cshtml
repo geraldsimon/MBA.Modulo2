@@ -20,7 +20,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width:70%; text-align:center">@Html.DisplayNameFor(model => model.Name)</th>
+                            <th style="width:70%; text-align:center">@Html.DisplayNameFor(model => model.Nome)</th>
                             <th style="width:05%; text-align:center">Status</th>
                             <th style="width:25%; text-align:center">Ações</th>
                         </tr>
@@ -29,20 +29,20 @@
                         @foreach (var item in Model)
                         {
                             <tr class="align-middle">
-                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@(item.Active ? "Ativo" : "Inativo")</td>
+                                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                                <td>@(item.Ativo ? "Ativo" : "Inativo")</td>
                                 <td style="text-align:center">
                                     <div class="d-flex gap-1">
                                         <form asp-action="ToggleStatus" method="post">
                                             <input type="hidden" name="id" value="@item.Id" />
-                                            <button type="submit" class="btn btn-sm @(item.Active ? "btn-danger" : "btn-success")">
-                                                @(item.Active ? "Desativar" : "Ativar")
+                                            <button type="submit" class="btn btn-sm @(item.Ativo ? "btn-danger" : "btn-success")">
+                                                @(item.Ativo ? "Desativar" : "Ativar")
                                             </button>
                                         </form>
 
                                         <form asp-controller="Produto" asp-action="Index" method="post">
                                             <input type="hidden" name="id" value="@item.Id" />
-                                            <button disabled="@(!item.Active)" type="submit" class="btn btn-sm btn-success">
+                                            <button disabled="@(!item.Ativo)" type="submit" class="btn btn-sm btn-success">
                                                 Editar Produtos
                                             </button>
                                         </form>

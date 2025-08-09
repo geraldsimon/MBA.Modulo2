@@ -92,16 +92,16 @@ namespace MBA.Modulo2.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Category", b =>
+            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Categoria", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
@@ -115,10 +115,10 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("Conteudo")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("PostId")
@@ -140,10 +140,10 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("Conteudo")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("VendedorId")
@@ -152,7 +152,7 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("AtualizadoEm")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -166,30 +166,30 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("CategoriaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("Imagem")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("VendedorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Stock")
+                    b.Property<int>("Estoque")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoriaId");
 
                     b.HasIndex("VendedorId");
 
@@ -202,13 +202,16 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Active")
+                    b.Property<int>("Ativo")
                         .HasColumnType("INT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
@@ -226,7 +229,7 @@ namespace MBA.Modulo2.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -336,13 +339,13 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(1000)");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                    b.HasKey("UserId", "LoginProvider", "Nome");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
@@ -360,9 +363,9 @@ namespace MBA.Modulo2.Data.Migrations
 
             modelBuilder.Entity("MBA.Modulo2.Data.Domain.Produto", b =>
                 {
-                    b.HasOne("MBA.Modulo2.Data.Domain.Category", "Category")
+                    b.HasOne("MBA.Modulo2.Data.Domain.Categoria", "Categoria")
                         .WithMany("Produtos")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -372,7 +375,7 @@ namespace MBA.Modulo2.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Categoria");
 
                     b.Navigation("Vendedor");
                 });
@@ -428,7 +431,7 @@ namespace MBA.Modulo2.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Category", b =>
+            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Categoria", b =>
                 {
                     b.Navigation("Produtos");
                 });

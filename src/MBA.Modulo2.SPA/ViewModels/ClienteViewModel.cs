@@ -6,6 +6,6 @@
 
         public string Name { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
     }
 }

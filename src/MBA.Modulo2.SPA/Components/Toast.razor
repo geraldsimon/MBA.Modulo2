@@ -1,0 +1,38 @@
+@* Componente Toast Centralizado - Implementação completa *@
+@if (Show)
+{
+    <div class="toast-notification @Type show">
+        <div class="toast-content">
+            <i class="toast-icon @GetToastIcon(Type)"></i>
+            <span class="toast-message">@Message</span>
+        </div>
+        <button class="toast-close" @onclick="FecharToast">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public string Type { get; set; } = "success"; 
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private async Task FecharToast()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    private string GetToastIcon(string tipo)
+    {
+        return tipo switch
+        {
+            "success" => "fas fa-check-circle",
+            "error" => "fas fa-exclamation-circle",
+            "warning" => "fas fa-exclamation-triangle",
+            "info" => "fas fa-info-circle",
+            _ => "fas fa-info-circle"
+        };
+    }
+}
+

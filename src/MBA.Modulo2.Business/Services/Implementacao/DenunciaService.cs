@@ -33,14 +33,14 @@ public class DenunciaService : IDenunciaService
 			return denunciaId;
 		}
 
-		var produto = await _produtoRepository.GetByIdAsync(denuncia.ProdutoId);
+		var produto = await _produtoRepository.PegaPorIdAsync(denuncia.ProdutoId);
 		if (produto == null)
 		{
 			_notifier.Handle(new Notificacao("Produto não encontrado."));
 			return Guid.Empty;
 		}
 
-		await _denunciaRepository.AddAsync(denuncia);
+		await _denunciaRepository.AdicionaAsync(denuncia);
 		return denuncia.Id;
 	}
 
@@ -50,7 +50,7 @@ public class DenunciaService : IDenunciaService
 		string observacao,
 		Guid adminId)
 	{
-		var denuncia = await _denunciaRepository.GetByIdAsync(denunciaId);
+		var denuncia = await _denunciaRepository.PegarPorIdAsync(denunciaId);
 		if (denuncia == null)
 		{
 			_notifier.Handle(new Notificacao("Denúncia não encontrada."));
@@ -70,15 +70,15 @@ public class DenunciaService : IDenunciaService
 
 		if (novoStatus == StatusDenuncia.Aprovada)
 		{
-			var produto = await _produtoRepository.GetByIdAsync(denuncia.ProdutoId);
+			var produto = await _produtoRepository.PegaPorIdAsync(denuncia?.ProdutoId);
 			if (produto != null)
 			{
-				produto.Active = false;
-				await _produtoRepository.UpdateAsync(produto);
+				produto.Ativo = false;
+				await _produtoRepository.AlteraAsync(produto);
 			}
 		}
 
-		await _denunciaRepository.UpdateAsync(denuncia);
+		await _denunciaRepository.AlteraAsync(denuncia);
 		return true;
 	}
 
@@ -99,7 +99,7 @@ public class DenunciaService : IDenunciaService
 
 	public async Task<Denuncia?> ObterDenunciaPorIdAsync(Guid id)
 	{
-		return await _denunciaRepository.GetByIdAsync(id);
+		return await _denunciaRepository.PegarPorIdAsync(id);
 	}
 
 	public async Task<Guid> UsuarioJaDenunciouProdutoAsync(Guid usuarioId, Guid produtoId)

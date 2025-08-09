@@ -4,11 +4,11 @@ namespace MBA.Modulo2.Shared.ViewModels;
 
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "Email is required.")]
+    [Required(ErrorMessage = "O Email é obrigatório.")]
     [EmailAddress]
     public string Email { get; set; }
 
-    [Required(ErrorMessage = "Password is required.")]
+    [Required(ErrorMessage = "A senha é obrigatória.")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
 

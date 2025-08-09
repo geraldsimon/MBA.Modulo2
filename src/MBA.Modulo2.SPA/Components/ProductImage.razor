@@ -1,0 +1,199 @@
+@if (UseImageFallback)
+{
+    <img src="@GetCategoryFallbackImage()" 
+         class="@CssClass category-fallback-image" 
+         alt="@Alt"
+         loading="lazy"
+         @attributes="AdditionalAttributes" />
+}
+else
+{
+    <img src="@GetImageSource()" 
+         class="@CssClass" 
+         alt="@Alt" 
+         loading="lazy"
+         @onerror="OnImageError"
+         @attributes="AdditionalAttributes" />
+}
+
+@code {
+    [Parameter] public string? ImageName { get; set; }
+    [Parameter] public string ProductName { get; set; } = "";
+    [Parameter] public string CategoryName { get; set; } = "";
+    [Parameter] public string CssClass { get; set; } = "";
+    [Parameter] public string Alt { get; set; } = "";
+    [Parameter] public string BaseUrl { get; set; } = "https://localhost:7009/images/";
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool UseImageFallback { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrWhiteSpace(ImageName) || 
+            ImageName.Contains("undefined") || 
+            ImageName.Contains("null") ||
+            ImageName.Trim().Equals("null", StringComparison.OrdinalIgnoreCase))
+        {
+            UseImageFallback = true;
+        }
+    }
+
+    private string GetImageSource()
+    {
+        if (string.IsNullOrWhiteSpace(ImageName))
+            return "";
+        
+        return $"{BaseUrl}{ImageName}";
+    }
+
+    private void OnImageError()
+    {
+        UseImageFallback = true;
+        StateHasChanged();
+    }
+
+    private string GetProductInitials()
+    {
+        if (string.IsNullOrWhiteSpace(ProductName))
+            return "??";
+
+        var words = ProductName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length == 1)
+            return words[0].Substring(0, Math.Min(2, words[0].Length)).ToUpper();
+        
+        return string.Join("", words.Take(2).Select(w => w[0])).ToUpper();
+    }
+
+    private string GetPlaceholderStyle()
+    {
+        var color = GenerateColorFromText(ProductName);
+        return $"background: linear-gradient(135deg, {color}, {color}88); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; min-height: 200px; position: relative;";
+    }
+
+    private string GetCategoryFallbackImage()
+    {
+        return MapCategoryToImage(CategoryName, ProductName);
+    }
+
+    private string MapCategoryToImage(string category, string productName)
+    {
+        var categoryKey = category?.ToLower().Trim() ?? "";
+        var productKey = productName?.ToLower() ?? "";
+
+        // Eletrônicos e Computadores
+        if (categoryKey.Contains("notebook") || categoryKey.Contains("laptop") || 
+            productKey.Contains("notebook") || productKey.Contains("laptop"))
+            return "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("desktop") || categoryKey.Contains("computador") || categoryKey.Contains("pc") ||
+            productKey.Contains("desktop") || productKey.Contains("computador"))
+            return "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("smartphone") || categoryKey.Contains("celular") || categoryKey.Contains("telefone") ||
+            productKey.Contains("smartphone") || productKey.Contains("celular") || productKey.Contains("iphone") || productKey.Contains("samsung"))
+            return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("tablet") || categoryKey.Contains("ipad") ||
+            productKey.Contains("tablet") || productKey.Contains("ipad"))
+            return "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("monitor") || categoryKey.Contains("tela") ||
+            productKey.Contains("monitor") || productKey.Contains("display"))
+            return "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("mouse") || categoryKey.Contains("teclado") || categoryKey.Contains("keyboard") ||
+            productKey.Contains("mouse") || productKey.Contains("teclado") || productKey.Contains("keyboard"))
+            return "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("fone") || categoryKey.Contains("headphone") || categoryKey.Contains("earphone") ||
+            productKey.Contains("fone") || productKey.Contains("headphone") || productKey.Contains("airpods"))
+            return "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&crop=center";
+            
+        // Eletrodomésticos
+        if (categoryKey.Contains("geladeira") || categoryKey.Contains("refrigerador") ||
+            productKey.Contains("geladeira") || productKey.Contains("refrigerador"))
+            return "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("fogão") || categoryKey.Contains("cooktop") ||
+            productKey.Contains("fogão") || productKey.Contains("cooktop"))
+            return "https://images.unsplash.com/photo-1556909114-4f6e7be7b3fd?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("micro") || categoryKey.Contains("microondas") ||
+            productKey.Contains("microondas"))
+            return "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("lavadora") || categoryKey.Contains("máquina") ||
+            productKey.Contains("lavadora") || productKey.Contains("máquina"))
+            return "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&crop=center";
+            
+        // Moda e Vestuário
+        if (categoryKey.Contains("roupa") || categoryKey.Contains("camiseta") || categoryKey.Contains("camisa") ||
+            productKey.Contains("camiseta") || productKey.Contains("camisa") || productKey.Contains("blusa"))
+            return "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("calça") || categoryKey.Contains("jeans") ||
+            productKey.Contains("calça") || productKey.Contains("jeans"))
+            return "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("sapato") || categoryKey.Contains("tênis") || categoryKey.Contains("calçado") ||
+            productKey.Contains("sapato") || productKey.Contains("tênis") || productKey.Contains("nike") || productKey.Contains("adidas"))
+            return "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&crop=center";
+            
+        // Casa e Jardim
+        if (categoryKey.Contains("sofá") || categoryKey.Contains("poltrona") ||
+            productKey.Contains("sofá") || productKey.Contains("poltrona"))
+            return "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("mesa") || categoryKey.Contains("cadeira") ||
+            productKey.Contains("mesa") || productKey.Contains("cadeira"))
+            return "https://images.unsplash.com/photo-1549497538-303791108f95?w=400&h=400&fit=crop&crop=center";
+            
+        if (categoryKey.Contains("cama") || categoryKey.Contains("colchão") ||
+            productKey.Contains("cama") || productKey.Contains("colchão"))
+            return "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop&crop=center";
+            
+        // Livros e Educação
+        if (categoryKey.Contains("livro") || categoryKey.Contains("book") ||
+            productKey.Contains("livro") || productKey.Contains("book"))
+            return "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop&crop=center";
+            
+        // Esporte e Lazer
+        if (categoryKey.Contains("esporte") || categoryKey.Contains("fitness") || categoryKey.Contains("academia") ||
+            productKey.Contains("haltere") || productKey.Contains("bicicleta") || productKey.Contains("bola"))
+            return "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center";
+            
+        // Beleza e Cuidados
+        if (categoryKey.Contains("beleza") || categoryKey.Contains("cosmético") || categoryKey.Contains("perfume") ||
+            productKey.Contains("perfume") || productKey.Contains("shampoo") || productKey.Contains("creme"))
+            return "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop&crop=center";
+            
+        // Automóveis
+        if (categoryKey.Contains("carro") || categoryKey.Contains("auto") || categoryKey.Contains("veículo") ||
+            productKey.Contains("pneu") || productKey.Contains("óleo") || productKey.Contains("peça"))
+            return "https://images.unsplash.com/photo-1549924231-f129b911e442?w=400&h=400&fit=crop&crop=center";
+            
+        // Geral - Imagem padrão para produtos não categorizados
+        return "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop&crop=center";
+    }
+
+    private string GenerateColorFromText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return "#6c53eb";
+
+        var colors = new[]
+        {
+            "#6c53eb", "#FF4C41", "#68CF29", "#FFAB2D", "#51A6F5",
+            "#9C27B0", "#E91E63", "#F44336", "#FF9800", "#4CAF50",
+            "#2196F3", "#795548", "#607D8B", "#3F51B5", "#009688"
+        };
+
+        int hash = 0;
+        foreach (char c in text)
+        {
+            hash = c + ((hash << 5) - hash);
+        }
+
+        return colors[Math.Abs(hash) % colors.Length];
+    }
+}

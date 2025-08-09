@@ -1,0 +1,129 @@
+﻿@page "/cadastro"
+@using MBA.Modulo2.Spa.ExternalApi
+@using MBA.Modulo2.Spa.Components
+@inject NavigationManager NavigationManager
+@inject AuthHttpClient AuthHttpApi
+@inject IJSRuntime JSRuntime
+
+<div class="auth-container">
+    <div class="auth-card auth-card-wide">
+        <div class="auth-header">
+            <img src="img/logo.png" alt="Logo Boa Compra" class="auth-logo" />
+            <h4 class="auth-title">Criar nova conta</h4>
+            <p class="auth-subtitle">Cadastre-se para começar a comprar</p>
+        </div>
+
+
+        <EditForm Model="cadUserModel" OnValidSubmit="HandleCadastro" class="auth-form auth-form-wide">
+            <DataAnnotationsValidator />
+            @* ValidationSummary ocultado para usar apenas toasts *@
+
+            <div class="form-row">
+                <div class="form-group form-group-full">
+                    <label for="nome" class="form-label">
+                        <i class="fas fa-user me-2 text-muted"></i>Nome Completo
+                    </label>
+                    <InputText id="nome" class="auth-input" @bind-Value="cadUserModel.Nome" placeholder="Digite seu nome completo" />
+                    <ValidationMessage For="@(() => cadUserModel.Nome)" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group form-group-full">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope me-2 text-muted"></i>Email
+                    </label>
+                    <InputText id="email" class="auth-input" @bind-Value="cadUserModel.Email" placeholder="seu@email.com" />
+                    <ValidationMessage For="@(() => cadUserModel.Email)" />
+                </div>
+            </div>
+
+            <div class="form-row form-row-split">
+                <div class="form-group form-group-half">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock me-2 text-muted"></i>Senha
+                    </label>
+                    <InputText id="password" type="password" class="auth-input"
+                               @bind-Value="cadUserModel.Password" placeholder="Digite sua senha" />
+                    <ValidationMessage For="@(() => cadUserModel.Password)" />
+                </div>
+
+                <div class="form-group form-group-half">
+                    <label for="confirmPassword" class="form-label">
+                        <i class="fas fa-check-circle me-2 text-muted"></i>Confirme sua senha
+                    </label>
+                    <InputText id="confirmPassword" type="password" class="auth-input"
+                               @bind-Value="cadUserModel.ConfirmPassword" placeholder="Confirme sua senha" />
+                    <ValidationMessage For="@(() => cadUserModel.ConfirmPassword)" />
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                <i class="fas fa-user-plus"></i>
+                <span>Cadastrar</span>
+            </button>
+        </EditForm>
+
+        <div class="auth-footer">
+            <p class="mb-0">
+                Já tem conta? 
+                <NavLink href="/login" class="auth-link">Entrar aqui</NavLink>
+            </p>
+        </div>
+    </div>
+</div>
+
+<Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
+
+@code {
+    private CadastroUserModel cadUserModel = new CadastroUserModel();
+    private bool ShowErrors;
+    private string Error = string.Empty;
+    
+    // Toast
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
+
+    private async Task HandleCadastro()
+    {
+        ShowErrors = false;
+        try
+        {
+            var result = await AuthHttpApi.NovoCadastroAsync(cadUserModel);
+
+            if (result.Success)
+            {
+                await MostrarToast("Cadastro realizado com sucesso!", "success");
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                await MostrarToast(result?.Data?.ToString() ?? "Erro ao cadastrar. Verifique os dados.", "error");
+            }
+        }
+        catch (Exception ex)
+        {
+            await MostrarToast("Erro no servidor. Tente novamente.", "error");
+            Console.WriteLine($"Erro no cadastro: {ex.Message}");
+        }
+    }
+    
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        await Task.Delay(4000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
+    }
+}

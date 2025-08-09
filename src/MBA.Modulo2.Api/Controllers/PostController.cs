@@ -21,9 +21,9 @@ public class PostController(IPostService postService,
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PostViewModel>>> GetAll()
     {
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        var postViewModels = _mapper.Map<IEnumerable<PostViewModel>>(await _postService.GetAllAsync(vendedorId));
+        var postViewModels = _mapper.Map<IEnumerable<PostViewModel>>(await _postService.PegarTodosAsync(vendedorId));
 
         return Ok(postViewModels);
     }
@@ -31,7 +31,7 @@ public class PostController(IPostService postService,
     [HttpGet("{id}")]
     public async Task<ActionResult<PostViewModel>> GetById(Guid id)
     {
-        var post = await _postService.GetByIdAsync(id);
+        var post = await _postService.PegarPorIdAsync(id);
         if (post == null)
         {
             ReportError("This post does not exist");
@@ -50,13 +50,13 @@ public class PostController(IPostService postService,
         {
             return BadRequest(ModelState);
         }
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
         var post = _mapper.Map<Post>(postViewModel);
         post.VendedorId = vendedorId;
-        post.CreatedAt = DateTime.UtcNow;
+        post.CriadoEm = DateTime.UtcNow;
 
-        await _postService.AddAsync(post);
+        await _postService.AdicionaAsync(post);
 
         var createdPostViewModel = _mapper.Map<PostViewModel>(post);
 
@@ -73,19 +73,19 @@ public class PostController(IPostService postService,
         }
 
         // Get vendedorId  from the logged-in user
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
         postViewModel.VendedorId = vendedorId;
         var post = _mapper.Map<Post>(postViewModel);
 
 
-        var postUpdate = await _postService.GetByIdAsync(id);
+        var postUpdate = await _postService.PegarPorIdAsync(id);
         if (postUpdate == null)
         {
-            ReportError("This post does not exist.");
+            ReportError("Este post não existe.");
             return CustomResponse();
         }
 
-        await _postService.UpdateAsync(post, vendedorId);
+        await _postService.AlteraAsync(post, vendedorId);
 
         return NoContent();
     }
@@ -94,16 +94,16 @@ public class PostController(IPostService postService,
     [Authorize]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var vendedorId = GeneralFunctions.GetUserIdFromToken(Request.Headers.Authorization.ToString());
+        var vendedorId = FuncoesGerais.PegarOIdDoUsuarioPeloToken(Request.Headers.Authorization.ToString());
 
-        var postUpdate = await _postService.GetByIdAsync(id);
+        var postUpdate = await _postService.PegarPorIdAsync(id);
         if (postUpdate == null)
         {
-            ReportError("This post does not exist.");
+            ReportError("Este post não existe.");
             return CustomResponse();
         }
 
-        await _postService.DeleteAsync(id, vendedorId);
+        await _postService.ExcluiAsync(id, vendedorId);
 
         return NoContent();
     }

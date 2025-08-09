@@ -7,9 +7,9 @@ namespace MBA.Modulo2.Api.ViewModels
     {
         public Guid Id { get; set; }
         
-        [Required(ErrorMessage = "The name field is mandatory.")]
-        public string Name { get; set; } = null!;
+        [Required(ErrorMessage = "O Nome é obrigatório.")]
+        public string Nome { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
     }
 }
