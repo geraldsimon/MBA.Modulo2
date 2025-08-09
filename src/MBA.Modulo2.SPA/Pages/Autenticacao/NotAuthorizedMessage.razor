@@ -1,46 +1,46 @@
 ﻿@page "/NotAuthorizedMessage"
+@using MBA.Modulo2.Spa.Components
 @inject NavigationManager NavigationManager
 
-<CardComponent>
-    <Titulo>
-        <span style="font-size: 20px; font-weight: bold; color: #dc3545;">
-            🚫 ACESSO NEGADO
-        </span>
-    </Titulo>
-
-    <Corpo>
-        <div style="text-align: center; padding: 20px;">
-            <p style="font-size: 18px; margin-bottom: 10px;">
-                @ErrorMessage
-            </p>
-            <p style="font-size: 15px; color: #6c757d; margin-bottom: 20px;">
-                Caso acredite que isso seja um erro, entre em contato com o administrador.
-            </p>
-
-            <a href="/" 
-               style="
-                    display: inline-block;
-                    padding: 8px 16px;
-                    background-color: #6c53eb;
-                    color: #fff;
-                    border-radius: 6px;
-                    font-size: 14px;
-                    text-decoration: none;
-                    transition: background-color 0.2s;
-               "
-               onmouseover="this.style.backgroundColor='#0056b3'"
-               onmouseout="this.style.backgroundColor='#007bff'">
-                Voltar para Home
-            </a>
+<div class="auth-container">
+    <div class="auth-card not-authorized-card">
+        <div class="auth-header">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h4 class="auth-title">Acesso Negado</h4>
+            <p class="auth-subtitle">Você não tem permissão para acessar este recurso</p>
         </div>
-    </Corpo>
-</CardComponent>
+
+        <div class="error-content">
+            <div class="error-help">
+                <p class="help-text">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Caso acredite que isso seja um erro, entre em contato com o administrador.
+                </p>
+            </div>
+
+            <div class="error-actions">
+                <a href="/" class="auth-btn primary-action">
+                    <i class="fas fa-home"></i>
+                    <span>Voltar para Home</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
 
 @code {
     private bool carregado = false;
-    public string ErrorMessage { get; set; } = "Você não tem permissão para acessar esta página.";
+    private string ErrorMessage { get; set; } = "Você não tem permissão para acessar esta página.";
+    
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "error";
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!carregado && firstRender)
         {
@@ -50,12 +50,29 @@
             if (query.TryGetValue("msg", out var msg))
             {
                 ErrorMessage = msg;
-                StateHasChanged();
             }
 
+            // Exibe o erro via toast
+            await MostrarToast(ErrorMessage, "error");
             carregado = true;
         }
-
-        return Task.CompletedTask;
+    }
+    
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        await Task.Delay(5000); // 5 segundos para erros
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
     }
 }
