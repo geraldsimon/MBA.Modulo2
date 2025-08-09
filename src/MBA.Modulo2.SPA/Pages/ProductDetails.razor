@@ -6,6 +6,7 @@
 @inject ProdutoHttpClient ProdutoApi
 @inject AuthHttpClient AuthHttpApi
 @inject FavoritoHttpClient FavoritoApi
+@inject NavigationManager Navigation
 
 @if (products == null)
 {
@@ -121,8 +122,17 @@ else
                             <button class="action-btn" title="Denunciar" @onclick="Denunciar">
                                 <img src="icons/icon_atencao.png" alt="Denunciar" />
                             </button>
-                            <button class="action-btn" title="Favoritar" @onclick="Favoritar">
-                                <img src="icons/icon_favorito.png" alt="Favoritar" />
+                            <button class="action-btn @(produtoEstaNosFavoritos ? "favorited" : "")" 
+                                    title="@(produtoEstaNosFavoritos ? "Remover dos favoritos" : "Adicionar aos favoritos")" 
+                                    @onclick="Favoritar">
+                                @if (produtoEstaNosFavoritos)
+                                {
+                                    <i class="fas fa-heart" style="color: #FF4C41; font-size: 20px;"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-heart" style="color: #6c757d; font-size: 20px;"></i>
+                                }
                             </button>
                         </div>
                     </div>
@@ -200,11 +210,20 @@ else
                                         <img src="@($"{imagePath}{produ.Imagem}")" class="mini-card-image" alt="@produ.Nome" />
                                         <div class="mini-card-overlay">
                                             <div class="mini-quick-actions">
-                                                <button class="mini-action-btn" title="Ver detalhes">
+                                                <button class="mini-action-btn" title="Ver detalhes" @onclick="() => VisualizacaoRapida(produ)">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="mini-action-btn" title="Favoritar">
-                                                    <i class="fas fa-heart"></i>
+                                                <button class="mini-action-btn @(ObterEstadoFavorito(produ.Id) ? "favorited" : "")" 
+                                                        title="@(ObterEstadoFavorito(produ.Id) ? "Remover dos favoritos" : "Adicionar aos favoritos")" 
+                                                        @onclick="() => FavoritarOutroProduto(produ.Id)">
+                                                    @if (ObterEstadoFavorito(produ.Id))
+                                                    {
+                                                        <i class="fas fa-heart" style="color: #FF4C41;"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="far fa-heart"></i>
+                                                    }
                                                 </button>
                                             </div>
                                         </div>
@@ -233,7 +252,81 @@ else
     {
         <ModalLogin OnClose="FecharModal" />
     }
-    <Toast Show="mostrarToast" ColorClass="@toastColorClass" Message="@toastMessage" OnClose="FecharToast" />
+    
+    @if (mostrarModalVisualizacao && produtoVisualizacao != null)
+    {
+        <div class="modal-overlay" @onclick="FecharModalVisualizacao">
+            <div class="modal-content quick-view-modal" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-eye me-2" style="color: var(--primary-color);"></i>Visualização Rápida
+                    </h5>
+                    <button class="modal-close-btn" @onclick="FecharModalVisualizacao">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="quick-view-image">
+                                <img src="@($"https://localhost:7009/images/{produtoVisualizacao.Imagem}")" alt="@produtoVisualizacao.Nome" class="img-fluid" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="product-quick-info">
+                                <h4 class="product-title-modal">@produtoVisualizacao.Nome</h4>
+                                <p class="product-description-modal">@produtoVisualizacao.Descricao</p>
+                                
+                                <div class="price-stock-section">
+                                    <div class="price-info">
+                                        <span class="price-label">Preço:</span>
+                                        <span class="price-value">@produtoVisualizacao.Preco.ToString("C")</span>
+                                    </div>
+                                    
+                                    @if (produtoVisualizacao.Estoque > 0)
+                                    {
+                                        <div class="stock-info stock-available">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>@produtoVisualizacao.Estoque em estoque</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="stock-info stock-unavailable">
+                                            <i class="fas fa-times-circle"></i>
+                                            <span>Produto esgotado</span>
+                                        </div>
+                                    }
+                                </div>
+                                
+                                <div class="modal-actions">
+                                    <a class="btn-modal primary" href="/produtoDetail/@produtoVisualizacao.Id">
+                                        <i class="fas fa-info-circle"></i>
+                                        Ver Detalhes Completos
+                                    </a>
+                                    <button class="btn-modal @(produtoVisualizacaoEstaNosFavoritos ? "danger" : "secondary")" 
+                                            @onclick="() => FavoritarProdutoVisualizacao()">
+                                        @if (produtoVisualizacaoEstaNosFavoritos)
+                                        {
+                                            <i class="fas fa-heart-broken"></i>
+                                            <span>Remover dos Favoritos</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-heart"></i>
+                                            <span>Favoritar</span>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    <Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
 
 
 
@@ -245,26 +338,77 @@ else
 
     [Parameter]
     public Guid Id { get; set; }
-
+    
+    private Guid ultimoIdCarregado = Guid.Empty;
+    private bool carregando = false;
     private bool logado = false;
     private bool mostrarModalLogin = false;
-    private bool mostrarToast;
-    private string toastMessage;
-    private string toastColorClass;
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
+    
+    private bool produtoEstaNosFavoritos = false;
+    private Dictionary<Guid, bool> estadoFavoritosProdutos = new Dictionary<Guid, bool>();
+    
+    private bool mostrarModalVisualizacao = false;
+    private dynamic produtoVisualizacao;
+    private bool produtoVisualizacaoEstaNosFavoritos = false;
 
 
 
     protected override async Task OnParametersSetAsync()
     {
+        if (carregando || Id == ultimoIdCarregado)
+        {
+            Console.WriteLine($"Carregamento ignorado - carregando: {carregando}, mesmo ID: {Id == ultimoIdCarregado}");
+            return;
+        }
+
         try
         {
+            carregando = true;
+            Console.WriteLine($"OnParametersSetAsync chamado para ID: {Id}");
+            
+            products = null;
+            StateHasChanged();
+            
             logado = await AuthHttpApi.UsuarioEstaLogadoAsync();
             products = await ProdutoApi.GetProdutoDetalheAsync(Id);
+            
+            if (logado)
+            {
+                produtoEstaNosFavoritos = await FavoritoApi.VerificarSeProdutoEstaNosFavoritos(Id);
+                
+                if (products?.Vendedor?.produtoReduzidos != null)
+                {
+                    estadoFavoritosProdutos.Clear();
+                    foreach (var produto in products.Vendedor.produtoReduzidos)
+                    {
+                        var estaNosFavoritos = await FavoritoApi.VerificarSeProdutoEstaNosFavoritos(produto.Id);
+                        estadoFavoritosProdutos[produto.Id] = estaNosFavoritos;
+                    }
+                }
+            }
+            else
+            {
+                produtoEstaNosFavoritos = false;
+                estadoFavoritosProdutos.Clear();
+            }
+            
+            ultimoIdCarregado = Id;
+            
+            Console.WriteLine($"Produtos carregados com sucesso: {products?.Nome}, nos favoritos: {produtoEstaNosFavoritos}");
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
             products = new ProdutoDetalhesViewModel();
+            StateHasChanged();
+        }
+        finally
+        {
+            carregando = false;
         }
     }
 
@@ -281,15 +425,18 @@ else
             switch (retorno)
             {
                 case 1:
-                    await MostrarToast("Produto adicionado aos favoritos!", "text-bg-success");
+                    produtoEstaNosFavoritos = true;
+                    await MostrarToast("Produto adicionado aos favoritos!", "success");
                     break;
                 case 2:
-                    await MostrarToast("Produto Deletado dos favoritos", "text-bg-warning");
+                    produtoEstaNosFavoritos = false;
+                    await MostrarToast("Produto removido dos favoritos!", "warning");
                     break;
                 case 3:
-                    await MostrarToast("Ocorreu algum erro!", "text-bg-danger");
+                    await MostrarToast("Ocorreu algum erro!", "error");
                     break;
             }
+            StateHasChanged();
         }
     }
 
@@ -327,20 +474,118 @@ else
 
 
 
-    private async Task MostrarToast(string mensagem, string corClasse)
+    private async Task MostrarToast(string mensagem, string tipo)
     {
         toastMessage = mensagem;
-        toastColorClass = corClasse;
+        toastType = tipo;
         mostrarToast = true;
         StateHasChanged();
-        await Task.Delay(3000);
+        
+        await Task.Delay(4000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
         mostrarToast = false;
         StateHasChanged();
     }
 
-    private Task FecharToast()
+    private async Task FavoritarOutroProduto(Guid produtoId)
     {
-        mostrarToast = false;
-        return Task.CompletedTask;
+        if (!logado)
+        {
+            mostrarModalLogin = true;
+            StateHasChanged();
+        }
+        else
+        {
+            try
+            {
+                byte retorno = await FavoritoApi.RegistrarFavorito(produtoId);
+                switch (retorno)
+                {
+                    case 1:
+                        estadoFavoritosProdutos[produtoId] = true;
+                        await MostrarToast("Produto adicionado aos favoritos!", "success");
+                        break;
+                    case 2:
+                        estadoFavoritosProdutos[produtoId] = false;
+                        await MostrarToast("Produto removido dos favoritos!", "warning");
+                        break;
+                    case 3:
+                        await MostrarToast("Ocorreu algum erro!", "error");
+                        break;
+                }
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao favoritar produto: {ex.Message}");
+                await MostrarToast("Erro ao favoritar produto!", "error");
+            }
+        }
+    }
+
+    private void VisualizacaoRapida(dynamic produto)
+    {
+        Console.WriteLine($"Visualização rápida chamada para produto: {produto?.Nome}, ID: {produto?.Id}");
+        produtoVisualizacao = produto;
+        produtoVisualizacaoEstaNosFavoritos = ObterEstadoFavorito(produto.Id);
+        mostrarModalVisualizacao = true;
+        StateHasChanged();
+    }
+
+    private void FecharModalVisualizacao()
+    {
+        mostrarModalVisualizacao = false;
+        produtoVisualizacao = null;
+        produtoVisualizacaoEstaNosFavoritos = false;
+        StateHasChanged();
+    }
+
+    private bool ObterEstadoFavorito(Guid produtoId)
+    {
+        return estadoFavoritosProdutos.ContainsKey(produtoId) ? estadoFavoritosProdutos[produtoId] : false;
+    }
+
+    private async Task FavoritarProdutoVisualizacao()
+    {
+        if (!logado)
+        {
+            mostrarModalLogin = true;
+            StateHasChanged();
+            return;
+        }
+
+        if (produtoVisualizacao == null) return;
+
+        try
+        {
+            byte retorno = await FavoritoApi.RegistrarFavorito(produtoVisualizacao.Id);
+            switch (retorno)
+            {
+                case 1:
+                    produtoVisualizacaoEstaNosFavoritos = true;
+                    estadoFavoritosProdutos[produtoVisualizacao.Id] = true;
+                    await MostrarToast("Produto adicionado aos favoritos!", "success");
+                    break;
+                case 2:
+                    produtoVisualizacaoEstaNosFavoritos = false;
+                    estadoFavoritosProdutos[produtoVisualizacao.Id] = false;
+                    await MostrarToast("Produto removido dos favoritos!", "warning");
+                    break;
+                case 3:
+                    await MostrarToast("Ocorreu algum erro!", "error");
+                    break;
+            }
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao favoritar produto: {ex.Message}");
+            await MostrarToast("Erro ao favoritar produto!", "error");
+        }
     }
 }
