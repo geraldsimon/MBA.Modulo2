@@ -1,4 +1,7 @@
-﻿<CascadingAuthenticationState>
+﻿@using MBA.Modulo2.Spa.Components
+@using MBA.Modulo2.Spa.Pages.NotFound
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
@@ -57,9 +60,7 @@
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Nada a ser executado neste endereço.</p>
-            </LayoutView>
+            <NotFound />
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
