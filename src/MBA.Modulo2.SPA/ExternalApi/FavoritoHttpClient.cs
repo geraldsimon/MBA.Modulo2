@@ -5,6 +5,7 @@ using System.Text.Json;
 using MBA.Modulo2.Spa.ViewModels;
 using MBA.Modulo2.Spa.ExternalApi;
 using Blazored.LocalStorage;
+using System.Linq;
 
 namespace MBA.Modulo2.Spa.ExternalApi
 {
@@ -112,6 +113,20 @@ namespace MBA.Modulo2.Spa.ExternalApi
             return 3;
 
 
+        }
+
+        public async Task<bool> VerificarSeProdutoEstaNosFavoritos(Guid idProduto)
+        {
+            try
+            {
+                var favoritos = await PegarosFavoritos();
+                return favoritos.Any(f => f.Produto != null && f.Produto.Id == idProduto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao verificar favorito: {ex.Message}");
+                return false;
+            }
         }
 
 
