@@ -46,7 +46,9 @@ else
                                         <p><strong>Preço:</strong> @product.Preco.ToString("C")</p>
                                         <p><strong>Estoque:</strong> @product.Estoque</p>
                                         <p><strong>Categoria:</strong> @product.Categoria</p>
-                                        <a class="btn btn-primary mt-auto" href="/produtoDetail/@product.Id">Ver Detalhes</a>
+                                        <NavLink class="btn btn-primary mt-auto" href="@($"/produtoDetail/{product.Id}")">
+                                            Ver Detalhes
+                                        </NavLink>
                                     </div>
                                 </div>
                             </div>
