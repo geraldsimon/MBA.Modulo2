@@ -1,5 +1,6 @@
 ﻿@using MBA.Modulo2.Spa.ExternalApi
 @inject FavoritoHttpClient FavoritoApi
+@inject AuthHttpClient AuthHttpApi
 
 @if (_carregando)
 {
@@ -12,6 +13,11 @@ else
     </button>
 }
 
+@if (mostrarModalLogin)
+{
+    <ModalLogin OnClose="FecharModal" />
+}
+
 <Toast Show="mostrarToast" ColorClass="@toastColorClass" Message="@toastMessage" OnClose="FecharToast" />
 
 @code {
@@ -21,7 +27,8 @@ else
     private bool _carregando = true;
     private bool _favoritado = false;
     private string _toolTip = "Favoritar";
-
+    private bool logado = false;
+    private bool mostrarModalLogin = false;
     private bool mostrarToast;
     private string toastMessage;
     private string toastColorClass;
@@ -32,6 +39,7 @@ else
     {
         try
         {
+            logado = await AuthHttpApi.UsuarioEstaLogadoAsync();
             _favoritado = await FavoritoApi.JaFavoritado(idProduto);
 
             if (_favoritado)
@@ -51,27 +59,35 @@ else
 
     private async Task FavoritarAsync()
     {
-        byte retorno = await FavoritoApi.RegistrarFavorito(idProduto);
-
-        switch (retorno)
+        if (logado.Equals(false))
         {
-            case 1:
-                _favoritado = true;
-                await MostrarToast("Produto adicionado aos favoritos!", "text-bg-success");
-                break;
-            case 2:
-                _favoritado = false;
-                await MostrarToast("Produto removido dos favoritos!", "text-bg-warning");
-                break;
-            default:
-                await MostrarToast("Erro ao favoritar produto.", "text-bg-danger");
-                break;
+            mostrarModalLogin = true;
+            StateHasChanged();
         }
-
-        if (_favoritado)
-            _toolTip = "Desfavoritar";
         else
-            _toolTip = "Favoritar";
+        {
+            byte retorno = await FavoritoApi.RegistrarFavorito(idProduto);
+
+            switch (retorno)
+            {
+                case 1:
+                    _favoritado = true;
+                    await MostrarToast("Produto adicionado aos favoritos!", "text-bg-success");
+                    break;
+                case 2:
+                    _favoritado = false;
+                    await MostrarToast("Produto removido dos favoritos!", "text-bg-warning");
+                    break;
+                default:
+                    await MostrarToast("Erro ao favoritar produto.", "text-bg-danger");
+                    break;
+            }
+
+            if (_favoritado)
+                _toolTip = "Desfavoritar";
+            else
+                _toolTip = "Favoritar";
+        }
 
     }
 
@@ -94,5 +110,15 @@ else
     {
         mostrarToast = false;
         return Task.CompletedTask;
+    }
+
+    private void AbrirModal()
+    {
+        mostrarModalLogin = true;
+    }
+
+    private void FecharModal()
+    {
+        mostrarModalLogin = false;
     }
 }

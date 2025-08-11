@@ -80,7 +80,6 @@ else
         </Corpo>
     </CardComponent>
 
-
     <CardComponent>
         <Titulo>
             VENDEDOR
@@ -134,14 +133,6 @@ else
             </div>
         </Corpo>
     </CardComponent>
-
-
-    @if (mostrarModalLogin)
-    {
-        <ModalLogin OnClose="FecharModal" />
-    }
-   
-
 }
 
 @code {
@@ -152,12 +143,7 @@ else
     public Guid Id { get; set; }
 
     private bool logado = false;
-    private bool mostrarModalLogin = false;
-    private bool mostrarToast;
-    private string toastMessage;
-    private string toastColorClass;
-
-
+    
     protected override async Task OnParametersSetAsync()
     {
         try
@@ -177,18 +163,7 @@ else
 
         if (usuarioId == null)
         {
-            mostrarModalLogin = true;
             StateHasChanged();
         }
-    }
-
-    private void AbrirModal()
-    {
-        mostrarModalLogin = true;
-    }
-
-    private void FecharModal()
-    {
-        mostrarModalLogin = false;
     }
 }
