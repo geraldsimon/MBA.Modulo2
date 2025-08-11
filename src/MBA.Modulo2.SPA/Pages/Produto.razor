@@ -2,6 +2,7 @@
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
 @inject ProdutoHttpClient ProdutoApi
+@inject NavigationManager Navigation
 
 <PageTitle>Lista de Produtos</PageTitle>
 
@@ -77,9 +78,9 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
             products = new List<ProdutoLoggedOutViewModel>();
             produtosFiltrados = new List<ProdutoLoggedOutViewModel>();
+            Navigation.NavigateTo($"/error/500");
         }
     }
 

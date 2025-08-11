@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using MBA.Modulo2.Spa.Components
 @attribute [Authorize]
+@inject NavigationManager Navigation
 @inject FavoritoHttpClient FavoritoApi
 
 <PageTitle>Lista de Produtos Favoritos</PageTitle>
@@ -78,8 +79,8 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
             favoritos = new List<FavoritoDoClienteViewModel>();
+            Navigation.NavigateTo($"/error/500");
         }
     }
 }
