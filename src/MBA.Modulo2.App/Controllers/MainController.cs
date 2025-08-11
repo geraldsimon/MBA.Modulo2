@@ -17,9 +17,9 @@ namespace MBA.Modulo2.App.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        protected MainController(INotifier notifier, 
-                                AppState appState, 
-                                SignInManager<ApplicationUser> signInManager, 
+        protected MainController(INotifier notifier,
+                                AppState appState,
+                                SignInManager<ApplicationUser> signInManager,
                                 IVendedorService vendedorService,
                                 IHttpContextAccessor httpContextAccessor)
         {
@@ -29,8 +29,6 @@ namespace MBA.Modulo2.App.Controllers
             _vendedorService = vendedorService;
             _notifier = notifier;
             _httpContextAccessor = httpContextAccessor;
-
-
             InitializeAppState().Wait();
         }
 
@@ -39,11 +37,16 @@ namespace MBA.Modulo2.App.Controllers
             var user = _httpContextAccessor.HttpContext?.User;
             if (user?.Identity?.IsAuthenticated== true)
             {
-                _appState.UserStateId = Guid.Parse(_signInManager.Context.User.GetUserId());
-                if (_appState.VendedorStateId == null)
+                bool isAdmin = _signInManager.Context.User.Claims.Any(c => c.Type == "Categorias");
+
+                if (!isAdmin)
                 {
-                    var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
-                    _appState.VendedorStateId = (Guid?)vendedor.Id;
+                    _appState.UserStateId = Guid.Parse(_signInManager.Context.User.GetUserId());
+                    if (_appState.VendedorStateId == null)
+                    {
+                        var vendedor = await _vendedorService.PegarVendedorPorAspNetUserIdAsync((Guid)_appState.UserStateId);
+                        _appState.VendedorStateId = (Guid?)vendedor.Id;
+                    }
                 }
             }
         }

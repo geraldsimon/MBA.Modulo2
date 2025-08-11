@@ -31,5 +31,11 @@ namespace MBA.Modulo2.Business.Services.Implementacao
         {
             return await _favoritoRepository.PegarPorIdProdutoFavoritoAsync(idCliente, idProduto);
         }
+
+        public async Task<bool> ProdutoJaFavoritadoAsync(Guid idCliente, Guid idProduto)
+        {
+            return await _favoritoRepository.ProdutoJaFavoritadoAsync(idCliente, idProduto);
+        }
+
     }
 }

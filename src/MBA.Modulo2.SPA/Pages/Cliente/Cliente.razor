@@ -1,0 +1,57 @@
+﻿@page "/cliente"
+@using MBA.Modulo2.Spa.ExternalApi
+@using MBA.Modulo2.Spa.ViewModels
+@inject ClienteHttpClient ClienteApi
+@inject AuthHttpClient AuthApi
+@inject NavigationManager Navigation
+
+<PageTitle>Cliente</PageTitle>
+
+    @if (cliente is null)
+    {
+        <p class="mt-3">Carregando informações...</p>
+    }
+    else
+    {
+    <div class="container mt-4" style="padding-bottom:8%">
+        <div class="bg-primary text-white p-2 rounded-top">
+            <h5 class="mb-0" style="margin-left:3%">DADOS DO USUÁRIO</h5>
+        </div>
+
+        <div class="mb-3 mt-3">
+            <label class="form-label">Nome</label>
+            <InputText @bind-Value="cliente.Nome" class="form-control" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Data do Cadastro</label>
+            <InputText @bind-Value="_dataCadastro" class="form-control" disabled />
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-warning me-2"
+                    @onclick="@(() => Navigation.NavigateTo($"/cliente/editar/{cliente.Id}"))">
+                Editar
+            </button>
+
+            <button class="btn btn-primary me-2"
+                    @onclick="@(() => Navigation.NavigateTo(""))">
+                Voltar
+            </button>
+        </div>
+    </div>
+
+    }
+
+@code {
+    private ClienteViewModel cliente = new ClienteViewModel();
+    private string _dataCadastro = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var clienteId = await AuthApi.PegarIdCliente();
+        cliente = await ClienteApi.ObterPorIdAsync(clienteId.Value);
+
+        _dataCadastro = cliente.CriadoEm.ToLocalTime().ToString("dd/MM/yyyy");
+    }
+}

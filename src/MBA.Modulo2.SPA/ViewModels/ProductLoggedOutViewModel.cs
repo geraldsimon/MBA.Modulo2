@@ -13,5 +13,9 @@
         public string Imagem { get; set; }
 
         public string ImagemUpload { get; set; }
+
+        public Guid CategoriaId { get; set; }
+
+        public string Categoria { get; set; }
     }
 }

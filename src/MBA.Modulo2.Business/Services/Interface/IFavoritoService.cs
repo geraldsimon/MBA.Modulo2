@@ -14,5 +14,7 @@ namespace MBA.Modulo2.Business.Services.Interface
 
         Task ExcluirTodosProdutosFavoritoAsync(Guid idCliente);
 
+        Task<bool> ProdutoJaFavoritadoAsync(Guid idCliente, Guid idProduto);
+
     }
 }
