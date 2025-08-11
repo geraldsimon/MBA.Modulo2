@@ -6,6 +6,7 @@
 @inject ProdutoHttpClient ProdutoApi
 @inject AuthHttpClient AuthHttpApi
 @inject FavoritoHttpClient FavoritoApi
+@inject NavigationManager Navigation
 
 @if (products == null)
 {
@@ -173,8 +174,7 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
-            products = new ProdutoDetalhesViewModel();
+            Navigation.NavigateTo($"/error/500");
         }
     }
 
@@ -187,16 +187,13 @@ else
             mostrarModalLogin = true;
             StateHasChanged();
         }
-        else
-        {
-            Console.WriteLine($"Usuário está logado com ID: {usuarioId}");
-        }
     }
 
     private void AbrirModal()
     {
         mostrarModalLogin = true;
     }
+
     private void FecharModal()
     {
         mostrarModalLogin = false;
