@@ -1,6 +1,8 @@
 ﻿@page "/cliente/editar/{id:guid}"
 @using MBA.Modulo2.Spa.ExternalApi
 @using MBA.Modulo2.Spa.ViewModels
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 @inject ClienteHttpClient ClienteApi
 @inject NavigationManager Navigation
 

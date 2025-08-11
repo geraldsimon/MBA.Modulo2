@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MBA.Modulo2.Api.Extensions;
 using MBA.Modulo2.Api.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
 using MBA.Modulo2.Data.Domain;
@@ -8,7 +9,7 @@ using System.Net;
 
 namespace MBA.Modulo2.Api.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
 
     public class ClienteController(IClienteService clienteService,
@@ -20,7 +21,7 @@ namespace MBA.Modulo2.Api.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
-        [AllowAnonymous]
+        
         public async Task<ActionResult<ClienteViewModel>> Add([FromBody] ClienteViewModel clienteViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -30,8 +31,8 @@ namespace MBA.Modulo2.Api.Controllers
             return CustomResponse(clienteViewModel);
         }
 
+        [ClaimsAuthorize("Perfil", "ED")]
         [HttpPut("{id:guid}")]
-        [AllowAnonymous]
         public async Task<IActionResult> Update(Guid id, ClienteViewModel ClienteViewModel)
         {
             if (id != ClienteViewModel.Id)
