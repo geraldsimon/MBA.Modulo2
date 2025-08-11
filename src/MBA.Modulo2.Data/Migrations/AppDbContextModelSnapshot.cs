@@ -15,7 +15,7 @@ namespace MBA.Modulo2.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProdutoVersion", "8.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("MBA.Modulo2.Data.Domain.ApplicationUser", b =>
                 {
@@ -72,7 +72,6 @@ namespace MBA.Modulo2.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedEmail");
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -89,10 +88,10 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -147,16 +146,34 @@ namespace MBA.Modulo2.Data.Migrations
                     b.ToTable("Denuncias");
                 });
 
+            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Favorito", b =>
+                {
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("AdicionadoEm")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ClienteId", "ProdutoId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("Favoritos");
+                });
+
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Categoria", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Descricao")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -170,10 +187,10 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("Conteudo")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PostId")
@@ -195,19 +212,19 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("Conteudo")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("VendedorId")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("AtualizadoEm")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("VendedorId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -221,41 +238,33 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Active")
+                    b.Property<bool>("Ativo")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("CategoriaId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ClienteId")
+                    b.Property<string>("Descricao")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Imagem")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("Nome")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Estoque")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("VendedorId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Active")
-                        .HasColumnType("INT");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("CategoriaId");
 
                     b.HasIndex("VendedorId");
 
@@ -268,16 +277,16 @@ namespace MBA.Modulo2.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Active")
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Ativo")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Active")
-                        .HasColumnType("INT");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -295,7 +304,7 @@ namespace MBA.Modulo2.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -400,13 +409,13 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Property<string>("LoginProvider")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                    b.HasKey("UserId", "LoginProvider", "Nome");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
@@ -436,6 +445,25 @@ namespace MBA.Modulo2.Data.Migrations
                     b.Navigation("Produto");
                 });
 
+            modelBuilder.Entity("MBA.Modulo2.Data.Domain.Favorito", b =>
+                {
+                    b.HasOne("MBA.Modulo2.Data.Domain.Cliente", "Cliente")
+                        .WithMany("Favoritos")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MBA.Modulo2.Data.Models.Produto", "Produto")
+                        .WithMany("Favoritos")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Comentario", b =>
                 {
                     b.HasOne("MBA.Modulo2.Data.Models.Post", "Post")
@@ -449,15 +477,11 @@ namespace MBA.Modulo2.Data.Migrations
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Produto", b =>
                 {
-                    b.HasOne("MBA.Modulo2.Data.Models.Categoria", "Category")
+                    b.HasOne("MBA.Modulo2.Data.Models.Categoria", "Categoria")
                         .WithMany("Produtos")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MBA.Modulo2.Data.Domain.Cliente", null)
-                        .WithMany("Favorites")
-                        .HasForeignKey("ClienteId");
 
                     b.HasOne("MBA.Modulo2.Data.Models.Vendedor", "Vendedor")
                         .WithMany("Produtos")
@@ -465,7 +489,7 @@ namespace MBA.Modulo2.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Categoria");
 
                     b.Navigation("Vendedor");
                 });
@@ -523,7 +547,7 @@ namespace MBA.Modulo2.Data.Migrations
 
             modelBuilder.Entity("MBA.Modulo2.Data.Domain.Cliente", b =>
                 {
-                    b.Navigation("Favorites");
+                    b.Navigation("Favoritos");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Categoria", b =>
@@ -534,6 +558,11 @@ namespace MBA.Modulo2.Data.Migrations
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Post", b =>
                 {
                     b.Navigation("Comentarios");
+                });
+
+            modelBuilder.Entity("MBA.Modulo2.Data.Models.Produto", b =>
+                {
+                    b.Navigation("Favoritos");
                 });
 
             modelBuilder.Entity("MBA.Modulo2.Data.Models.Vendedor", b =>

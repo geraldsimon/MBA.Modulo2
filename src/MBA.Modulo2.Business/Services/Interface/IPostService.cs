@@ -4,10 +4,10 @@ namespace MBA.Modulo2.Business.Services.Interface
 {
     public interface IPostService
     {
-        Task<IEnumerable<Post>> GetAllAsync(Guid sellerId);
-        Task<Post> GetByIdAsync(Guid id);
-        Task AddAsync(Post post);
-        Task UpdateAsync(Post post, Guid sellerId);
-        Task DeleteAsync(Guid id, Guid sellerId);
+        Task<IEnumerable<Post>> PegarTodosAsync(Guid sellerId);
+        Task<Post> PegarPorIdAsync(Guid id);
+        Task AdicionaAsync(Post post);
+        Task AlteraAsync(Post post, Guid sellerId);
+        Task ExcluiAsync(Guid id, Guid sellerId);
     }
 }

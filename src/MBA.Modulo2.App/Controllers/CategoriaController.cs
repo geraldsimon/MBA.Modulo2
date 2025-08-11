@@ -1,9 +1,12 @@
 ﻿using AppSemTemplate.Extensions;
 using AutoMapper;
+using MBA.Modulo2.App.Configuration;
 using MBA.Modulo2.App.ViewModels;
 using MBA.Modulo2.Business.Services.Interface;
+using MBA.Modulo2.Data.Domain;
 using MBA.Modulo2.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -11,15 +14,21 @@ using System.ComponentModel.DataAnnotations;
 namespace MBA.Modulo2.App.Controllers;
 
 [Authorize]
-public class CategoriaController(ICategoryService categoriaService, IMapper mapper) : Controller
+public class CategoriaController(INotifier notifier,
+                                 AppState appState,
+                                 SignInManager<ApplicationUser> signInManager,
+                                 IVendedorService vendedorService,
+                                 ICategoriaService categoriaService,
+                                 IMapper mapper,
+                               IHttpContextAccessor httpContextAccessor) : MainController(notifier, appState, signInManager, vendedorService, httpContextAccessor)
 {
-    private readonly ICategoryService _categoriaService = categoriaService;
+    private readonly ICategoriaService _categoriaService = categoriaService;
     private readonly IMapper _mapper = mapper;
 
     [ClaimsAuthorize("Categorias", "VI")]
     public async Task<IActionResult> Index()
     {
-        return View(_mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoriaService.GetAllAsync()));
+        return View(_mapper.Map<IEnumerable<CategoriaViewModel>>(await _categoriaService.PegarTodosAsync()));
     }
 
     [Authorize]
@@ -30,7 +39,7 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
             return BadRequest(ModelState);
         }
 
-        var categoria = _mapper.Map<CategoriaViewModel>(await _categoriaService.GetByIdAsync(id));
+        var categoria = _mapper.Map<CategoriaViewModel>(await _categoriaService.PegarPorIdAsync(id));
 
         if (categoria == null)
         {
@@ -46,24 +55,24 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
         return View();
     }
 
-    [ClaimsAuthorize("Categorias","AD")]
+    [ClaimsAuthorize("Categorias", "AD")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description")] CategoriaViewModel categoria)
+    public async Task<IActionResult> Create([Bind("Id,Nome,Descricao")] CategoriaViewModel categoria)
     {
         if (ModelState.IsValid)
         {
-            var categoriaExists = _mapper.Map<Categoria>(await _categoriaService.GetByNameAsync(categoria.Name));
+            var categoriaExists = _mapper.Map<Categoria>(await _categoriaService.PegarPorNomeAsync(categoria.Nome));
 
             if (categoriaExists != null)
             {
 
-                ModelState.AddModelError("Name", "There is already a categoria with this name.");
+                ModelState.AddModelError("Nome", "Já existe uma categoria com este nome.");
             }
             else
             {
 
-                await _categoriaService.AddAsync(_mapper.Map<Categoria>(categoria));
+                await _categoriaService.AdicionaAsync(_mapper.Map<Categoria>(categoria));
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -78,7 +87,7 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
             return BadRequest(ModelState);
         }
 
-        var categoria = _mapper.Map<CategoriaViewModel>(await _categoriaService.GetByIdAsync(id));
+        var categoria = _mapper.Map<CategoriaViewModel>(await _categoriaService.PegarPorIdAsync(id));
         if (categoria == null)
         {
             return NotFound();
@@ -86,8 +95,8 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
 
         var _categoria = new CategoriaViewModel
         {
-            Name = categoria.Name,
-            Description = categoria.Description
+            Nome = categoria.Nome,
+            Descricao = categoria.Descricao
         };
 
         return View(_categoria);
@@ -96,7 +105,7 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
     [ClaimsAuthorize("Categorias", "ED")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] CategoriaViewModel categoria)
+    public async Task<IActionResult> Edit(Guid id, [Bind("Id,Nome,Descricao")] CategoriaViewModel categoria)
     {
         if (id != categoria.Id)
         {
@@ -107,11 +116,11 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
         {
             try
             {
-                await _categoriaService.UpdateAsync(_mapper.Map<Categoria>(categoria));
+                await _categoriaService.AlteraAsync(_mapper.Map<Categoria>(categoria));
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await CategoryExists(categoria.Id))
+                if (!await CategoriaExiste(categoria.Id))
                 {
                     return NotFound();
                 }
@@ -133,7 +142,7 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
             return BadRequest(ModelState);
         }
 
-        var categoria = _mapper.Map<CategoriaViewModel>(await _categoriaService.GetByIdWithProdutoAsync(id));
+        var categoria = _mapper.Map<CategoriaViewModel>(await _categoriaService.PegarPorIdComProdutoAsync(id));
 
         if (categoria == null)
         {
@@ -142,7 +151,7 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
 
         if (categoria.Produtos.Any())
         {
-            TempData["Erro"] = $"The {categoria.Name} categoria cannot be deleted as it is already associated with products.";
+            TempData["Erro"] = $"A categoria {categoria.Nome} não pode ser excluída, pois já está associada a produtos.";
             return RedirectToAction("Index");
         }
 
@@ -160,17 +169,17 @@ public class CategoriaController(ICategoryService categoriaService, IMapper mapp
             return BadRequest(ModelState);
         }
 
-        var categoria = await _categoriaService.GetByIdAsync(id);
+        var categoria = await _categoriaService.PegarPorIdAsync(id);
         if (categoria != null)
         {
-            await _categoriaService.DeleteAsync(id);
+            await _categoriaService.ExcluiAsync(id);
         }
 
         return RedirectToAction(nameof(Index));
     }
 
-    private async Task<bool> CategoryExists(Guid id)
+    private async Task<bool> CategoriaExiste(Guid id)
     {
-        return await _categoriaService.GetByIdAsync(id) != null;
+        return await _categoriaService.PegarPorIdAsync(id) != null;
     }
 }

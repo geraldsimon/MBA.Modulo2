@@ -12,17 +12,21 @@ namespace MBA.Modulo2.Api.Configuration
         {
             CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
             CreateMap<Produto, ProdutoViewModel>().ReverseMap();
-            CreateMap<Produto, ProdutoLoggedOutViewModel>().ReverseMap();
+            CreateMap<Produto, ProdutoLoggedOutViewModel>()
+                 .ForMember(dest => dest.Categoria, opt => opt.MapFrom(src => src.Categoria.Descricao))
+                 .ReverseMap();
             CreateMap<Post, PostViewModel>().ReverseMap();
             CreateMap<Comentario, ComentarioViewModel>().ReverseMap();
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();
+            CreateMap<Favorito, FavoritoViewModel>().ReverseMap();
+            CreateMap<Favorito, FavoritoDoClienteViewModel>();
 
             CreateMap<Produto, ProdutoDetalhesViewModel>()
                 .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.Vendedor));
 
             CreateMap<Vendedor, VendedorViewModel>()
                 .ForMember(dest => dest.produtoReduzidos, opt => opt.MapFrom(src => src.Produtos))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome));
         }
     }
 }

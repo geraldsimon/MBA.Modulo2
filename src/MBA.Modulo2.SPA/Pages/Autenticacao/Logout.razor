@@ -1,0 +1,14 @@
+﻿@page "/logout"
+@using MBA.Modulo2.Spa.Services.Autenticacao
+@using MBA.Modulo2.Spa.Services.Autenticacao.Interface
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+         await AuthService.Logout();
+        NavigationManager.NavigateTo("/");
+    }   
+}

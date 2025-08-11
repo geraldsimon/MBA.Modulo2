@@ -1,0 +1,164 @@
+.header .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn,
+.top-row .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn,
+.navbar .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn,
+a.btn.btn-outline-primary.btn-sm.header-btn {
+    all: unset !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+    
+    min-width: 2.5rem !important;
+    height: 2.5rem !important;
+    padding: 0.375rem 0.75rem !important;
+    
+    font-family: var(--font-family-base) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    
+    color: var(--primary-color) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--primary-color) !important;
+    border-radius: var(--border-radius) !important;
+    
+    transition: var(--transition-base) !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+
+.header .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn:hover,
+.top-row .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn:hover,
+.navbar .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn:hover,
+a.btn.btn-outline-primary.btn-sm.header-btn:hover {
+    color: white !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-1px) !important;
+    text-decoration: none !important;
+}
+
+.header .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn:active,
+.top-row .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn:active,
+.navbar .navbar-nav .nav-item a.btn.btn-outline-primary.btn-sm.header-btn:active,
+a.btn.btn-outline-primary.btn-sm.header-btn:active {
+    transform: translateY(0) !important;
+}
+
+.header .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn,
+.top-row .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn,
+.navbar .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn,
+a.btn.btn-outline-danger.btn-sm.header-btn {
+    all: unset !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+    
+    min-width: 2.5rem !important;
+    height: 2.5rem !important;
+    padding: 0.375rem 0.75rem !important;
+    
+    font-family: var(--font-family-base) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    
+    color: var(--danger-color) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--danger-color) !important;
+    border-radius: var(--border-radius) !important;
+    
+    transition: var(--transition-base) !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+
+.header .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn:hover,
+.top-row .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn:hover,
+.navbar .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn:hover,
+a.btn.btn-outline-danger.btn-sm.header-btn:hover {
+    color: white !important;
+    background-color: var(--danger-color) !important;
+    border-color: var(--danger-color) !important;
+    transform: translateY(-1px) !important;
+    text-decoration: none !important;
+}
+
+.header .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn:active,
+.top-row .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn:active,
+.navbar .navbar-nav .nav-item a.btn.btn-outline-danger.btn-sm.header-btn:active,
+a.btn.btn-outline-danger.btn-sm.header-btn:active {
+    transform: translateY(0) !important;
+}
+
+.user-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.user-name {
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+}
+
+.user-name i {
+    color: var(--primary-color) !important;
+    opacity: 0.8 !important;
+}
+
+@media (max-width: 992px) {
+    .user-name {
+        display: none !important;
+    }
+    
+    .header .navbar-nav .nav-item a.btn.header-btn,
+    .top-row .navbar-nav .nav-item a.btn.header-btn,
+    .navbar .navbar-nav .nav-item a.btn.header-btn,
+    a.btn.header-btn {
+        min-width: 2.25rem !important;
+        height: 2.25rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .user-info {
+        gap: 0.25rem !important;
+    }
+    
+    .header .navbar-nav .nav-item a.btn.header-btn,
+    .top-row .navbar-nav .nav-item a.btn.header-btn,
+    .navbar .navbar-nav .nav-item a.btn.header-btn,
+    a.btn.header-btn {
+        min-width: 2rem !important;
+        height: 2rem !important;
+        padding: 0.25rem !important;
+        font-size: 0.75rem !important;
+    }
+}
+
+[data-theme="dark"] .user-name {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .user-name i {
+    color: var(--primary-color) !important;
+}
+
+.header-btn i,
+.user-name i {
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+}

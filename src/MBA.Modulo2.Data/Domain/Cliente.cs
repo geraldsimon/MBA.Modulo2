@@ -5,11 +5,12 @@ namespace MBA.Modulo2.Data.Domain
     public class Cliente
     {
         public Guid Id { get; set; }
+        public Guid ApplicationUserId { get; set; }
 
-        public string Name { get; set; } = null!;
+        public string Nome { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
-        public ICollection<Produto> Favoritos { get; set; } = [];
+        public IEnumerable<Favorito> Favoritos { get; set; }
     }
 }

@@ -9,29 +9,29 @@ public class ProdutoViewModel
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     
-    [Required(ErrorMessage = "The name field is mandatory.")]
-    public string Name { get; set; } = null!;
+    [Required(ErrorMessage = "O Nome é obrigatório.")]
+    public string Nome { get; set; } = null!;
 
-    [Required(ErrorMessage = "The Description field is mandatory.")]
-    public string Description { get; set; }
+    [Required(ErrorMessage = "A Descricao é obrigatória.")]
+    public string Descricao { get; set; }
 
-    [Required(ErrorMessage = "The Price field is mandatory.")]
-    [Range(0, double.MaxValue, ErrorMessage = "The price cannot be negative.")]
+    [Required(ErrorMessage = "O Estoque é obrigatório.")]
+    [Range(0, double.MaxValue, ErrorMessage = "O preço deve ser maior que zero.")]
     [Column(TypeName = "decimal(18,2)")]
-    public decimal Price { get; set; }
+    public decimal Preco { get; set; }
 
-    [Range(0, int.MaxValue, ErrorMessage = "The quantity cannot be negative.")]
-    [Required(ErrorMessage = "The Stock field is mandatory.")]
-    public int Stock { get; set; }
+    [Range(0, int.MaxValue, ErrorMessage = "A quantidade não pode ser negativa.")]
+    [Required(ErrorMessage = "O Estoque é obrigatório")]
+    public int Estoque { get; set; }
 
-    public string Image { get; set; }
-    public bool Active { get; set; }
+    public string Imagem { get; set; }
+    public bool Ativo { get; set; }
 
     [JsonIgnore]
-    public IFormFile ImageFile { get; set; }
+    public IFormFile ImagemFile { get; set; }
 
-    public Guid CategoryId { get; set; }
-    public Categoria Category { get; set; } = null!;
+    public Guid CategoriaId { get; set; }
+    public Categoria Categoria { get; set; } = null!;
 
     // FK for Vendedor
     public Guid VendedorId { get; set; }

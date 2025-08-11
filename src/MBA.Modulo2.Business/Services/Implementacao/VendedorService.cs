@@ -8,23 +8,28 @@ public class VendedorService(IVendedorRepository sellerRepository) : IVendedorSe
 {
     private readonly IVendedorRepository _vendedorRepository = sellerRepository;
 
-    public async Task AddAsync(Vendedor seller)
+    public async Task AdicionaAsync(Vendedor seller)
     {
-        await _vendedorRepository.AddAsync(seller);
+        await _vendedorRepository.AdicionaAsync(seller);
     }
 
-    public async Task<Vendedor> GetByByIdWithProdutoAsync(Guid id)
+    public async Task<Vendedor> PegarPorIdComProdutosAsync(Guid id)
     {
-        return await _vendedorRepository.GetByByIdWithProdutoAsync(id);
+        return await _vendedorRepository.PegarPorIdComProdutosAsync(id);
     }
 
-    public async Task<IEnumerable<Vendedor>> GetAllAsync()
+    public async Task<Vendedor> PegarVendedorPorAspNetUserIdAsync(Guid id)
     {
-        return await _vendedorRepository.GetAllAsync();
+        return await _vendedorRepository.PegarPorAspNetUserIdAsync(id);
+    }
+
+    public async Task<IEnumerable<Vendedor>> PegarTodosAsync()
+    {
+        return await _vendedorRepository.PegarTodosAsync();
     }
     
-    public async Task UpdateAsync(Vendedor vendedor)
+    public async Task AlteraAsync(Vendedor vendedor)
     {
-        await _vendedorRepository.UpdateAsync(vendedor);
+        await _vendedorRepository.AlteraAsync(vendedor);
     }
 }

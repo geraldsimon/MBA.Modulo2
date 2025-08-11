@@ -48,7 +48,7 @@ public class DenunciaViewModel
 			DataResolucao = denuncia.DataResolucao,
 			ObservacaoAdmin = denuncia.ObservacaoAdmin ?? string.Empty,
 			ProdutoId = denuncia.ProdutoId,
-			ProdutoNome = denuncia.Produto?.Name ?? string.Empty,
+			ProdutoNome = denuncia.Produto?.Nome ?? string.Empty,
 			DenuncianteId = denuncia.DenuncianteId,
 			DenuncianteEmail = denuncia.Denunciante?.Email ?? string.Empty,
 			AdminResponsavelId = denuncia.AdminResponsavelId,

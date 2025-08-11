@@ -15,12 +15,15 @@ namespace MBA.Modulo2.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController(INotifier notifier,
                       SignInManager<ApplicationUser> signInManager,
+                      IClienteService clienteService,
                       UserManager<ApplicationUser> userManager,
                       IOptions<AppSettings> appSettings) : MainController(notifier)
 {
+    private readonly IClienteService _clienteService = clienteService;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly AppSettings _appSettings = appSettings.Value;
+
 
     [HttpPost("newAccount")]
     public async Task<ActionResult> NewAccount(RegisterUserViewModel registerUser)
@@ -37,9 +40,38 @@ public class AuthController(INotifier notifier,
         var result = await _userManager.CreateAsync(identityUser, registerUser.Password);
         if (result.Succeeded)
         {
+
+            var clienteId = Guid.NewGuid();
+            Cliente cliente = new()
+            {
+                Id = clienteId,
+                Nome = registerUser.Nome,
+                ApplicationUserId = identityUser.Id,
+                CriadoEm = DateTime.UtcNow
+            };
+
+
+            await _clienteService.AdicionaAsync(cliente);
+
+            var claimsToAdd = new[]
+            {
+                new Claim("Produtos", "VI"),//vizualizar
+                new Claim("Favoritos", "VI"),// favoritos visualizar
+                new Claim("Favoritos", "AD"),// add em favoritos
+                new Claim("Favoritos", "RM"),// remover de favoritos
+                new Claim("Perfil", "ED") //editar perfil
+            };
+
+            foreach (var claim in claimsToAdd)
+            {
+                await _userManager.AddClaimAsync(identityUser, claim);
+            }
+
             await _signInManager.SignInAsync(identityUser, false);
 
-            return CustomResponse(await GenerateJwt(identityUser.Email));
+            var vendedor = await Pegarendedor(Guid.Parse(_userManager.GetUserId(User)));
+
+            return CustomResponse(await GenerateJwt(identityUser.Email, vendedor.Id));
         }
         foreach (var error in result.Errors)
         {
@@ -58,7 +90,8 @@ public class AuthController(INotifier notifier,
 
         if (result.Succeeded)
         {
-            return CustomResponse(await GenerateJwt(loginUser.Email));
+            var vendedor = await Pegarendedor(Guid.Parse(_userManager.GetUserId(User)));
+            return CustomResponse(await GenerateJwt(loginUser.Email, vendedor.Id));
         }
         if (result.IsLockedOut)
         {
@@ -70,15 +103,15 @@ public class AuthController(INotifier notifier,
         return CustomResponse(loginUser);
     }
 
-    private async Task<LoginResponseViewModel> GenerateJwt(string email)
+    private async Task<LoginResponseViewModel> GenerateJwt(string email, Guid clienteId)
     {
         var userJwt = await _userManager.FindByEmailAsync(email);
         var claims = await _userManager.GetClaimsAsync(userJwt);
         var userRoles = await _userManager.GetRolesAsync(userJwt);
 
-
         claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userJwt.Id.ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Email, userJwt.Email));
+        claims.Add(new Claim("clienteId", clienteId.ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
@@ -105,6 +138,7 @@ public class AuthController(INotifier notifier,
 
         var response = new LoginResponseViewModel
         {
+            ClienteId = clienteId,
             AccessToken = encodedToken,
             ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
             UserToken = new UserTokenViewModel
@@ -115,6 +149,12 @@ public class AuthController(INotifier notifier,
             }
         };
         return response;
+    }
+
+
+    private async Task<Cliente> Pegarendedor(Guid id)
+    {
+        return await _clienteService.PegarClintePorAspNetUserIdAsync(id);
     }
 
     private static long ToUnixEpochDate(DateTime date)

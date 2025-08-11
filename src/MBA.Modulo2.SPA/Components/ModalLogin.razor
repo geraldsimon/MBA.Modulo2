@@ -1,0 +1,41 @@
+﻿<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.6);" @onclick="FecharModal">
+    <div class="modal-dialog modal-dialog-centered" @onclick:stopPropagation>
+        <div class="card-compra modal-content shadow-compra-lg">
+            <div class="card-compra-header text-center">
+                <h5 class="mb-0">Acesso Necessário</h5>
+                <button type="button" class="btn-close" @onclick="FecharModal" aria-label="Fechar" style="position: absolute; top: 1rem; right: 1rem;"></button>
+            </div> 
+
+            <div class="card-compra-body text-center">
+                <img src="img/logo.png" alt="Logo" class="mb-3" style="width: 100px; height: auto;" />
+
+                <h4 class="fw-semibold">Caro Cliente</h4>
+                <p class="text-muted mb-4">
+                    Para realizar esta ação é necessário estar logado em nossa plataforma.
+                </p>
+
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="/login" class="btn-compra btn-compra-primary">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Ir para Login
+                    </a>
+                    <button class="btn-compra btn-compra-outline-primary" @onclick="FecharModal">
+                        <i class="fas fa-times me-2"></i>
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    private async Task FecharModal()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+}
+

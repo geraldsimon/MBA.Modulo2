@@ -6,23 +6,23 @@ namespace MBA.Modulo2.Business.Services.Implamentation
 {
     public class PostService(IPostRepository postRepository) : IPostService
     {
-        public async Task<IEnumerable<Post>> GetAllAsync(Guid sellerId)
+        public async Task<IEnumerable<Post>> PegarTodosAsync(Guid sellerId)
         {
-            return await postRepository.GetAllAsync(sellerId);
+            return await postRepository.PegarTodosAsync(sellerId);
         }
-        public async Task<Post> GetByIdAsync(Guid id)
+        public async Task<Post> PegarPorIdAsync(Guid id)
         {
-            return await postRepository.GetByIdAsync(id);
-        }
-
-        public async Task AddAsync(Post post)
-        {
-            await postRepository.AddAsync(post);
+            return await postRepository.PegarPorIdAsync(id);
         }
 
-        public async Task UpdateAsync(Post post, Guid sellerId)
+        public async Task AdicionaAsync(Post post)
         {
-            var existingPost = await postRepository.GetByIdAsync(post.Id);
+            await postRepository.AdicionaAsync(post);
+        }
+
+        public async Task AlteraAsync(Post post, Guid sellerId)
+        {
+            var existingPost = await postRepository.PegarPorIdAsync(post.Id);
 
             if (existingPost == null)
             {
@@ -34,12 +34,12 @@ namespace MBA.Modulo2.Business.Services.Implamentation
                 throw new UnauthorizedAccessException("You are not authorized to update this post.");
             }
 
-            await postRepository.UpdateAsync(post);
+            await postRepository.AlteraAsync(post);
         }
 
-        public async Task DeleteAsync(Guid id, Guid sellerId)
+        public async Task ExcluiAsync(Guid id, Guid sellerId)
         {
-            var post = await postRepository.GetByIdAsync(id);
+            var post = await postRepository.PegarPorIdAsync(id);
 
             if (post == null)
             {
@@ -51,7 +51,7 @@ namespace MBA.Modulo2.Business.Services.Implamentation
                 throw new UnauthorizedAccessException("You are not authorized to delete this post.");
             }
 
-            await postRepository.DeleteAsync(id);
+            await postRepository.ExcluiAsync(id);
         }
     }
 }

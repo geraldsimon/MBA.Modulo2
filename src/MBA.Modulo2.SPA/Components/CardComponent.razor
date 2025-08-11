@@ -1,0 +1,15 @@
+﻿<div class="card-compra">
+    <div class="card-compra-header">
+        <h5>@Titulo</h5>
+    </div>
+    <div class="card-compra-body">
+        @Corpo
+    </div>
+</div>
+@code {
+    [Parameter]
+    public RenderFragment Titulo { get; set; }
+
+    [Parameter]
+    public RenderFragment Corpo { get; set; }
+}

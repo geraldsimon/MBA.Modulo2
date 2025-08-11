@@ -8,30 +8,35 @@ namespace MBA.Modulo2.Business.Services.Implementacao
     {
         private readonly IClienteRepository _clienteRepository = customerRepository;
 
-        public async Task<IEnumerable<Cliente>> GetAllAsync()
+        public async Task<IEnumerable<Cliente>> PegarTodosAsync()
         {
-            return await _clienteRepository.GetAllAsync();
+            return await _clienteRepository.PegarTodosAsync();
         }
 
-        public async Task<Cliente> GetByIdAsync(Guid id)
+        public async Task<Cliente> PegarPorIdAsync(Guid id)
         {
-            return await _clienteRepository.GetByIdAsync(id);
+            return await _clienteRepository.PegarPorIdAsync(id);
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<Cliente> PegarClintePorAspNetUserIdAsync(Guid id)
         {
-            await _clienteRepository.DeleteAsync(id);
+            return await _clienteRepository.PegarPorAspNetUserIdAsync(id);
+        }
+
+        public async Task<bool> ExcluiAsync(Guid id)
+        {
+            await _clienteRepository.ExcluiAsync(id);
             return true;
         }
 
-        public async Task UpdateAsync(Cliente cliente)
+        public async Task AlteraAsync(Cliente cliente)
         {
-            await _clienteRepository.UpdateAsync(cliente);
+            await _clienteRepository.AlteraAsync(cliente);
         }
 
-        public async Task AddAsync(Cliente customer)
+        public async Task AdicionaAsync(Cliente customer)
         {
-            await _clienteRepository.AddAsync(customer);
+            await _clienteRepository.AdicionaAsync(customer);
         }
     }
 }

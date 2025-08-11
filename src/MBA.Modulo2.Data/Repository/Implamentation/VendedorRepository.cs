@@ -14,12 +14,11 @@ namespace MBA.Modulo2.Data.Repository.Implamentation;
 
    
 
-    public async Task<Vendedor> GetByByIdWithProdutoAsync(Guid id)
+    public async Task<Vendedor> PegarPorIdComProdutosAsync(Guid id)
     {
+        
         return await _context.Vendedores
                         .Include(c => c.Produtos)
                         .FirstOrDefaultAsync(m => m.Id == id);
     }
-
-
 }
