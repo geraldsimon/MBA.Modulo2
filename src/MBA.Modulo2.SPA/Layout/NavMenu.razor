@@ -1,5 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
+        <img src="img/bag.png" alt="Logo" class="me-2" style="height:40px;" />
         <a class="navbar-brand" href="">Developer Store</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -7,11 +8,6 @@
     </div>
 </div>
 
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-        <span class="bi bi-house-door-fill nav-icon" aria-hidden="true"></span> Home
-    </NavLink>
-</div>
 <div class="nav-item px-3">
     <NavLink class="nav-link" href="produto">
         <span class="bi bi-box-seam-fill nav-icon" aria-hidden="true"></span> Produto
@@ -22,6 +18,13 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="favoritos">
                 <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/cliente" Match="NavLinkMatch.Prefix">
+                <span class="bi bi-people-fill nav-icon" aria-hidden="true"></span>
+                Usuário
             </NavLink>
         </div>
     </Authorized>

@@ -4,6 +4,12 @@
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Views\Cliente\**" />
+	  <Content Remove="Views\Cliente\**" />
+	  <EmbeddedResource Remove="Views\Cliente\**" />
+	  <None Remove="Views\Cliente\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="14.0.0" />

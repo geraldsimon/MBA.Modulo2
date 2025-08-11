@@ -1,4 +1,4 @@
-﻿namespace MBA.Modulo2.Spa.ViewModels
+﻿namespace MBA.Modulo2.App.ViewModels
 {
     public class ClienteViewModel
     {
