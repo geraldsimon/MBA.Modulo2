@@ -163,9 +163,6 @@ A documentação da API está disponível através do Swagger. Após iniciar a API, ac
 - Usuario Admin = Admin@gmail.com
 - Senha = Teste@123
 
--   - ** Para testes na aplicação API o prjeto conta com arquivos de configuração do Postman, que podem ser importados para facilitar os testes.
-- O arquivo `DeveloperStore.postman_collection.json` contém a coleção de requisições para a API.
-- O arquivo `DeveloperStore.postman_environment.json` contém o ambiente de configuração para o Postman. 
 
 ## **10. Avaliação**
 

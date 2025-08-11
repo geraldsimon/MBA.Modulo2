@@ -12,10 +12,11 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
 
     public async Task<List<Produto>> PegaTodosComCategoriasAsync()
     {
-        return await _context.Produtos
-                        .Include(c => c.Categoria)
-                        .Where(c => c.Ativo)
-                        .ToListAsync();
+   return await _context.Produtos
+                    .Include(c => c.Categoria)
+                    .Include(a => a.Vendedor)
+                    .Where(p => p.Ativo && p.Vendedor.Ativo)
+                    .ToListAsync();
     }
 
     public async Task<List<Produto>> PegarTodosPorCategoriaAsync(Guid id)
