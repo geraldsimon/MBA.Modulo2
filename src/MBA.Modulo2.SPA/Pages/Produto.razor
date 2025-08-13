@@ -5,8 +5,7 @@
 @inject FavoritoHttpClient FavoritoApi
 @inject AuthHttpClient AuthHttpApi
 @inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager
-
+@inject NavigationManager Navigation
 
 <PageTitle>Lista de Produtos</PageTitle>
 
@@ -674,6 +673,10 @@ else
     private Dictionary<Guid, bool> estadoFavoritosProdutos = new Dictionary<Guid, bool>();
     private bool produtoVisualizacaoEstaNosFavoritos = false;
     
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
     private ProdutoLoggedOutViewModel produtoVisualizacao;
     private ProdutoLoggedOutViewModel produtoCompartilhamento;
     
