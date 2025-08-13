@@ -56,6 +56,34 @@ namespace MBA.Modulo2.Spa.ExternalApi
             return favoritos ?? new List<FavoritoDoClienteViewModel>();
         }
 
+        public async Task<bool> JaFavoritado(Guid idProduto)
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}/{idProduto}");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var produto = JsonSerializer.Deserialize<FavoritoViewModel>(json, _jsonSerializerOptions);
+
+            if (produto is not null)
+                return true;
+
+            return false;
+
+        }
+
+
         public async Task<bool> DeletarFavorito(Guid idProduto)
         {
             var token = await _localStorage.GetItemAsync<string>("authToken");

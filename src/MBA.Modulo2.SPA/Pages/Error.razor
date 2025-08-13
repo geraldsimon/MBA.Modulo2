@@ -1,0 +1,42 @@
+﻿@page "/error/500"
+@using Shared
+@layout ErrorLayout
+
+<div class="error-page">
+    <h1>Erro 500</h1>
+    <p>Ocorreu um erro interno no aplicativo.</p>
+    <a href="/" class="btn-voltar">Voltar para a página inicial</a>
+</div>
+
+<style>
+    .error-page {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #fff;
+        text-align: center;
+        color: #cc0000;
+        font-family: Arial, sans-serif;
+    }
+
+        .error-page h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-page p {
+            font-size: 1.5rem;
+        }
+
+    .btn-voltar {
+        padding: 10px 20px;
+        font-size: 18px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+</style>

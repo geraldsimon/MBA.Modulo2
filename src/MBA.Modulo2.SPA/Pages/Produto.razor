@@ -7,6 +7,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
+
 <PageTitle>Lista de Produtos</PageTitle>
 
 @if (products == null)
@@ -702,9 +703,9 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
             products = new List<ProdutoLoggedOutViewModel>();
             produtosFiltrados = new List<ProdutoLoggedOutViewModel>();
+            Navigation.NavigateTo($"/error/500");
         }
     }
 
