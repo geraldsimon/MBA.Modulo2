@@ -10,131 +10,335 @@
 
 @if (products == null)
 {
-    <p>Carregando produtos...</p>
+    <div class="product-skeleton-container">
+        <div class="product-card-container">
+            <div class="card-compra">
+                <div class="card-compra-header">
+                    <div class="skeleton-loader skeleton-card-title"></div>
+                </div>
+                <div class="card-compra-body">
+                    <div class="product-image-container">
+                        <div class="skeleton-product-image"></div>
+                    </div>
+                    
+                    <div class="product-content">
+                        <div class="product-header">
+                            <div class="skeleton-loader skeleton-price"></div>
+                            <div class="skeleton-action-buttons">
+                                <div class="skeleton-loader skeleton-action-btn"></div>
+                                <div class="skeleton-loader skeleton-action-btn"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="skeleton-loader skeleton-title"></div>
+                        
+                        <div class="product-info-grid">
+                            <div class="skeleton-info-card">
+                                <div class="skeleton-loader skeleton-info-title"></div>
+                                <div class="skeleton-loader skeleton-info-content"></div>
+                            </div>
+                            <div class="skeleton-info-card">
+                                <div class="skeleton-loader skeleton-info-title"></div>
+                                <div class="skeleton-loader skeleton-info-content"></div>
+                            </div>
+                            <div class="skeleton-info-card">
+                                <div class="skeleton-loader skeleton-info-title"></div>
+                                <div class="skeleton-loader skeleton-info-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="vendor-card-container">
+            <div class="card-compra">
+                <div class="card-compra-header">
+                    <div class="skeleton-loader skeleton-card-title"></div>
+                </div>
+                <div class="card-compra-body">
+                    <div class="vendor-content">
+                        <div class="vendor-profile-skeleton">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <div class="skeleton-vendor-avatar"></div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="vendor-info">
+                                        <div class="skeleton-loader skeleton-vendor-title"></div>
+                                        <div class="skeleton-loader skeleton-vendor-name"></div>
+                                        <div class="skeleton-loader skeleton-vendor-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="other-products-skeleton">
+                            <div class="skeleton-loader skeleton-products-title"></div>
+                            <div class="product-grid">
+                                @for (int i = 0; i < 4; i++)
+                                {
+                                    <div class="skeleton-mini-card">
+                                        <div class="skeleton-mini-image"></div>
+                                        <div class="skeleton-mini-content">
+                                            <div class="skeleton-loader skeleton-mini-title"></div>
+                                            <div class="skeleton-loader skeleton-mini-price"></div>
+                                            <div class="skeleton-loader skeleton-mini-button"></div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
 
     var imagePath = $"https://localhost:7009/images/";
 
-    <CardComponent>
-        <Titulo>
-            PRODUTO
-        </Titulo>
-        <Corpo>
-            <div class="text-center" style="margin:2% 20%">
-                <img src="@($"{imagePath}{products.Imagem}")" class="card-img-top img-fluid" alt="@products.Nome" style="max-width: 100%; height: auto;">
-            </div>
-            <div class="card-body" style="margin:1% 15%">
+    <div class="product-card-container">
+        <CardComponent>
+            <Titulo>
+                PRODUTO
+            </Titulo>
+            <Corpo>
+                <div class="product-image-container">
+                    <ProductImage ImageName="@products.Imagem" 
+                                  ProductName="@products.Nome" 
+                                  CategoryName="@products.Categoria.Nome"
+                                  CssClass="product-image" 
+                                  Alt="@products.Nome" />
+                </div>
+                
+                <div class="product-content">
+                    <div class="product-header">
+                        <h4 class="product-price">@products.Preco.ToString("C")</h4>
+                        <div class="product-actions">
+                            <button class="action-btn" title="Denunciar" @onclick="Denunciar">
+                                <img src="icons/icon_atencao.png" alt="Denunciar" />
+                            </button>
+                            <button class="action-btn @(produtoEstaNosFavoritos ? "favorited" : "")" 
+                                    title="@(produtoEstaNosFavoritos ? "Remover dos favoritos" : "Adicionar aos favoritos")" 
+                                    @onclick="Favoritar">
+                                @if (produtoEstaNosFavoritos)
+                                {
+                                    <i class="fas fa-heart" style="color: #FF4C41; font-size: 20px;"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-heart" style="color: #6c757d; font-size: 20px;"></i>
+                                }
+                            </button>
+                        </div>
+                    </div>
 
+                    <h5 class="product-title">@products.Nome</h5>
 
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-9"><h4 class="text-primary fw-bold">@products.Preco</h4></div>
-                        <div class="col-3">
-                            <div>
-                                <button class="btn btn-outline-secondary me-2" title="Denunciar" @onclick="Denunciar">
-                                    <img src="icons/icon_atencao.png" alt="Denunciar" style="width: 20px; height: 20px;" />
-                                </button>
-
-                                <Favoritar idProduto=@products.Id/>
-
+                    <div class="product-info-grid">
+                        <div class="info-card">
+                            <h5 class="info-card-title">Descrição</h5>
+                            <div class="info-card-content">
+                                @products.Descricao
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <h5 class="info-card-title">Estoque</h5>
+                            <div class="info-card-content">
+                                @if (products.Estoque > 0)
+                                {
+                                    <span class="badge-compra badge-compra-success">@products.Estoque unidades</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-compra badge-compra-danger">Esgotado</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <h5 class="info-card-title">Categoria</h5>
+                            <div class="info-card-content">
+                                <span class="badge-compra badge-compra-primary">@products.Categoria.Nome</span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </Corpo>
+        </CardComponent>
+    </div>
 
-                <h5 class="card-title text-primary mt-3">@products.Nome</h5>
 
-
-                <div class="row" style="margin-top:4%">
-                    <div class="col-sm-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Descricao</h5>
-                                <p class="card-text">
-                                    @products.Descricao
-                                </p>
+    <div class="vendor-card-container">
+        <CardComponent>
+            <Titulo>
+                VENDEDOR
+            </Titulo>
+            <Corpo>
+                <div class="vendor-content">
+                    <div class="vendor-profile-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="https://img.freepik.com/vetores-gratis/circulo-azul-com-usuario-branco_78370-4707.jpg?semt=ais_hybrid&w=740" 
+                                     class="vendor-avatar" alt="Foto do vendedor">
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Estoque</h5>
-                                <p class="card-text">@products.Estoque . </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title">Categoria</h6>
-                                <p class="card-text">@products.Categoria.Nome . </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Corpo>
-    </CardComponent>
-
-    <CardComponent>
-        <Titulo>
-            VENDEDOR
-        </Titulo>
-        <Corpo>
-            <div class="card-body" style="margin:1% 15%">
-
-                <div class="card mb-3 w-100">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="https://img.freepik.com/vetores-gratis/circulo-azul-com-usuario-branco_78370-4707.jpg?semt=ais_hybrid&w=740" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body d-flex flex-column h-100">
-                                <h5 class="card-title">INFORMAÇÕES GERAIS</h5>
-                                <div style="margin:5%">
-                                    <h3 class="card-text">NOME : @products.Vendedor.Nome </h3>
-
+                            <div class="col-md-8">
+                                <div class="vendor-info">
+                                    <h5 class="vendor-info-title">INFORMAÇÕES GERAIS</h5>
+                                    <div class="vendor-name">@products.Vendedor.Nome</div>
+                                    <p class="vendor-last-seen">
+                                        <i class="fas fa-clock me-1"></i>
+                                        Último acesso: há 3 horas
+                                    </p>
                                 </div>
-
-                                <!-- Este fica na parte inferior -->
-                                <p class="card-text mt-auto">
-                                    <small class="text-body-secondary">Último acesso: há 3 horas</small>
-                                </p>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card mb-3 w-100">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">OUTROS PRODUTOS DO VENDEDOR</h5>
-                        <div class="row">
+                    <div class="other-products-card">
+                        <h5 class="other-products-title">
+                            <i class="fas fa-store me-2"></i>OUTROS PRODUTOS DO VENDEDOR
+                        </h5>
+                        <div class="product-grid">
                             @foreach (var produ in products.Vendedor.produtoReduzidos)
                             {
-                                <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                                    <div class="card h-100">
-                                        <img src="@($"{imagePath}{produ.Imagem}")" class="card-img-top" alt="@produ.Nome" style="object-fit: cover; height: 200px;" />
-                                        <div class="card-body d-flex flex-column">
-                                            <h6 class="card-title">@produ.Nome</h6>
-                                            <p class="card-text mt-auto"><strong>Preço:</strong> @produ.Preco.ToString("C")</p>
-                                            <NavLink class="btn btn-primary mt-auto" href="@($"/produtoDetail/{produ.Id}")">
-                                                Ver Detalhes
-                                            </NavLink>
+
+                                <div class="modern-mini-card">
+                                    <div class="mini-card-image-container">
+                                        <ProductImage ImageName="@produ.Imagem" 
+                                                      ProductName="@produ.Nome" 
+                                                      CategoryName="@produ.Categoria"
+                                                      CssClass="mini-card-image" 
+                                                      Alt="@produ.Nome" />
+                                        <div class="mini-card-overlay">
+                                            <div class="mini-quick-actions">
+                                                <button class="mini-action-btn" title="Ver detalhes" @onclick="() => VisualizacaoRapida(produ)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="mini-action-btn @(ObterEstadoFavorito(produ.Id) ? "favorited" : "")" 
+                                                        title="@(ObterEstadoFavorito(produ.Id) ? "Remover dos favoritos" : "Adicionar aos favoritos")" 
+                                                        @onclick="() => FavoritarOutroProduto(produ.Id)">
+                                                    @if (ObterEstadoFavorito(produ.Id))
+                                                    {
+                                                        <i class="fas fa-heart" style="color: #FF4C41;"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="far fa-heart"></i>
+                                                    }
+                                                </button>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="mini-card-content">
+                                        <h6 class="mini-product-title">@produ.Nome</h6>
+                                        <div class="mini-price-section">
+                                            <span class="mini-price-value">@produ.Preco.ToString("C")</span>
+                                        </div>
+                                        <a class="modern-mini-btn" href="/produtoDetail/@produ.Id">
+                                            <span>Ver Detalhes</span>
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             }
                         </div>
                     </div>
                 </div>
+            </Corpo>
+        </CardComponent>
+    </div>
 
+
+    @if (mostrarModalLogin)
+    {
+        <ModalLogin OnClose="FecharModal" />
+    }
+    
+    @if (mostrarModalVisualizacao && produtoVisualizacao != null)
+    {
+        <div class="modal-overlay" @onclick="FecharModalVisualizacao">
+            <div class="modal-content quick-view-modal" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-eye me-2" style="color: var(--primary-color);"></i>Visualização Rápida
+                    </h5>
+                    <button class="modal-close-btn" @onclick="FecharModalVisualizacao">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="quick-view-image">
+                                <ProductImage ImageName="@produtoVisualizacao.Imagem" 
+                                              ProductName="@produtoVisualizacao.Nome" 
+                                              CategoryName="@produtoVisualizacao.Categoria"
+                                              CssClass="img-fluid" 
+                                              Alt="@produtoVisualizacao.Nome" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="product-quick-info">
+                                <h4 class="product-title-modal">@produtoVisualizacao.Nome</h4>
+                                <p class="product-description-modal">@produtoVisualizacao.Descricao</p>
+                                
+                                <div class="price-stock-section">
+                                    <div class="price-info">
+                                        <span class="price-label">Preço:</span>
+                                        <span class="price-value">@produtoVisualizacao.Preco.ToString("C")</span>
+                                    </div>
+                                    
+                                    @if (produtoVisualizacao.Estoque > 0)
+                                    {
+                                        <div class="stock-info stock-available">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>@produtoVisualizacao.Estoque em estoque</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="stock-info stock-unavailable">
+                                            <i class="fas fa-times-circle"></i>
+                                            <span>Produto esgotado</span>
+                                        </div>
+                                    }
+                                </div>
+                                
+                                <div class="modal-actions">
+                                    <a class="btn-modal primary" href="/produtoDetail/@produtoVisualizacao.Id">
+                                        <i class="fas fa-info-circle"></i>
+                                        Ver Detalhes Completos
+                                    </a>
+                                    <button class="btn-modal @(produtoVisualizacaoEstaNosFavoritos ? "danger" : "secondary")" 
+                                            @onclick="() => FavoritarProdutoVisualizacao()">
+                                        @if (produtoVisualizacaoEstaNosFavoritos)
+                                        {
+                                            <i class="fas fa-heart-broken"></i>
+                                            <span>Remover dos Favoritos</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-heart"></i>
+                                            <span>Favoritar</span>
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </Corpo>
-    </CardComponent>
+        </div>
+    }
+    
+    <Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
+
+
+
+
 }
 
 @code {
@@ -143,22 +347,110 @@ else
 
     [Parameter]
     public Guid Id { get; set; }
-
-    private bool logado = false;
     
+    private Guid ultimoIdCarregado = Guid.Empty;
+    private bool carregando = false;
+    private bool logado = false;
+    private bool mostrarModalLogin = false;
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
+    
+    private bool produtoEstaNosFavoritos = false;
+    private Dictionary<Guid, bool> estadoFavoritosProdutos = new Dictionary<Guid, bool>();
+    
+    private bool mostrarModalVisualizacao = false;
+    private dynamic produtoVisualizacao;
+    private bool produtoVisualizacaoEstaNosFavoritos = false;
+
+
+
+
     protected override async Task OnParametersSetAsync()
     {
+        if (carregando || Id == ultimoIdCarregado)
+        {
+            Console.WriteLine($"Carregamento ignorado - carregando: {carregando}, mesmo ID: {Id == ultimoIdCarregado}");
+            return;
+        }
+
         try
         {
+            carregando = true;
+            Console.WriteLine($"OnParametersSetAsync chamado para ID: {Id}");
+            
+            products = null;
+            StateHasChanged();
+            
             logado = await AuthHttpApi.UsuarioEstaLogadoAsync();
             products = await ProdutoApi.GetProdutoDetalheAsync(Id);
+            
+            if (logado)
+            {
+                produtoEstaNosFavoritos = await FavoritoApi.VerificarSeProdutoEstaNosFavoritos(Id);
+                
+                if (products?.Vendedor?.produtoReduzidos != null)
+                {
+                    estadoFavoritosProdutos.Clear();
+                    foreach (var produto in products.Vendedor.produtoReduzidos)
+                    {
+                        var estaNosFavoritos = await FavoritoApi.VerificarSeProdutoEstaNosFavoritos(produto.Id);
+                        estadoFavoritosProdutos[produto.Id] = estaNosFavoritos;
+                    }
+                }
+            }
+            else
+            {
+                produtoEstaNosFavoritos = false;
+                estadoFavoritosProdutos.Clear();
+            }
+            
+            ultimoIdCarregado = Id;
+            
+            Console.WriteLine($"Produtos carregados com sucesso: {products?.Nome}, nos favoritos: {produtoEstaNosFavoritos}");
+            StateHasChanged();
         }
         catch (Exception ex)
         {
-            Navigation.NavigateTo($"/error/500");
+            Console.WriteLine($"Erro ao buscar produtos: {ex.Message}");
+            products = new ProdutoDetalhesViewModel();
+            StateHasChanged();
+        }
+        finally
+        {
+            carregando = false;
         }
     }
 
+    private async Task Favoritar()
+    {
+        if (logado.Equals(false))
+        {
+            mostrarModalLogin = true;
+            StateHasChanged();
+        }
+        else
+        {
+            byte retorno = await FavoritoApi.RegistrarFavorito(Id);
+            switch (retorno)
+            {
+                case 1:
+                    produtoEstaNosFavoritos = true;
+                    await MostrarToast("Produto adicionado aos favoritos!", "success");
+                    break;
+                case 2:
+                    produtoEstaNosFavoritos = false;
+                    await MostrarToast("Produto removido dos favoritos!", "warning");
+                    break;
+                case 3:
+                    await MostrarToast("Ocorreu algum erro!", "error");
+                    break;
+            }
+            StateHasChanged();
+        }
+    }
+
+    
     private async Task Denunciar()
     {
         var usuarioId = await AuthHttpApi.PegarIdUsuario();
@@ -166,6 +458,142 @@ else
         if (usuarioId == null)
         {
             StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine($"Usuário está logado com ID: {usuarioId}");
+        }
+    }
+
+
+    
+    private void AbrirModal()
+    {
+        mostrarModalLogin = true;
+    }
+    private void FecharModal()
+    {
+        mostrarModalLogin = false;
+    }
+    
+
+
+
+
+
+
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        await Task.Delay(4000);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
+    }
+
+    private async Task FavoritarOutroProduto(Guid produtoId)
+    {
+        if (!logado)
+        {
+            mostrarModalLogin = true;
+            StateHasChanged();
+        }
+        else
+        {
+            try
+            {
+                byte retorno = await FavoritoApi.RegistrarFavorito(produtoId);
+                switch (retorno)
+                {
+                    case 1:
+                        estadoFavoritosProdutos[produtoId] = true;
+                        await MostrarToast("Produto adicionado aos favoritos!", "success");
+                        break;
+                    case 2:
+                        estadoFavoritosProdutos[produtoId] = false;
+                        await MostrarToast("Produto removido dos favoritos!", "warning");
+                        break;
+                    case 3:
+                        await MostrarToast("Ocorreu algum erro!", "error");
+                        break;
+                }
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao favoritar produto: {ex.Message}");
+                await MostrarToast("Erro ao favoritar produto!", "error");
+            }
+        }
+    }
+
+    private void VisualizacaoRapida(dynamic produto)
+    {
+        Console.WriteLine($"Visualização rápida chamada para produto: {produto?.Nome}, ID: {produto?.Id}");
+        produtoVisualizacao = produto;
+        produtoVisualizacaoEstaNosFavoritos = ObterEstadoFavorito(produto.Id);
+        mostrarModalVisualizacao = true;
+        StateHasChanged();
+    }
+
+    private void FecharModalVisualizacao()
+    {
+        mostrarModalVisualizacao = false;
+        produtoVisualizacao = null;
+        produtoVisualizacaoEstaNosFavoritos = false;
+        StateHasChanged();
+    }
+
+    private bool ObterEstadoFavorito(Guid produtoId)
+    {
+        return estadoFavoritosProdutos.ContainsKey(produtoId) ? estadoFavoritosProdutos[produtoId] : false;
+    }
+
+    private async Task FavoritarProdutoVisualizacao()
+    {
+        if (!logado)
+        {
+            mostrarModalLogin = true;
+            StateHasChanged();
+            return;
+        }
+
+        if (produtoVisualizacao == null) return;
+
+        try
+        {
+            byte retorno = await FavoritoApi.RegistrarFavorito(produtoVisualizacao.Id);
+            switch (retorno)
+            {
+                case 1:
+                    produtoVisualizacaoEstaNosFavoritos = true;
+                    estadoFavoritosProdutos[produtoVisualizacao.Id] = true;
+                    await MostrarToast("Produto adicionado aos favoritos!", "success");
+                    break;
+                case 2:
+                    produtoVisualizacaoEstaNosFavoritos = false;
+                    estadoFavoritosProdutos[produtoVisualizacao.Id] = false;
+                    await MostrarToast("Produto removido dos favoritos!", "warning");
+                    break;
+                case 3:
+                    await MostrarToast("Ocorreu algum erro!", "error");
+                    break;
+            }
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao favoritar produto: {ex.Message}");
+            await MostrarToast("Erro ao favoritar produto!", "error");
         }
     }
 }

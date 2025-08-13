@@ -1,34 +1,46 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <img src="img/bag.png" alt="Logo" class="me-2" style="height:40px;" />
-        <a class="navbar-brand" href="">Developer Store</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<div class="deznav">
+    <div class="deznav-scroll">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <h5 class="mb-0 fw-bold">Boa Compra</h5>
+            </div>
+            <button title="Navigation menu" class="navbar-toggler d-lg-none" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <ul class="metismenu @NavMenuCssClass" id="menu">
+            <li class="nav-label first">Menu Principal</li>
+            
+            <li class="nav-item">
+                <NavLink class="nav-link ai-icon" href="" Match="NavLinkMatch.All">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Home</span>
+                </NavLink>
+            </li>
+            
+            <li class="nav-item">
+                <NavLink class="nav-link ai-icon" href="produto">
+                    <i class="fas fa-box"></i>
+                    <span class="nav-text">Produtos</span>
+                </NavLink>
+            </li>
+
+            <AuthorizeView>
+                <Authorized>
+                    <li class="nav-label">Minha Conta</li>
+                    
+                    <li class="nav-item">
+                        <NavLink class="nav-link ai-icon" href="favoritos">
+                            <i class="fas fa-heart"></i>
+                            <span class="nav-text">Favoritos</span>
+                        </NavLink>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+        </ul>
     </div>
 </div>
-
-<div class="nav-item px-3">
-    <NavLink class="nav-link" href="produto">
-        <span class="bi bi-box-seam-fill nav-icon" aria-hidden="true"></span> Produto
-    </NavLink>
-</div>
-<AuthorizeView>
-    <Authorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="favoritos">
-                <span class="bi bi-clipboard2-heart-fill nav-icon" aria-hidden="true"></span> Favoritos
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/cliente" Match="NavLinkMatch.Prefix">
-                <span class="bi bi-people-fill nav-icon" aria-hidden="true"></span>
-                Usuário
-            </NavLink>
-        </div>
-    </Authorized>
-</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;
