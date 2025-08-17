@@ -87,7 +87,6 @@ namespace MBA.Modulo2.Spa.ExternalApi
             var json = JsonSerializer.Serialize(cliente);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // Monta a URL incluindo o ID na rota (como o controller exige)
             var url = $"{_api}/{cliente.Id}?api-version=1.0";
 
             var request = new HttpRequestMessage(HttpMethod.Put, url)

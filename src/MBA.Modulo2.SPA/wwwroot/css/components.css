@@ -358,3 +358,9 @@
     height: 250px;
     width: 100%;
 }
+
+.card-usuario-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: transparent;
+}
