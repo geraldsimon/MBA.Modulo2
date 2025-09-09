@@ -6,12 +6,39 @@
 @attribute [Authorize]
 @inject NavigationManager Navigation
 @inject FavoritoHttpClient FavoritoApi
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <PageTitle>Lista de Produtos Favoritos</PageTitle>
 
 @if (favoritos == null)
 {
-    <p>Carregando produtos favoritados...</p>
+    <div class="container-fluid py-4">
+        <div class="card-compra">
+            <div class="card-compra-header">
+                <div class="skeleton-loader skeleton-title"></div>
+            </div>
+            <div class="card-compra-body">
+                <div class="row">
+                    @for (int i = 0; i < 8; i++)
+                    {
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div class="skeleton-product-card">
+                                <div class="skeleton-card-image"></div>
+                                <div class="skeleton-card-content">
+                                    <div class="skeleton-loader skeleton-product-title"></div>
+                                    <div class="skeleton-loader skeleton-description"></div>
+                                    <div class="skeleton-loader skeleton-price"></div>
+                                    <div class="skeleton-loader skeleton-stock"></div>
+                                    <div class="skeleton-loader skeleton-button"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else if (favoritos.Count == 0)
 {
@@ -34,53 +61,760 @@ else if (favoritos.Count == 0)
 }
 else
 {
-    var imagePath = $"https://localhost:7009/images/";
+    <div class="container-fluid py-4">
+        <div class="card-compra">
+            <div class="card-compra-header">
+                <h4>PRODUTOS FAVORITOS</h4>
+            </div>
+            <div class="card-compra-body">
+                <div class="filters-section mb-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="textoBusca" class="form-label">
+                                    <i class="fas fa-search me-2 text-muted"></i>Buscar favoritos
+                                </label>
+                                <input id="textoBusca" type="text" class="form-control" placeholder="Digite o nome ou descrição..." 
+                                       @bind="textoBusca" @bind:after="AplicarFiltros" />
+                            </div>
+                        </div>
+                            
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filtroCategoria" class="form-label">
+                                    <i class="fas fa-tags me-2 text-muted"></i>Categoria
+                                </label>
+                                <select id="filtroCategoria" class="form-control" @bind="categoriaSelecionada" @bind:after="AplicarFiltros">
+                                    <option value="">Todas as categorias</option>
+                                    @foreach (var categoria in categorias)
+                                    {
+                                        <option value="@categoria">@categoria</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="ordenacao" class="form-label">
+                                    <i class="fas fa-sort me-2 text-muted"></i>Ordenar por
+                                </label>
+                                <select id="ordenacao" class="form-control" @bind="ordenacaoSelecionada" @bind:after="AplicarFiltros">
+                                    <option value="nome">Nome (A-Z)</option>
+                                    <option value="preco-menor">Menor preço</option>
+                                    <option value="preco-maior">Maior preço</option>
+                                    <option value="categoria">Categoria</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-flex gap-2">
+                                    <button class="btn-compra btn-compra-sm btn-compra-outline" @onclick="ToggleFiltrosAvancados" title="Filtros avançados">
+                                        <i class="fas fa-sliders-h"></i>
+                                    </button>
+                                    <button class="btn-compra btn-compra-sm btn-compra-outline" @onclick="LimparFiltros" title="Limpar filtros">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @if (mostrarFiltrosAvancados)
+                    {
+                        <div class="advanced-filters">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="precoMinimo" class="form-label">
+                                            <i class="fas fa-dollar-sign me-2 text-muted"></i>Preço mínimo
+                                        </label>
+                                        <input id="precoMinimo" type="number" class="form-control" step="0.01" min="0" 
+                                               @bind="precoMinimo" @bind:after="AplicarFiltros" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="precoMaximo" class="form-label">
+                                            <i class="fas fa-dollar-sign me-2 text-muted"></i>Preço máximo
+                                        </label>
+                                        <input id="precoMaximo" type="number" class="form-control" step="0.01" min="0" 
+                                               @bind="precoMaximo" @bind:after="AplicarFiltros" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="results-controls mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="results-info">
+                                    <span class="text-muted">
+                                        <i class="fas fa-heart me-2"></i>
+                                        <strong>@favoritosFiltrados.Count</strong> favorito(s) encontrado(s)
+                                        @if (favoritos?.Count > 0 && favoritosFiltrados.Count != favoritos.Count)
+                                        {
+                                            <span>de @favoritos.Count no total</span>
+                                        }
+                                        
+                                        @if (totalPaginas > 1)
+                                        {
+                                            <span class="ms-2 text-muted">
+                                                • Página @paginaAtual de @totalPaginas
+                                            </span>
+                                        }
+                                    </span>
+                                    
+                                    @if (!string.IsNullOrEmpty(textoBusca) || !string.IsNullOrEmpty(categoriaSelecionada) || precoMinimo > 0 || (precoMaximo > 0 && precoMaximo < (favoritos?.Max(p => p.Produto.Preco) ?? 0)))
+                                    {
+                                        <span class="filter-indicator ms-2">
+                                            <i class="fas fa-filter me-1"></i>Filtros ativos
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="page-controls d-flex justify-content-end align-items-center">
+                                    <label class="form-label me-2 mb-0">Itens por página:</label>
+                                    <select class="form-control form-control-sm page-size-select" @bind="itensPorPagina" @bind:after="() => AlterarItensPorPagina(itensPorPagina)">
+                                        <option value="4">4</option>
+                                        <option value="8">8</option>
+                                        <option value="12">12</option>
+                                        <option value="16">16</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <CardComponent>
-        <Titulo>
-            PRODUTOS FAVORITOS
-        </Titulo>
-        <Corpo>
-            <div class="card mb-3 w-100">
-                <div class="card-body">
+                @if (favoritosFiltrados.Any())
+                {
                     <div class="row">
-                        @foreach (var fav in favoritos)
+                        @foreach (var fav in favoritosPaginados)
                         {
                             <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                                <div class="card h-100">
-                                    <img src="@($"{imagePath}{fav.Produto.Imagem}")" class="card-img-top" alt="@fav.Produto.Nome" style="object-fit: cover; height: 200px;" />
-                                    <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title">@fav.Produto.Nome</h5>
-                                        <p class="card-text">@fav.Produto.Descricao</p>
-                                        <p><strong>Preço:</strong> @fav.Produto.Preco.ToString("C")</p>
-                                        <p><strong>Estoque:</strong> @fav.Produto.Estoque</p>
-                                        <a class="btn btn-primary mt-auto" href="/produtoDetail/@fav.Produto.Id">Ver Detalhes</a>
+                                <div class="modern-product-card">
+                                    <div class="card-image-container">
+                                        <ProductImage ImageName="@fav.Produto.Imagem" 
+                                                      ProductName="@fav.Produto.Nome" 
+                                                      CategoryName="@fav.Produto.Categoria"
+                                                      CssClass="card-image" 
+                                                      Alt="@fav.Produto.Nome" />
+                                        <div class="image-overlay">
+                                            <div class="quick-actions">
+                                                <button class="quick-action-btn" title="Remover dos favoritos" @onclick="() => RemoverFavorito(fav.Produto.Id)">
+                                                    <i class="fas fa-heart-broken"></i>
+                                                </button>
+                                                <button class="quick-action-btn" title="Visualização rápida" @onclick="() => VisualizacaoRapida(fav.Produto)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="quick-action-btn" title="Compartilhar" @onclick="() => CompartilharProduto(fav.Produto)">
+                                                    <i class="fas fa-share-alt"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="card-badges">
+                                            <span class="status-badge" style="background: var(--danger-color); color: white;">
+                                                <i class="fas fa-heart me-1"></i>Favorito
+                                            </span>
+                                            @if (fav.Produto.Estoque <= 0)
+                                            {
+                                                <span class="status-badge out-of-stock">Esgotado</span>
+                                            }
+                                            else if (fav.Produto.Estoque <= 5)
+                                            {
+                                                <span class="status-badge low-stock">Últimas unidades</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-content">
+                                        <h5 class="product-name">@fav.Produto.Nome</h5>
+                                        
+                                        <p class="product-description">@fav.Produto.Descricao</p>
+                                        
+                                        <div class="card-footer-content">
+                                            <div class="price-section">
+                                                <span class="price-label">Preço</span>
+                                                <span class="price-value">@fav.Produto.Preco.ToString("C")</span>
+                                            </div>
+                                            
+                                            <div class="stock-section">
+                                                @if (fav.Produto.Estoque > 0)
+                                                {
+                                                    <span class="stock-available">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        @fav.Produto.Estoque em estoque
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="stock-unavailable">
+                                                        <i class="fas fa-times-circle"></i>
+                                                        Indisponível
+                                                    </span>
+                                                }
+                                            </div>
+                                            
+                                            <a class="modern-btn primary-btn" href="/produtoDetail/@fav.Produto.Id">
+                                                <span>Ver Detalhes</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
+                    
+                    @if (totalPaginas > 1)
+                    {
+                        <div class="pagination-container mt-4">
+                            <nav class="pagination-nav">
+                                <div class="pagination-info">
+                                    Mostrando @((paginaAtual - 1) * itensPorPagina + 1) até @(Math.Min(paginaAtual * itensPorPagina, favoritosFiltrados.Count)) de @favoritosFiltrados.Count favoritos
+                                </div>
+                                
+                                <ul class="pagination">
+                                    <li class="page-item @(paginaAtual == 1 ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(1)" disabled="@(paginaAtual == 1)">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </button>
+                                    </li>
+                                    
+                                    <li class="page-item @(paginaAtual == 1 ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(paginaAtual - 1)" disabled="@(paginaAtual == 1)">
+                                            <i class="fas fa-angle-left"></i>
+                                        </button>
+                                    </li>
+                                    
+                                    @{
+                                        var inicioRange = Math.Max(1, paginaAtual - 2);
+                                        var fimRange = Math.Min(totalPaginas, paginaAtual + 2);
+                                    }
+                                    
+                                    @if (inicioRange > 1)
+                                    {
+                                        <li class="page-item">
+                                            <button class="page-link" @onclick="() => IrParaPagina(1)">1</button>
+                                        </li>
+                                        @if (inicioRange > 2)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                    }
+                                    
+                                    @for (var i = inicioRange; i <= fimRange; i++)
+                                    {
+                                        var pagina = i;
+                                        <li class="page-item @(paginaAtual == pagina ? "active" : "")">
+                                            <button class="page-link" @onclick="() => IrParaPagina(pagina)">
+                                                @pagina
+                                            </button>
+                                        </li>
+                                    }
+                                    
+                                    @if (fimRange < totalPaginas)
+                                    {
+                                        @if (fimRange < totalPaginas - 1)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                        <li class="page-item">
+                                            <button class="page-link" @onclick="() => IrParaPagina(totalPaginas)">@totalPaginas</button>
+                                        </li>
+                                    }
+                                    
+                                    <li class="page-item @(paginaAtual == totalPaginas ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(paginaAtual + 1)" disabled="@(paginaAtual == totalPaginas)">
+                                            <i class="fas fa-angle-right"></i>
+                                        </button>
+                                    </li>
+                                    
+                                    <li class="page-item @(paginaAtual == totalPaginas ? "disabled" : "")">
+                                        <button class="page-link" @onclick="() => IrParaPagina(totalPaginas)" disabled="@(paginaAtual == totalPaginas)">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state general-empty">
+                        <div class="empty-state-animation">
+                            <div class="general-icon-container">
+                                <i class="fas fa-heart general-icon"></i>
+                                <div class="floating-items">
+                                    <i class="fas fa-heart"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="empty-state-title">Nenhum favorito encontrado</h5>
+                        <p class="empty-state-text">
+                            Não encontramos favoritos que correspondam aos filtros aplicados.<br>
+                            Tente ajustar os filtros ou limpar a busca.
+                        </p>
+                        <div class="empty-state-actions">
+                            <button class="modern-btn secondary-btn me-3" @onclick="LimparFiltros">
+                                <span>Limpar filtros</span>
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <a class="modern-btn primary-btn" href="/produto">
+                                <span>Ver produtos</span>
+                                <i class="fas fa-shopping-bag"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@if (mostrarModalVisualizacao && produtoVisualizacao != null)
+{
+    <div class="modal-overlay" @onclick="FecharModalVisualizacao">
+        <div class="modal-content quick-view-modal" @onclick:stopPropagation="true">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-heart me-2" style="color: var(--danger-color);"></i>Favorito - Visualização Rápida
+                </h5>
+                <button class="modal-close-btn" @onclick="FecharModalVisualizacao">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="quick-view-image">
+                            <ProductImage ImageName="@produtoVisualizacao.Imagem" 
+                                          ProductName="@produtoVisualizacao.Nome" 
+                                          CategoryName="@produtoVisualizacao.Categoria"
+                                          CssClass="img-fluid" 
+                                          Alt="@produtoVisualizacao.Nome" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="quick-view-info">
+                            <div class="favorite-indicator">
+                                <i class="fas fa-heart"></i>
+                                <span>Este produto está em seus favoritos</span>
+                            </div>
+                            <h4 class="product-title-modal">@produtoVisualizacao.Nome</h4>
+                            <p class="product-description-modal">@produtoVisualizacao.Descricao</p>
+                            
+                            <div class="price-stock-section">
+                                <div class="price-info">
+                                    <span class="price-label">Preço:</span>
+                                    <span class="price-value">@produtoVisualizacao.Preco.ToString("C")</span>
+                                </div>
+                                
+                                @if (produtoVisualizacao.Estoque > 0)
+                                {
+                                    <div class="stock-info stock-available">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>@produtoVisualizacao.Estoque em estoque</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="stock-info stock-unavailable">
+                                        <i class="fas fa-times-circle"></i>
+                                        <span>Indisponível</span>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <div class="modal-actions">
+                                <a class="btn-modal primary" href="/produtoDetail/@produtoVisualizacao.Id">
+                                    <i class="fas fa-info-circle"></i>
+                                    Ver Detalhes Completos
+                                </a>
+                                <button class="btn-modal danger" @onclick="() => RemoverFavorito(produtoVisualizacao.Id)">
+                                    <i class="fas fa-heart-broken"></i>
+                                    Remover dos Favoritos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </Corpo>
-    </CardComponent>
-
-
+        </div>
+    </div>
 }
+
+@if (mostrarModalCompartilhamento && produtoCompartilhamento != null)
+{
+    <div class="modal-overlay" @onclick="FecharModalCompartilhamento">
+        <div class="modal-content share-modal" @onclick:stopPropagation="true">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-share-alt me-2"></i>Compartilhar Favorito
+                </h5>
+                <button class="modal-close-btn" @onclick="FecharModalCompartilhamento">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="product-preview">
+                    <div class="product-preview-image">
+                        <ProductImage ImageName="@produtoCompartilhamento.Imagem" 
+                                      ProductName="@produtoCompartilhamento.Nome" 
+                                      CategoryName="@produtoCompartilhamento.Categoria"
+                                      CssClass="img-fluid" 
+                                      Alt="@produtoCompartilhamento.Nome" />
+                    </div>
+                    <div class="product-preview-info">
+                        <h6>@produtoCompartilhamento.Nome</h6>
+                        <span class="preview-price">@produtoCompartilhamento.Preco.ToString("C")</span>
+                        <small class="favorite-note">
+                            <i class="fas fa-heart"></i> Este é um dos seus favoritos
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="share-options">
+                    <h6 class="share-title">Compartilhar via:</h6>
+                    <div class="share-buttons">
+                        <button class="share-btn whatsapp" @onclick="() => CompartilharViaWhatsApp(produtoCompartilhamento)">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                        <button class="share-btn facebook" @onclick="() => CompartilharViaFacebook(produtoCompartilhamento)">
+                            <i class="fab fa-facebook"></i>
+                            <span>Facebook</span>
+                        </button>
+                        <button class="share-btn twitter" @onclick="() => CompartilharViaTwitter(produtoCompartilhamento)">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </button>
+                        <button class="share-btn email" @onclick="() => CompartilharViaEmail(produtoCompartilhamento)">
+                            <i class="fas fa-envelope"></i>
+                            <span>E-mail</span>
+                        </button>
+                    </div>
+                    
+                    <div class="copy-link-section">
+                        <label class="form-label">Link do produto:</label>
+                        <div class="copy-link-container">
+                            <input type="text" class="form-control" @bind="linkProduto" readonly />
+                            <button class="btn-copy" @onclick="CopiarLink" title="Copiar link">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        @if (linkCopiado)
+                        {
+                            <small class="text-success">
+                                <i class="fas fa-check"></i> Link copiado!
+                            </small>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<Toast Show="mostrarToast" 
+       Message="@toastMessage" 
+       Type="@toastType" 
+       OnClose="OnToastClose" />
 
 @code {
     private List<FavoritoDoClienteViewModel> favoritos;
+    
+    private List<FavoritoDoClienteViewModel> favoritosFiltrados = new List<FavoritoDoClienteViewModel>();
+    private List<FavoritoDoClienteViewModel> favoritosPaginados = new List<FavoritoDoClienteViewModel>();
+    private List<string> categorias = new List<string>();
+    
+    private string textoBusca = "";
+    private string categoriaSelecionada = "";
+    private string ordenacaoSelecionada = "nome";
+    private bool mostrarFiltrosAvancados = false;
+    private decimal precoMinimo = 0;
+    private decimal precoMaximo = 0;
+    
+    private int paginaAtual = 1;
+    private int itensPorPagina = 8;
+    private int totalPaginas = 0;
+    
+    private bool mostrarModalVisualizacao = false;
+    private bool mostrarModalCompartilhamento = false;
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
+    
+    private ProdutoLoggedOutViewModel produtoVisualizacao;
+    private ProdutoLoggedOutViewModel produtoCompartilhamento;
+    
+    private string linkProduto = "";
+    private bool linkCopiado = false;
+    
+    private readonly string imagePath = "https://localhost:7009/images/";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             favoritos = await FavoritoApi.PegarosFavoritos();
+            
+            if (favoritos?.Any() == true)
+            {
+                categorias = favoritos
+                    .Select(f => f.Produto.Categoria)
+                    .Where(c => !string.IsNullOrEmpty(c))
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToList();
+            }
+            
+            AplicarFiltros();
         }
         catch (Exception ex)
         {
             favoritos = new List<FavoritoDoClienteViewModel>();
-            Navigation.NavigateTo($"/error/500");
+            AplicarFiltros();
         }
+    }
+    
+    private void AplicarFiltros()
+    {
+        if (favoritos == null)
+        {
+            favoritosFiltrados = new List<FavoritoDoClienteViewModel>();
+            AtualizarPaginacao();
+            return;
+        }
+
+        var query = favoritos.AsQueryable();
+
+        if (!string.IsNullOrEmpty(textoBusca))
+        {
+            query = query.Where(f => f.Produto.Nome.Contains(textoBusca, StringComparison.OrdinalIgnoreCase) ||
+                                   f.Produto.Descricao.Contains(textoBusca, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (!string.IsNullOrEmpty(categoriaSelecionada))
+        {
+            query = query.Where(f => f.Produto.Categoria == categoriaSelecionada);
+        }
+
+        if (precoMinimo > 0)
+        {
+            query = query.Where(f => f.Produto.Preco >= precoMinimo);
+        }
+
+        if (precoMaximo > 0)
+        {
+            query = query.Where(f => f.Produto.Preco <= precoMaximo);
+        }
+
+        query = ordenacaoSelecionada switch
+        {
+            "nome" => query.OrderBy(f => f.Produto.Nome),
+            "preco-menor" => query.OrderBy(f => f.Produto.Preco),
+            "preco-maior" => query.OrderByDescending(f => f.Produto.Preco),
+            "categoria" => query.OrderBy(f => f.Produto.Categoria).ThenBy(f => f.Produto.Nome),
+            _ => query.OrderBy(f => f.Produto.Nome)
+        };
+
+        favoritosFiltrados = query.ToList();
+        paginaAtual = 1; 
+        AtualizarPaginacao();
+        StateHasChanged();
+    }
+
+    private void AtualizarPaginacao()
+    {
+        totalPaginas = favoritosFiltrados.Count > 0 ? (int)Math.Ceiling((double)favoritosFiltrados.Count / itensPorPagina) : 0;
+        
+        if (paginaAtual > totalPaginas && totalPaginas > 0)
+        {
+            paginaAtual = totalPaginas;
+        }
+        
+        var skip = (paginaAtual - 1) * itensPorPagina;
+        favoritosPaginados = favoritosFiltrados.Skip(skip).Take(itensPorPagina).ToList();
+    }
+
+    private void IrParaPagina(int numeroPagina)
+    {
+        if (numeroPagina >= 1 && numeroPagina <= totalPaginas)
+        {
+            paginaAtual = numeroPagina;
+            AtualizarPaginacao();
+            StateHasChanged();
+        }
+    }
+
+    private void AlterarItensPorPagina(int novoTamanho)
+    {
+        itensPorPagina = novoTamanho;
+        paginaAtual = 1;
+        AtualizarPaginacao();
+        StateHasChanged();
+    }
+
+    private void LimparFiltros()
+    {
+        textoBusca = "";
+        categoriaSelecionada = "";
+        ordenacaoSelecionada = "nome";
+        precoMinimo = 0;
+        precoMaximo = 0;
+        mostrarFiltrosAvancados = false;
+        
+        AplicarFiltros();
+    }
+
+    private void ToggleFiltrosAvancados()
+    {
+        mostrarFiltrosAvancados = !mostrarFiltrosAvancados;
+        StateHasChanged();
+    }
+    
+    private async Task RemoverFavorito(Guid produtoId)
+    {
+        try
+        {
+            bool removido = await FavoritoApi.DeletarFavorito(produtoId);
+            
+            if (removido)
+            {
+                favoritos.RemoveAll(f => f.Produto.Id == produtoId);
+                
+                AplicarFiltros();
+                
+                MostrarToast("Produto removido dos favoritos!", "warning");
+            }
+            else
+            {
+                MostrarToast("Erro ao remover dos favoritos", "error");
+            }
+        }
+        catch (Exception ex)
+        {
+            MostrarToast("Erro ao remover dos favoritos", "error");
+            Console.WriteLine($"Erro ao remover favorito: {ex.Message}");
+        }
+    }
+    
+    private void VisualizacaoRapida(ProdutoLoggedOutViewModel produto)
+    {
+        Console.WriteLine($"VisualizacaoRapida chamado para produto: {produto?.Nome}");
+        produtoVisualizacao = produto;
+        mostrarModalVisualizacao = true;
+        StateHasChanged();
+    }
+    
+    private void CompartilharProduto(ProdutoLoggedOutViewModel produto)
+    {
+        Console.WriteLine($"CompartilharProduto chamado para produto: {produto?.Nome}");
+        produtoCompartilhamento = produto;
+        linkProduto = $"{NavigationManager.BaseUri}produtoDetail/{produto.Id}";
+        linkCopiado = false;
+        mostrarModalCompartilhamento = true;
+        StateHasChanged();
+    }
+    
+    private void FecharModalVisualizacao()
+    {
+        mostrarModalVisualizacao = false;
+        produtoVisualizacao = null;
+        StateHasChanged();
+    }
+    
+    private void FecharModalCompartilhamento()
+    {
+        mostrarModalCompartilhamento = false;
+        produtoCompartilhamento = null;
+        linkCopiado = false;
+        StateHasChanged();
+    }
+    
+    private async Task CompartilharViaWhatsApp(ProdutoLoggedOutViewModel produto)
+    {
+        var texto = $"Confira este produto dos meus favoritos: {produto.Nome} - {produto.Preco:C} - {NavigationManager.BaseUri}produtoDetail/{produto.Id}";
+        var url = $"https://wa.me/?text={Uri.EscapeDataString(texto)}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        FecharModalCompartilhamento();
+        MostrarToast("Compartilhado via WhatsApp!", "success");
+    }
+    
+    private async Task CompartilharViaFacebook(ProdutoLoggedOutViewModel produto)
+    {
+        var url = $"https://www.facebook.com/sharer/sharer.php?u={Uri.EscapeDataString(NavigationManager.BaseUri + $"produtoDetail/{produto.Id}")}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        FecharModalCompartilhamento();
+        MostrarToast("Compartilhado via Facebook!", "success");
+    }
+    
+    private async Task CompartilharViaTwitter(ProdutoLoggedOutViewModel produto)
+    {
+        var texto = $"Um dos meus favoritos: {produto.Nome} - {produto.Preco:C}";
+        var url = $"https://twitter.com/intent/tweet?text={Uri.EscapeDataString(texto)}&url={Uri.EscapeDataString(NavigationManager.BaseUri + $"produtoDetail/{produto.Id}")}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        FecharModalCompartilhamento();
+        MostrarToast("Compartilhado via Twitter!", "success");
+    }
+    
+    private async Task CompartilharViaEmail(ProdutoLoggedOutViewModel produto)
+    {
+        var assunto = $"Produto dos meus favoritos: {produto.Nome}";
+        var corpo = $"Olá!%0A%0AEncontrei este produto interessante nos meus favoritos e queria compartilhar com você:%0A%0A{produto.Nome}%0APreço: {produto.Preco:C}%0A%0AConfira mais detalhes em: {NavigationManager.BaseUri}produtoDetail/{produto.Id}";
+        var url = $"mailto:?subject={Uri.EscapeDataString(assunto)}&body={corpo}";
+        await JSRuntime.InvokeVoidAsync("open", url, "_self");
+        FecharModalCompartilhamento();
+        MostrarToast("Cliente de e-mail aberto!", "info");
+    }
+    
+    private async Task CopiarLink()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", linkProduto);
+            linkCopiado = true;
+            StateHasChanged();
+            await Task.Delay(2000);
+            linkCopiado = false;
+            StateHasChanged();
+        }
+        catch
+        {
+            MostrarToast("Não foi possível copiar o link", "error");
+
+        }
+    }
+    
+    private void MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+    }
+    
+    private void OnToastClose()
+    {
+        mostrarToast = false;
+        StateHasChanged();
     }
 }

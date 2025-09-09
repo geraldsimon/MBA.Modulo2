@@ -1,0 +1,39 @@
+@using MBA.Modulo2.Spa.Services
+@inject IThemeService ThemeService
+@implements IDisposable
+
+<div class="theme-toggle">
+    <button class="btn btn-outline-primary btn-sm" @onclick="ToggleTheme" 
+            title="@(ThemeService.CurrentTheme == "dark" ? "Alterar para tema claro" : "Alterar para tema escuro")">
+        @if (ThemeService.CurrentTheme == "dark")
+        {
+            <i class="fas fa-sun text-warning"></i>
+            <span class="d-none d-lg-inline ms-1">Claro</span>
+        }
+        else
+        {
+            <i class="fas fa-moon text-primary"></i>
+            <span class="d-none d-lg-inline ms-1">Escuro</span>
+        }
+    </button>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ThemeService.GetThemeAsync();
+        ThemeService.OnThemeChanged += StateHasChanged;
+        StateHasChanged();
+    }
+
+    private async Task ToggleTheme()
+    {
+        var newTheme = ThemeService.CurrentTheme == "light" ? "dark" : "light";
+        await ThemeService.SetThemeAsync(newTheme);
+    }
+
+    public void Dispose()
+    {
+        ThemeService.OnThemeChanged -= StateHasChanged;
+    }
+}

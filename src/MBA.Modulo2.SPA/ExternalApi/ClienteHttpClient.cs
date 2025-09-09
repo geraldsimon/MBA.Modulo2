@@ -1,4 +1,5 @@
-﻿using MBA.Modulo2.Spa.ViewModels;
+﻿using Blazored.LocalStorage;
+using MBA.Modulo2.Spa.ViewModels;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -6,10 +7,24 @@ using System.Text.Json;
 
 namespace MBA.Modulo2.Spa.ExternalApi
 {
-    public class ClienteHttpClient(HttpClient httpClient)
+    public class ClienteHttpClient
     {
-        private readonly HttpClient _httpClient = httpClient;
+        private readonly HttpClient _httpClient;
+        private readonly AuthHttpClient _authHttpClient;
+        private readonly ILocalStorageService _localStorage;
         private readonly string _api = "api/Cliente";
+
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        public ClienteHttpClient(HttpClient httpClient, AuthHttpClient authHttpClient, ILocalStorageService localStorage)
+        {
+            this._httpClient = httpClient;
+            this._authHttpClient = authHttpClient;
+            this._localStorage = localStorage;
+        }
 
         public async Task<ClienteViewModel> GetClienteAsync()
         {
@@ -67,10 +82,24 @@ namespace MBA.Modulo2.Spa.ExternalApi
 
         public async Task AtualizarClienteAsync(ClienteViewModel cliente)
         {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
             var json = JsonSerializer.Serialize(cliente);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync($"{_api}/{cliente.Id}?api-version=1.0", content);
+            var url = $"{_api}/{cliente.Id}?api-version=1.0";
+
+            var request = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = content
+            };
+
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            var response = await _httpClient.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
         }

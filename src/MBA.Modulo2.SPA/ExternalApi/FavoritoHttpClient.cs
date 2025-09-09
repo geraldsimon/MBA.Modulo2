@@ -5,6 +5,7 @@ using System.Text.Json;
 using MBA.Modulo2.Spa.ViewModels;
 using MBA.Modulo2.Spa.ExternalApi;
 using Blazored.LocalStorage;
+using System.Linq;
 
 namespace MBA.Modulo2.Spa.ExternalApi
 {
@@ -35,19 +36,15 @@ namespace MBA.Modulo2.Spa.ExternalApi
             return idCliente.Value;
         }
 
-
         public async Task<List<FavoritoDoClienteViewModel>> PegarosFavoritos()
         {
             var token = await _localStorage.GetItemAsync<string>("authToken");
-
-
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_api}");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
             if (!string.IsNullOrWhiteSpace(token))
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-
 
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -107,13 +104,12 @@ namespace MBA.Modulo2.Spa.ExternalApi
 
         public async Task<byte> RegistrarFavorito(Guid idProduto)
         {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
             var body = new
             {
                 produtoId = idProduto
             };
-
-            var token = await _localStorage.GetItemAsync<string>("authToken");
-
 
             var jsonBody = JsonSerializer.Serialize(body, _jsonSerializerOptions);
             var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
@@ -138,18 +134,20 @@ namespace MBA.Modulo2.Spa.ExternalApi
                 return 2;
             }
             return 3;
-
-
         }
 
-
-
-
-
-
-
-
-
-
+        public async Task<bool> VerificarSeProdutoEstaNosFavoritos(Guid idProduto)
+        {
+            try
+            {
+                var favoritos = await PegarosFavoritos();
+                return favoritos.Any(f => f.Produto != null && f.Produto.Id == idProduto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao verificar favorito: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
