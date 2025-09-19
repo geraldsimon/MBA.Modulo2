@@ -1,51 +1,183 @@
 ﻿@page "/categorias"
 @using MBA.Modulo2.Spa.ExternalApi
-@using MBA.Modulo2.Spa.Shared
 @using MBA.Modulo2.Spa.ViewModels
+@using MBA.Modulo2.Spa.Components
 @inject NavigationManager navigationManager
 @inject CategoriaHttpClient CategoriaApi
+@inject IJSRuntime JSRuntime
 
-<h1>Categorias</h1>
-@if(categorias is not null)
+<PageTitle>Gerenciar Categorias</PageTitle>
+
+@if (isLoading)
 {
-    <table class="table table-striped">
-        <thead><tr><th scope="col">Id</th><th scope="col">Nome</th><th scope="col">Descrição</th></tr></thead>
-        <tbody>
-            @foreach(var categoria in categorias)
-            {
-                <tr>
-                    <td>@categoria.Id</td>
-                    <td>@categoria.Nome</td>
-                    <td>@categoria.Description</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="container-fluid py-4">
+        <div class="card-compra">
+            <div class="card-compra-header">
+                <div class="skeleton-loader skeleton-title"></div>
+            </div>
+            <div class="card-compra-body">
+                <div class="skeleton-table">
+                    @for (int i = 0; i < 6; i++)
+                    {
+                        <div class="skeleton-table-row">
+                            <div class="skeleton-loader skeleton-cell"></div>
+                            <div class="skeleton-loader skeleton-cell"></div>
+                            <div class="skeleton-loader skeleton-cell"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <DisplayMessage ErrorMessage="Não foi possível acessar categorias!!!" />
+    <div class="container-fluid py-4">
+        <div class="card-compra">
+            <div class="card-compra-header">
+                <h4>
+                    <i class="fas fa-tags me-2"></i>
+                    GERENCIAR CATEGORIAS
+                </h4>
+            </div>
+            <div class="card-compra-body">
+                @if (categorias?.Any() == true)
+                {
+                    <div class="categories-info mb-3">
+                        <span class="text-muted">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>@categorias.Count</strong> categoria(s) encontrada(s)
+                        </span>
+                    </div>
+                    
+                    <div class="categories-container">
+                        <div class="categories-grid">
+                            @foreach (var categoria in categorias)
+                            {
+                                <div class="category-card">
+                                    <div class="category-card-header">
+                                        <div class="category-icon">
+                                            <i class="fas fa-tag"></i>
+                                        </div>
+                                        <div class="category-info">
+                                            <h5 class="category-name">@categoria.Nome</h5>
+                                            <span class="category-id">ID: @categoria.Id</span>
+                                        </div>
+                                    </div>
+                                    <div class="category-card-body">
+                                        <p class="category-description">
+                                            @if (!string.IsNullOrEmpty(categoria.Description))
+                                            {
+                                                @categoria.Description
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Sem descrição</span>
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state categories-empty">
+                        <div class="empty-state-animation">
+                            <div class="categories-icon-container">
+                                <i class="fas fa-tags categories-icon"></i>
+                                <div class="categories-particles"></div>
+                            </div>
+                        </div>
+                        <h5 class="empty-state-title">Nenhuma categoria encontrada</h5>
+                        <p class="empty-state-text">
+                            Não foi possível carregar as categorias do sistema.<br>
+                            Verifique sua conexão ou tente novamente.
+                        </p>
+                        <div class="empty-state-actions">
+                            <button class="btn-compra btn-compra-primary" @onclick="RecarregarCategorias">
+                                <span>Tentar novamente</span>
+                                <i class="fas fa-sync-alt ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 }
-<div>
-    <DisplayMessage ErrorMessage="@erroMessage"/>
-</div>
+
+<Toast Show="@mostrarToast" Message="@toastMessage" Type="@toastType" OnClose="@(EventCallback.Factory.Create(this, FecharToast))" />
 
 
 @code {
-
-    private List<CategoriaViewModel> categorias = new List<CategoriaViewModel>();
-    readonly string erroMessage = string.Empty;
+    private List<CategoriaViewModel>? categorias = null;
+    private bool isLoading = true;
+    
+    private bool mostrarToast = false;
+    private string toastMessage = "";
+    private string toastType = "success";
 
     protected override async Task OnInitializedAsync()
     {
+        await CarregarCategorias();
+    }
+    
+    private async Task CarregarCategorias()
+    {
         try
         {
-             categorias = await CategoriaApi.GetCategoriasAsync(); 
-
+            isLoading = true;
+            StateHasChanged();
+            
+            await Task.Delay(500);
+            categorias = await CategoriaApi.GetCategoriasAsync();
+            
+            if (categorias?.Any() == true)
+            {
+                await MostrarToast($"{categorias.Count} categoria(s) carregada(s) com sucesso!", "success");
+            }
         }
         catch (UnauthorizedAccessException)
         {
-            navigationManager.NavigateTo($"/NotAuthorizedMessage?msg={Uri.EscapeDataString("Usuário não autorizado")}");
+            navigationManager.NavigateTo($"/NotAuthorizedMessage?msg={Uri.EscapeDataString("Usuário não autorizado para acessar categorias")}");
         }
+        catch (Exception ex)
+        {
+            await MostrarToast("Erro ao carregar categorias. Tente novamente.", "error");
+            Console.WriteLine($"Erro ao carregar categorias: {ex.Message}");
+            categorias = new List<CategoriaViewModel>();
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+    
+    private async Task RecarregarCategorias()
+    {
+        await MostrarToast("Recarregando categorias...", "info");
+        await CarregarCategorias();
+    }
+    
+    private async Task MostrarToast(string mensagem, string tipo)
+    {
+        toastMessage = mensagem;
+        toastType = tipo;
+        mostrarToast = true;
+        StateHasChanged();
+        
+        int delay = tipo == "error" ? 5000 : 3000;
+        await Task.Delay(delay);
+        mostrarToast = false;
+        StateHasChanged();
+    }
+    
+    private void FecharToast()
+    {
+        mostrarToast = false;
+        StateHasChanged();
     }
 }

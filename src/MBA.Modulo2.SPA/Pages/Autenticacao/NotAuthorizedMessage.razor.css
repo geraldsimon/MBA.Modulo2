@@ -1,5 +1,95 @@
-﻿.erroMessage {
+﻿/* Extensões específicas para a página NotAuthorized */
+.not-authorized-card {
+    max-width: 500px;
+}
+
+.not-authorized-card::before {
+    background: linear-gradient(90deg, var(--danger-color), #dc3545);
+}
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-lg);
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 76, 65, 0.1), rgba(255, 76, 65, 0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 76, 65, 0.2);
+    transition: var(--transition-base);
+}
+
+.error-icon i {
+    font-size: 2rem;
+    color: var(--danger-color);
+    animation: pulse-error 2s ease-in-out infinite;
+}
+
+@keyframes pulse-error {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.error-content {
+    margin-top: var(--spacing-lg);
+}
+
+.error-help {
+    margin-bottom: var(--spacing-xl);
+}
+
+.help-text {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    margin: 0;
+    display: flex;
+    align-items: flex-start;
+    line-height: var(--line-height-base);
+}
+
+.help-text i {
+    color: var(--warning-color);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.error-actions {
     display: flex;
     justify-content: center;
-    align-items: center;
+}
+
+.error-actions .auth-btn.primary-action {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    width: auto;
+    min-width: 200px;
+}
+
+.error-actions .auth-btn.primary-action:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .not-authorized-card {
+        max-width: 100%;
+    }
+    
+    .error-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .error-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .error-actions .auth-btn.primary-action {
+        width: 100%;
+        min-width: auto;
+    }
 }
